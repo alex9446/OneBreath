@@ -1,27 +1,33 @@
 import { createResource, For, Suspense } from 'solid-js'
-import { action } from '@solidjs/router'
+import { action, redirect, useSubmission } from '@solidjs/router'
 import { useSupabase } from '../context'
 import './Register.sass'
 
-const fetchGroups = async () => {
-  const supabaseClient = useSupabase()!
-  const { data: groups, error } = await supabaseClient.from('groups').select('id,name').order('id')
-  if (error) throw error.message
-  return groups
-}
-
-const createUser = action(async (formData: FormData) => {
-  const email = formData.get('email')
-  const password = formData.get('password')
-  const firstName = formData.get('first-name')
-  const lastName = formData.get('last-name')
-  const watchword = formData.get('watchword')
-  const group = formData.get('group')
-  console.debug(email, password, firstName, lastName, watchword, group)
-})
-
 const Register = () => {
+  const supabaseClient = useSupabase()!
+
+  const fetchGroups = async () => {
+    const { data: groups, error } = await supabaseClient.from('groups').select('id,name').order('id')
+    if (error) throw error.message
+    return groups
+  }
   const [groups] = createResource(fetchGroups)
+
+  const createUser = action(async (formData: FormData) => {
+    const { error } = await supabaseClient.auth.signUp({
+      email: formData.get('email')!.toString(),
+      password: formData.get('password')!.toString(),
+      options: {data: {
+        first_name: formData.get('first-name')!.toString(),
+        last_name: formData.get('last-name')!.toString(),
+        group_id: formData.get('group')!.toString(),
+        watchword: formData.get('watchword')!.toString(),
+      }}
+    })
+    if (error) throw error.message
+    throw redirect('/')
+  })
+  const submissions = useSubmission(createUser)
 
   return (
     <main id='register-page'>
@@ -39,8 +45,11 @@ const Register = () => {
         </select>
         <label for='watchword'>Parola d'ordine:</label>
         <input id='watchword' type='text' name='watchword' required />
-        <input type='submit' value='Registrami' />
+        <input type='submit' value='Registrami' disabled={groups.state !== 'ready'} />
       </form>
+      <p class='error-box'>
+        {typeof submissions.error === 'string' && submissions.error}
+      </p>
     </main>
   )
 }
