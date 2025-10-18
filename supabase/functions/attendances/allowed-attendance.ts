@@ -2,7 +2,7 @@ import { SupabaseClient } from 'jsr:@supabase/supabase-js@2'
 import { Database } from '../_shared/database.types.ts'
 
 const validTimes = {
-  start: 1,
+  start: 0, // TODO: edit to ~20
   end: 24
 }
 

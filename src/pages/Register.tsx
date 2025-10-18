@@ -36,7 +36,7 @@ const Register = () => {
   }
   let watchwordElement!: HTMLInputElement
 
-  const submitDisabled = () => groups.state !== 'ready' || !watchwordValid()
+  const submitDisabled = () => groups.state !== 'ready'
 
   return (
     <main id='register-page'>
