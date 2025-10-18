@@ -20,7 +20,7 @@ const Login = () => {
     <main id='login-page'>
       <form method='post' action={logonUser}>
         <input type='email' name='email' required placeholder='email' />
-        <input type='password' name='password' required minLength="6" placeholder='password' />
+        <input type='password' name='password' required minLength='6' placeholder='password' />
         <input type='submit' value='Login' />
       </form>
       <p class='error-box'>

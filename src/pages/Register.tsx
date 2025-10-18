@@ -1,5 +1,6 @@
-import { createResource, For, Suspense } from 'solid-js'
+import { createResource, createSignal, For, Suspense } from 'solid-js'
 import { action, redirect, useSubmission } from '@solidjs/router'
+import { watchwordIsValid } from '../mixed'
 import { useSupabase } from '../context'
 import './Register.sass'
 
@@ -29,11 +30,19 @@ const Register = () => {
   })
   const submissions = useSubmission(createUser)
 
+  const [watchwordValid, setWatchwordValid] = createSignal(false)
+  const checkWatchword = (word: string) => {
+    watchwordIsValid(word).then((valid) => setWatchwordValid(valid))
+  }
+  let watchwordElement!: HTMLInputElement
+
+  const submitDisabled = () => groups.state !== 'ready' || !watchwordValid()
+
   return (
     <main id='register-page'>
       <form method='post' action={createUser}>
         <input type='email' name='email' required placeholder='email' />
-        <input type='password' name='password' required minLength="6" placeholder='password' />
+        <input type='password' name='password' required minLength='6' placeholder='password' />
         <input type='text' name='first-name' required placeholder='nome' />
         <input type='text' name='last-name' required placeholder='cognome' />
         <select name='group'>
@@ -44,8 +53,10 @@ const Register = () => {
           </Suspense>
         </select>
         <label for='watchword'>Parola d'ordine:</label>
-        <input id='watchword' type='text' name='watchword' required />
-        <input type='submit' value='Registrami' disabled={groups.state !== 'ready'} />
+        <input id='watchword' type='text' name='watchword' required
+               ref={watchwordElement} onKeyUp={() => checkWatchword(watchwordElement.value)} />
+        <p>{watchwordValid() ? 'valida' : 'non valida'}</p>
+        <input type='submit' value='Registrami' disabled={submitDisabled()} />
       </form>
       <p class='error-box'>
         {typeof submissions.error === 'string' && submissions.error}
