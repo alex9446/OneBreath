@@ -2,7 +2,7 @@
 import { lazy } from 'solid-js'
 import { render } from 'solid-js/web'
 import { Route, Router } from '@solidjs/router'
-import { Provider } from './context'
+import { Provider } from './utils/context'
 import Home from './pages/Home'
 import './index.sass'
 const Login = lazy(() => import('./pages/Login'))

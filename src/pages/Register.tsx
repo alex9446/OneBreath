@@ -1,7 +1,7 @@
 import { createResource, createSignal, For, Suspense } from 'solid-js'
 import { action, redirect, useSubmission } from '@solidjs/router'
-import { watchwordIsValid } from '../mixed'
-import { useSupabase } from '../context'
+import { watchwordIsValid } from '../utils/mixed'
+import { useSupabase } from '../utils/context'
 import './Register.sass'
 
 const Register = () => {

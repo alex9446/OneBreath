@@ -1,5 +1,5 @@
 import { action, redirect, useNavigate, useSubmission } from '@solidjs/router'
-import { useSupabase } from '../context'
+import { useSupabase } from '../utils/context'
 import './Login.sass'
 
 const Login = () => {
