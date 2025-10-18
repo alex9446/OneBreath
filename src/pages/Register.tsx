@@ -21,7 +21,7 @@ const Register = () => {
         first_name: formData.get('first-name')!.toString(),
         last_name: formData.get('last-name')!.toString(),
         group_id: formData.get('group')!.toString(),
-        watchword: formData.get('watchword')!.toString(),
+        watchword: formData.get('watchword')!.toString()
       }}
     })
     if (error) throw error.message

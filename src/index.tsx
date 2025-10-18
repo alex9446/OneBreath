@@ -1,11 +1,12 @@
 /* @refresh reload */
+import { lazy } from 'solid-js'
 import { render } from 'solid-js/web'
 import { Route, Router } from '@solidjs/router'
 import { Provider } from './context'
 import Home from './pages/Home'
-import Login from './pages/Login'
-import Register from './pages/Register'
 import './index.sass'
+const Login = lazy(() => import('./pages/Login'))
+const Register = lazy(() => import('./pages/Register'))
 
 const root = document.getElementById('root')
 
