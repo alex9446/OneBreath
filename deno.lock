@@ -120,11 +120,13 @@
   "workspace": {
     "packageJson": {
       "dependencies": [
-        "npm:@supabase/supabase-js@^2.57.4",
-        "npm:solid-js@^1.9.8",
-        "npm:typescript@~5.8.3",
-        "npm:vite-plugin-solid@^2.11.8",
-        "npm:vite@^7.1.2"
+        "npm:@solidjs/router@~0.15.3",
+        "npm:@supabase/supabase-js@^2.75.0",
+        "npm:sass@^1.93.2",
+        "npm:solid-js@^1.9.9",
+        "npm:typescript@^5.9.3",
+        "npm:vite-plugin-solid@^2.11.9",
+        "npm:vite@^7.1.9"
       ]
     }
   }

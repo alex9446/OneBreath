@@ -21,6 +21,7 @@ export async function allowedAttendance(supabaseAdmin: SupabaseClient<Database>,
   if (attendances.length > 0) return {
     message: 'attendance already set!',
     groupSetted: attendances[0].group_id,
+    daySetted: nowInRome.dayOfWeek,
     code: 403
   }
 

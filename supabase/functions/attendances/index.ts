@@ -38,8 +38,8 @@ Deno.serve(async (req: Request) => {
 
     // @uml - can set attendance?
     const allowed = await allowedAttendance(supabaseAdmin, group, nowInRome, userId)
-    if (allowed.code !== 200) return jsonResponseMessage(allowed.message, allowed.code,
-                                                         {group_setted: allowed.groupSetted})
+    const extra = {group_setted: allowed.groupSetted, day_setted: allowed.daySetted}
+    if (allowed.code !== 200) return jsonResponseMessage(allowed.message, allowed.code, extra)
 
     if (action === 'verify') return jsonResponseMessage('attendance markable', 200,
                                                         { day_of_week: nowInRome.dayOfWeek })

@@ -32,7 +32,9 @@ const Register = () => {
 
   const [watchwordValid, setWatchwordValid] = createSignal(false)
   const checkWatchword = (word: string) => {
-    watchwordIsValid(word).then((valid) => setWatchwordValid(valid))
+    watchwordIsValid(word).then((valid) => {
+      if (valid !== watchwordValid()) setWatchwordValid(valid)
+    })
   }
   let watchwordElement!: HTMLInputElement
 
