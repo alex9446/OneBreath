@@ -1,13 +1,12 @@
-import { A } from '@solidjs/router'
 import CheckLogin from '../components/CheckLogin'
+import Attendance from '../components/Attendance'
+import './Home.sass'
 
 const Home = () => (
-  <>
-    <p>{localStorage.getItem('group_id')}</p>
+  <main id='home-page'>
     <CheckLogin />
-    <A href='/login'>Login</A><br/>
-    <A href='/register'>Register</A>
-  </>
+    <Attendance />
+  </main>
 )
 
 export default Home

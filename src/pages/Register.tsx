@@ -1,3 +1,4 @@
+import { Show } from 'solid-js'
 import { action, redirect, useSubmission } from '@solidjs/router'
 import { useSupabase } from '../utils/context'
 import SelectGroup from '../components/SelectGroup'
@@ -37,9 +38,9 @@ const Register = () => {
         <Watchword />
         <input type='submit' value='Registrami' />
       </form>
-      <p class='error-box'>
-        {typeof submissions.error === 'string' && submissions.error}
-      </p>
+      <Show when={typeof submissions.error === 'string'}>
+        <p class='error-box'>{submissions.error}</p>
+      </Show>
     </main>
   )
 }

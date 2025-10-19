@@ -1,14 +1,8 @@
 import { createResource, For, Suspense } from 'solid-js'
-import { useSupabase } from '../utils/context'
+import { fetchGroups } from '../utils/fetchGroups'
 
 const SelectGroup = () => {
-  const supabaseClient = useSupabase()!
-
-  const [groups] = createResource(async () => {
-    const { data: groups, error } = await supabaseClient.from('groups').select('id,name').order('id')
-    if (error) throw error.message
-    return groups
-  })
+  const [groups] = createResource(fetchGroups)
 
   return (
     <select name='group' required>

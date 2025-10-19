@@ -1,3 +1,4 @@
+import { Show } from 'solid-js'
 import { action, redirect, useNavigate, useSubmission } from '@solidjs/router'
 import { useSupabase } from '../utils/context'
 import './Login.sass'
@@ -14,7 +15,7 @@ const Login = () => {
     if (signInError) throw signInError.message
     const { data: profiles, error: profilesError } = await supabaseClient.from('profiles').select('group_id')
     if (profilesError) throw profilesError.message
-    if (profiles.length !== 1) throw 'Mismatch with group_id'
+    if (profiles.length !== 1) throw 'Mismatch with profile select'
     localStorage.setItem('group_id', profiles[0].group_id.toString())
     throw redirect('/')
   })
@@ -27,9 +28,9 @@ const Login = () => {
         <input type='password' name='password' required minLength='6' placeholder='password' />
         <input type='submit' value='Login' />
       </form>
-      <p class='error-box'>
-        {typeof submissions.error === 'string' && submissions.error}
-      </p>
+      <Show when={typeof submissions.error === 'string'}>
+        <p class='error-box'>{submissions.error}</p>
+      </Show>
       <p class='line'>oppure</p>
       <button onClick={() => navigate('/register')}>Crea account</button>
     </main>
