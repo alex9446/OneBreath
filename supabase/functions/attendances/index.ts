@@ -2,6 +2,7 @@
 import 'jsr:@supabase/functions-js@2/edge-runtime.d.ts'
 import { createClient } from 'jsr:@supabase/supabase-js@2'
 import { Database } from '../_shared/database.types.ts'
+import { corsHeaders } from '../_shared/cors.ts'
 import { jsonResponse, jsonResponseMessage } from './wrapped-response.ts'
 import { validateUser } from './validate-user.ts'
 import { allowedAttendance } from './allowed-attendance.ts'
@@ -16,7 +17,7 @@ console.info(`Edge function "attendances" up and running!`)
 
 Deno.serve(async (req: Request) => {
   // This is needed if you're planning to invoke your function from a browser.
-  if (req.method === 'OPTIONS') return new Response('ok')
+  if (req.method === 'OPTIONS') return new Response('ok', { headers: corsHeaders })
 
   try {
     // @uml - payload valid?
@@ -30,9 +31,9 @@ Deno.serve(async (req: Request) => {
     )
 
     // @uml - user valid?
-    const validate = await validateUser(req, supabaseAdmin)
+    const validate = await validateUser(req.headers.get('Authorization'), supabaseAdmin)
     if (validate.code !== 200) return jsonResponseMessage(validate.message, validate.code)
-    const userId = validate.userId ?? ''
+    const userId = validate.userId!
 
     const nowInRome = Temporal.Now.zonedDateTimeISO('Europe/Rome')
 

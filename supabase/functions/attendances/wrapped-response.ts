@@ -1,6 +1,8 @@
+import { corsHeaders } from '../_shared/cors.ts'
+
 export function jsonResponse(json: object, status: number) {
   return new Response(JSON.stringify({...json, code: status}), {
-    headers: { 'Content-Type': 'application/json' },
+    headers: { ...corsHeaders, 'Content-Type': 'application/json' },
     status: status
   })
 }

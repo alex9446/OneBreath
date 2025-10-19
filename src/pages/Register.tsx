@@ -1,8 +1,8 @@
 import { action, redirect, useSubmission } from '@solidjs/router'
 import { useSupabase } from '../utils/context'
-import './Register.sass'
 import SelectGroup from '../components/SelectGroup'
 import Watchword from '../components/Watchword'
+import './Register.sass'
 
 const Register = () => {
   const supabaseClient = useSupabase()!
