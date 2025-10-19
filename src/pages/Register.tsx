@@ -1,44 +1,30 @@
-import { createResource, createSignal, For, Suspense } from 'solid-js'
 import { action, redirect, useSubmission } from '@solidjs/router'
-import { watchwordIsValid } from '../utils/mixed'
 import { useSupabase } from '../utils/context'
 import './Register.sass'
+import SelectGroup from '../components/SelectGroup'
+import Watchword from '../components/Watchword'
 
 const Register = () => {
   const supabaseClient = useSupabase()!
 
-  const fetchGroups = async () => {
-    const { data: groups, error } = await supabaseClient.from('groups').select('id,name').order('id')
-    if (error) throw error.message
-    return groups
-  }
-  const [groups] = createResource(fetchGroups)
-
   const createUser = action(async (formData: FormData) => {
+    const group_id = formData.get('group')!.toString()
+    if (group_id === '404') throw 'Group not selected'
     const { error } = await supabaseClient.auth.signUp({
       email: formData.get('email')!.toString(),
       password: formData.get('password')!.toString(),
       options: {data: {
         first_name: formData.get('first-name')!.toString(),
         last_name: formData.get('last-name')!.toString(),
-        group_id: formData.get('group')!.toString(),
+        group_id: group_id,
         watchword: formData.get('watchword')!.toString()
       }}
     })
     if (error) throw error.message
+    localStorage.setItem('group_id', group_id)
     throw redirect('/')
   })
   const submissions = useSubmission(createUser)
-
-  const [watchwordValid, setWatchwordValid] = createSignal(false)
-  const checkWatchword = (word: string) => {
-    watchwordIsValid(word).then((valid) => {
-      if (valid !== watchwordValid()) setWatchwordValid(valid)
-    })
-  }
-  let watchwordElement!: HTMLInputElement
-
-  const submitDisabled = () => groups.state !== 'ready'
 
   return (
     <main id='register-page'>
@@ -47,18 +33,9 @@ const Register = () => {
         <input type='password' name='password' required minLength='6' placeholder='password' />
         <input type='text' name='first-name' required placeholder='nome' />
         <input type='text' name='last-name' required placeholder='cognome' />
-        <select name='group'>
-          <Suspense fallback={<option>Caricamento gruppi...</option>}>
-            <For each={groups()}>
-              {(group) => <option value={group.id}>{group.name}</option>}
-            </For>
-          </Suspense>
-        </select>
-        <label for='watchword'>Parola d'ordine:</label>
-        <input id='watchword' type='text' name='watchword' required
-               ref={watchwordElement} onKeyUp={() => checkWatchword(watchwordElement.value)} />
-        <p>{watchwordValid() ? 'valida' : 'non valida'}</p>
-        <input type='submit' value='Registrami' disabled={submitDisabled()} />
+        <SelectGroup />
+        <Watchword />
+        <input type='submit' value='Registrami' />
       </form>
       <p class='error-box'>
         {typeof submissions.error === 'string' && submissions.error}

@@ -7,16 +7,20 @@ const Login = () => {
   const supabaseClient = useSupabase()!
 
   const logonUser = action(async (formData: FormData) => {
-    const { error } = await supabaseClient.auth.signInWithPassword({
+    const { error: signInError } = await supabaseClient.auth.signInWithPassword({
       email: formData.get('email')!.toString(),
       password: formData.get('password')!.toString()
     })
-    if (error) throw error.message
+    if (signInError) throw signInError.message
+    const { data: profiles, error: profilesError } = await supabaseClient.from('profiles').select('group_id')
+    if (profilesError) throw profilesError.message
+    if (profiles.length !== 1) throw 'Mismatch with group_id'
+    localStorage.setItem('group_id', profiles[0].group_id.toString())
     throw redirect('/')
   })
   const submissions = useSubmission(logonUser)
 
-  return(
+  return (
     <main id='login-page'>
       <form method='post' action={logonUser}>
         <input type='email' name='email' required placeholder='email' />

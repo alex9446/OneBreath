@@ -1,5 +1,5 @@
 import { useNavigate } from '@solidjs/router'
-import { useSupabase } from './context'
+import { useSupabase } from '../utils/context'
 
 const CheckLogin = () => {
   const navigate = useNavigate()
