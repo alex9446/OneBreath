@@ -1,6 +1,7 @@
 import { Show } from 'solid-js'
 import { action, redirect, useNavigate, useSubmission } from '@solidjs/router'
 import { useSupabase } from '../utils/context'
+import { setGroupInLS } from '../utils/mixed'
 import './Login.sass'
 
 const Login = () => {
@@ -16,7 +17,7 @@ const Login = () => {
     const { data: profiles, error: profilesError } = await supabaseClient.from('profiles').select('group_id')
     if (profilesError) throw profilesError.message
     if (profiles.length !== 1) throw 'Mismatch with profile select'
-    localStorage.setItem('group_id', profiles[0].group_id.toString())
+    setGroupInLS(profiles[0].group_id)
     throw redirect('/')
   })
   const submissions = useSubmission(logonUser)

@@ -1,11 +1,15 @@
-import { createSignal } from 'solid-js'
+import type { Accessor, Component, Setter } from 'solid-js'
 import { watchwordIsValid } from '../utils/mixed'
 
-const Watchword = () => {
-  const [watchwordValid, setWatchwordValid] = createSignal(false)
+type WatchwordProps = {
+  valid: Accessor<boolean>
+  setValid: Setter<boolean>
+}
+
+const Watchword: Component<WatchwordProps> = (props) => {
   const checkWatchword = (word: string) => {
     watchwordIsValid(word).then((valid) => {
-      if (valid !== watchwordValid()) setWatchwordValid(valid)
+      if (valid !== props.valid()) props.setValid(valid)
     })
   }
   let watchwordElement!: HTMLInputElement
@@ -15,7 +19,7 @@ const Watchword = () => {
       <label for='watchword'>Parola d'ordine:</label>
       <input type='text' name='watchword' required ref={watchwordElement}
              onKeyUp={() => checkWatchword(watchwordElement.value)} />
-      <p>{watchwordValid() ? 'valida' : 'non valida'}</p>
+      <p>{props.valid() ? 'valida' : 'non valida'}</p>
     </>
   )
 }

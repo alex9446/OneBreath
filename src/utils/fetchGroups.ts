@@ -13,8 +13,8 @@ export const setGroups = (groups: Groups) => {
 export const getGroups = (): Groups => JSON.parse(Cookies.get('groups_cache') ?? '[]')
 
 export const fetchGroups = async () => {
-  const cached_groups = getGroups()
-  if (cached_groups.length > 0) return cached_groups
+  const cachedGroups = getGroups()
+  if (cachedGroups.length > 0) return cachedGroups
 
   const supabaseClient = useSupabase()
   const { data: groups, error } = await supabaseClient.from('groups').select('id,name').order('id')

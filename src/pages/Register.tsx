@@ -1,28 +1,31 @@
-import { Show } from 'solid-js'
+import { createSignal, Show } from 'solid-js'
 import { action, redirect, useSubmission } from '@solidjs/router'
 import { useSupabase } from '../utils/context'
+import { setGroupInLS } from '../utils/mixed'
 import SelectGroup from '../components/SelectGroup'
 import Watchword from '../components/Watchword'
 import './Register.sass'
 
 const Register = () => {
+  const [watchwordValid, setWatchwordValid] = createSignal(false)
   const supabaseClient = useSupabase()
 
   const createUser = action(async (formData: FormData) => {
-    const group_id = formData.get('group')!.toString()
-    if (group_id === '404') throw 'Group not selected'
+    if (!watchwordValid()) throw 'Parola d\'ordine non valida'
+    const groupId = formData.get('group')!.toString()
+    if (groupId === '404') throw 'Group not selected'
     const { error } = await supabaseClient.auth.signUp({
       email: formData.get('email')!.toString(),
       password: formData.get('password')!.toString(),
       options: {data: {
         first_name: formData.get('first-name')!.toString(),
         last_name: formData.get('last-name')!.toString(),
-        group_id: group_id,
+        group_id: groupId,
         watchword: formData.get('watchword')!.toString()
       }}
     })
     if (error) throw error.message
-    localStorage.setItem('group_id', group_id)
+    setGroupInLS(groupId)
     throw redirect('/')
   })
   const submissions = useSubmission(createUser)
@@ -35,7 +38,7 @@ const Register = () => {
         <input type='text' name='first-name' required placeholder='nome' />
         <input type='text' name='last-name' required placeholder='cognome' />
         <SelectGroup />
-        <Watchword />
+        <Watchword valid={watchwordValid} setValid={setWatchwordValid} />
         <input type='submit' value='Registrami' />
       </form>
       <Show when={typeof submissions.error === 'string'}>
