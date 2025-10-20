@@ -1,4 +1,4 @@
-import { createClient, SupabaseClient } from '@supabase/supabase-js'
+import { createClient, type SupabaseClient } from '@supabase/supabase-js'
 import { createContext, useContext, type ParentComponent } from 'solid-js'
 import { type Database } from './database.types'
 
@@ -15,4 +15,8 @@ export const Provider: ParentComponent = (props) => {
   )
 }
 
-export const useSupabase = () => useContext(supabaseContext)
+export const useSupabase = () => {
+  const context = useContext(supabaseContext)
+  if (!context) throw new Error('can\'t find supabaseContext')
+  return context
+}

@@ -6,7 +6,7 @@ import Watchword from '../components/Watchword'
 import './Register.sass'
 
 const Register = () => {
-  const supabaseClient = useSupabase()!
+  const supabaseClient = useSupabase()
 
   const createUser = action(async (formData: FormData) => {
     const group_id = formData.get('group')!.toString()

@@ -5,7 +5,7 @@ import './Login.sass'
 
 const Login = () => {
   const navigate = useNavigate()
-  const supabaseClient = useSupabase()!
+  const supabaseClient = useSupabase()
 
   const logonUser = action(async (formData: FormData) => {
     const { error: signInError } = await supabaseClient.auth.signInWithPassword({
