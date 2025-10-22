@@ -2,6 +2,7 @@ import { Show } from 'solid-js'
 import { action, redirect, useNavigate, useSubmission } from '@solidjs/router'
 import { useSupabase } from '../utils/context'
 import { setGroupInLS } from '../utils/mixed'
+import OrLine from '../components/OrLine'
 import './Login.sass'
 
 const Login = () => {
@@ -32,7 +33,7 @@ const Login = () => {
       <Show when={typeof submissions.error === 'string'}>
         <p class='error-box'>{submissions.error}</p>
       </Show>
-      <p class='line'>oppure</p>
+      <OrLine />
       <button onClick={() => navigate('/register')}>Crea account</button>
     </main>
   )

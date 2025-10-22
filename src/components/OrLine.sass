@@ -1,0 +1,16 @@
+%shared-line
+  content: ''
+  flex: 1 1
+  border-bottom: 1px solid
+
+p.or-line
+  display: flex
+  flex-direction: row
+  align-items: center
+  color: #dddddd
+  &::before
+    @extend %shared-line
+    margin-right: 10px
+  &::after
+    @extend %shared-line
+    margin-left: 10px
