@@ -5,7 +5,6 @@ import { setGroupInLS } from '../utils/mixed'
 import SelectGroup from '../components/SelectGroup'
 import Watchword from '../components/Watchword'
 import OrLine from '../components/OrLine'
-import './Register.sass'
 
 const Register = () => {
   const [watchwordValid, setWatchwordValid] = createSignal(false)

@@ -9,13 +9,21 @@ main
   flex-direction: column
   margin: 30px
   gap: 20px
+  font-size: 24px
+  color: white
   form
+    display: flex
+    flex-direction: column
     gap: 20px
   input, button, select
     padding: 0 15px
     height: 50px
+    border: 1px solid transparent
     border-radius: 10px
   input[type=submit], button
-    color: white
+    color: inherit
     background-color: #4c5f87
     text-transform: uppercase
+    cursor: pointer
+    &:disabled
+      background-color: #697287

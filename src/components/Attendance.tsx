@@ -22,7 +22,7 @@ const Attendance = () => {
             <p>Eri presente <DayOfWeek day={(dVerify().extra.day_of_week!)-1} />
             &nbsp;a <GroupName id={groupId} />?</p>
             <SetAttendance groupId={groupId} refetch={refetch} />
-            <p class='red-text'>Azione non annullabile</p>
+            <p class='non-cancelable'>Azione non annullabile</p>
           </Match>
           <Match when={dVerify().code === 403}>
             <Show fallback={<p>Segnatura presenza a <GroupName id={groupId} /> non attiva</p>}

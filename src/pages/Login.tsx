@@ -3,7 +3,6 @@ import { action, redirect, useNavigate, useSubmission } from '@solidjs/router'
 import { useSupabase } from '../utils/context'
 import { setGroupInLS } from '../utils/mixed'
 import OrLine from '../components/OrLine'
-import './Login.sass'
 
 const Login = () => {
   const navigate = useNavigate()

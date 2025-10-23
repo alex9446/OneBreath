@@ -17,7 +17,7 @@ const Watchword: Component<WatchwordProps> = (props) => {
   return (
     <>
       <label for='watchword'>Parola d'ordine:</label>
-      <input type='text' name='watchword' required ref={watchwordElement}
+      <input type='password' name='watchword' required ref={watchwordElement}
              onKeyUp={() => checkWatchword(watchwordElement.value)} />
       <p>{props.valid() ? 'valida' : 'non valida'}</p>
     </>
