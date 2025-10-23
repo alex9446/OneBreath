@@ -1,7 +1,7 @@
-import { Show } from 'solid-js'
 import { action, redirect, useNavigate, useSubmission } from '@solidjs/router'
 import { useSupabase } from '../utils/context'
 import { setGroupInLS } from '../utils/mixed'
+import ErrorBox from '../components/ErrorBox'
 import OrLine from '../components/OrLine'
 
 const Login = () => {
@@ -29,9 +29,7 @@ const Login = () => {
         <input type='password' name='password' required minLength='6' placeholder='password' />
         <input type='submit' value='Login' disabled={submissions.pending} />
       </form>
-      <Show when={typeof submissions.error === 'string'}>
-        <p class='error-box'>{submissions.error}</p>
-      </Show>
+      <ErrorBox>{submissions.error}</ErrorBox>
       <OrLine />
       <button onClick={() => navigate('/register')}>Crea account</button>
     </main>

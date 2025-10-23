@@ -1,7 +1,8 @@
-import { Show, type Component } from 'solid-js'
+import type { Component } from 'solid-js'
 import { action, useAction, useSubmission } from '@solidjs/router'
 import { useSupabase } from '../utils/context'
 import invokeAttendances from '../utils/invokeAttendances'
+import ErrorBox from '../components/ErrorBox'
 
 const SetAttendance: Component<{ groupId: number, refetch: Function }> = (props) => {
   const supabaseClient = useSupabase()
@@ -21,9 +22,7 @@ const SetAttendance: Component<{ groupId: number, refetch: Function }> = (props)
       <button onClick={onClickEvent} disabled={submissions.pending}>
         {submissions.pending ? 'Invio...' : 'Si'}
       </button>
-      <Show when={typeof submissions.error === 'string'}>
-        <p class='error-box'>{submissions.error}</p>
-      </Show>
+      <ErrorBox>{submissions.error}</ErrorBox>
     </>
   )
 }

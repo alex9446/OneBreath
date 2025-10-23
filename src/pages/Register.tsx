@@ -1,9 +1,10 @@
-import { createSignal, Show } from 'solid-js'
+import { createSignal } from 'solid-js'
 import { action, redirect, useNavigate, useSubmission } from '@solidjs/router'
 import { useSupabase } from '../utils/context'
 import { setGroupInLS } from '../utils/mixed'
 import SelectGroup from '../components/SelectGroup'
 import Watchword from '../components/Watchword'
+import ErrorBox from '../components/ErrorBox'
 import OrLine from '../components/OrLine'
 
 const Register = () => {
@@ -42,9 +43,7 @@ const Register = () => {
         <Watchword valid={watchwordValid} setValid={setWatchwordValid} />
         <input type='submit' value='Crea account' disabled={submissions.pending} />
       </form>
-      <Show when={typeof submissions.error === 'string'}>
-        <p class='error-box'>{submissions.error}</p>
-      </Show>
+      <ErrorBox>{submissions.error}</ErrorBox>
       <OrLine />
       <button onClick={() => navigate('/login')}>Login</button>
     </main>

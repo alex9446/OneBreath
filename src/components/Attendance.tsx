@@ -2,6 +2,7 @@ import { createResource, Match, Show, Switch } from 'solid-js'
 import { useSupabase } from '../utils/context'
 import { getGroupFromLS } from '../utils/mixed'
 import invokeAttendances from '../utils/invokeAttendances'
+import ErrorBox from './ErrorBox'
 import DayOfWeek from './DayOfWeek'
 import GroupName from './GroupName'
 import SetAttendance from './SetAttendance'
@@ -17,7 +18,7 @@ const Attendance = () => {
   return (
     <Show when={verify()} fallback={<p>Caricamento presenza...</p>}>
       {(dVerify) => <>
-        <Switch fallback={<p class='error-box'>Errore non gestito</p>}>
+        <Switch fallback={<ErrorBox>Errore non gestito</ErrorBox>}>
           <Match when={dVerify().code === 200 && 'day_of_week' in dVerify().extra}>
             <p>Eri presente <DayOfWeek day={(dVerify().extra.day_of_week!)-1} />
             &nbsp;a <GroupName id={groupId} />?</p>
@@ -32,7 +33,7 @@ const Attendance = () => {
             </Show>
           </Match>
           <Match when={'message' in dVerify()}>
-            <p class='error-box'>{dVerify().message}</p>
+            <ErrorBox>{dVerify().message}</ErrorBox>
           </Match>
         </Switch>
       </>}
