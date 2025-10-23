@@ -1,0 +1,65 @@
+@font-face {
+    font-family: 'DM Mono';
+    src: local('DM Mono Light'), local('DMMono-Light'),
+        url('DMMono-Light.woff2') format('woff2'),
+        url('DMMono-Light.woff') format('woff'),
+        url('DMMono-Light.ttf') format('truetype');
+    font-weight: 300;
+    font-style: normal;
+    font-display: swap;
+}
+
+@font-face {
+    font-family: 'DM Mono';
+    src: local('DM Mono Medium Italic'), local('DMMono-MediumItalic'),
+        url('DMMono-MediumItalic.woff2') format('woff2'),
+        url('DMMono-MediumItalic.woff') format('woff'),
+        url('DMMono-MediumItalic.ttf') format('truetype');
+    font-weight: 500;
+    font-style: italic;
+    font-display: swap;
+}
+
+@font-face {
+    font-family: 'DM Mono';
+    src: local('DM Mono Italic'), local('DMMono-Italic'),
+        url('DMMono-Italic.woff2') format('woff2'),
+        url('DMMono-Italic.woff') format('woff'),
+        url('DMMono-Italic.ttf') format('truetype');
+    font-weight: normal;
+    font-style: italic;
+    font-display: swap;
+}
+
+@font-face {
+    font-family: 'DM Mono';
+    src: local('DM Mono Regular'), local('DMMono-Regular'),
+        url('DMMono-Regular.woff2') format('woff2'),
+        url('DMMono-Regular.woff') format('woff'),
+        url('DMMono-Regular.ttf') format('truetype');
+    font-weight: normal;
+    font-style: normal;
+    font-display: swap;
+}
+
+@font-face {
+    font-family: 'DM Mono';
+    src: local('DM Mono Medium'), local('DMMono-Medium'),
+        url('DMMono-Medium.woff2') format('woff2'),
+        url('DMMono-Medium.woff') format('woff'),
+        url('DMMono-Medium.ttf') format('truetype');
+    font-weight: 500;
+    font-style: normal;
+    font-display: swap;
+}
+
+@font-face {
+    font-family: 'DM Mono';
+    src: local('DM Mono Light Italic'), local('DMMono-LightItalic'),
+        url('DMMono-LightItalic.woff2') format('woff2'),
+        url('DMMono-LightItalic.woff') format('woff'),
+        url('DMMono-LightItalic.ttf') format('truetype');
+    font-weight: 300;
+    font-style: italic;
+    font-display: swap;
+}
