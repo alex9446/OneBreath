@@ -27,7 +27,7 @@ const Login = () => {
       <form method='post' action={logonUser}>
         <input type='email' name='email' required placeholder='email' />
         <input type='password' name='password' required minLength='6' placeholder='password' />
-        <input type='submit' value='Login' />
+        <input type='submit' value='Login' disabled={submissions.pending} />
       </form>
       <Show when={typeof submissions.error === 'string'}>
         <p class='error-box'>{submissions.error}</p>

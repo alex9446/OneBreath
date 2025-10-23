@@ -40,7 +40,7 @@ const Register = () => {
         <input type='text' name='last-name' required placeholder='cognome' />
         <SelectGroup />
         <Watchword valid={watchwordValid} setValid={setWatchwordValid} />
-        <input type='submit' value='Crea account' />
+        <input type='submit' value='Crea account' disabled={submissions.pending} />
       </form>
       <Show when={typeof submissions.error === 'string'}>
         <p class='error-box'>{submissions.error}</p>

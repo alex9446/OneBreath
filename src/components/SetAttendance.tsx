@@ -1,10 +1,9 @@
-import { createSignal, Show, type Component } from 'solid-js'
+import { Show, type Component } from 'solid-js'
 import { action, useAction, useSubmission } from '@solidjs/router'
 import { useSupabase } from '../utils/context'
 import invokeAttendances from '../utils/invokeAttendances'
 
 const SetAttendance: Component<{ groupId: number, refetch: Function }> = (props) => {
-  const [sending, setSending] = createSignal(false)
   const supabaseClient = useSupabase()
 
   const set = action(async (groupId: number) => {
@@ -15,15 +14,12 @@ const SetAttendance: Component<{ groupId: number, refetch: Function }> = (props)
   const useSet = useAction(set)
   const submissions = useSubmission(set)
 
-  const onClickEvent = () => {
-    setSending(true)
-    useSet(props.groupId)
-  }
+  const onClickEvent = () => useSet(props.groupId)
 
   return (
     <>
-      <button onClick={onClickEvent} disabled={sending()}>
-        {sending() ? 'Invio...' : 'Si'}
+      <button onClick={onClickEvent} disabled={submissions.pending}>
+        {submissions.pending ? 'Invio...' : 'Si'}
       </button>
       <Show when={typeof submissions.error === 'string'}>
         <p class='error-box'>{submissions.error}</p>
