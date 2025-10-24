@@ -2,7 +2,7 @@ import { createSignal } from 'solid-js'
 import { action, redirect, useNavigate, useSubmission } from '@solidjs/router'
 import { useSupabase } from '../utils/context'
 import { setGroupInLS } from '../utils/mixed'
-import SelectGroup from '../components/SelectGroup'
+import RadioGroup from '../components/RadioGroup'
 import Watchword from '../components/Watchword'
 import ErrorBox from '../components/ErrorBox'
 import OrLine from '../components/OrLine'
@@ -15,7 +15,7 @@ const Register = () => {
   const createUser = action(async (formData: FormData) => {
     if (!watchwordValid()) throw 'Parola d\'ordine non valida'
     const groupId = formData.get('group')!.toString()
-    if (groupId === '404') throw 'Group not selected'
+    if (groupId === '0') throw 'Group not selected'
     const { error } = await supabaseClient.auth.signUp({
       email: formData.get('email')!.toString(),
       password: formData.get('password')!.toString(),
@@ -39,7 +39,7 @@ const Register = () => {
         <input type='password' name='password' required minLength='6' placeholder='password' />
         <input type='text' name='first-name' required placeholder='nome' />
         <input type='text' name='last-name' required placeholder='cognome' />
-        <SelectGroup />
+        <RadioGroup />
         <Watchword valid={watchwordValid} setValid={setWatchwordValid} />
         <input type='submit' value='Crea account' disabled={submissions.pending} />
       </form>
