@@ -1,13 +1,22 @@
 import { corsHeaders } from '../_shared/cors.ts'
 
-export function jsonResponse(json: object, status: number) {
-  return new Response(JSON.stringify({...json, code: status}), {
+type responseBody = {
+  message: string
+  code: number
+  extra?: object | null
+} | {
+  catched_error: unknown
+  code: number
+}
+
+export function jsonResponse(body: responseBody) {
+  return new Response(JSON.stringify(body), {
     headers: { ...corsHeaders, 'Content-Type': 'application/json' },
-    status: status
+    status: body.code
   })
 }
 
-export function jsonResponseMessage(message: string, status: number,
+export function jsonResponseMessage(message: string, code: number,
                                     extra: object | null = null) {
-  return jsonResponse({ message, extra }, status)
+  return jsonResponse({ message, code, extra })
 }

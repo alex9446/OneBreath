@@ -32,8 +32,8 @@ Deno.serve(async (req: Request) => {
 
     // @uml - user valid?
     const validate = await validateUser(req.headers.get('Authorization'), supabaseAdmin)
-    if (validate.code !== 200) return jsonResponseMessage(validate.message, validate.code)
-    const userId = validate.userId!
+    if (validate.error) return jsonResponse(validate.error)
+    const userId = validate.data.userId
 
     const nowInRome = Temporal.Now.zonedDateTimeISO('Europe/Rome')
 
@@ -52,7 +52,13 @@ Deno.serve(async (req: Request) => {
 
     return jsonResponseMessage('I\'m a teapot', 418)
   } catch (rawError) {
-    const msgInError = rawError instanceof Object && 'message' in rawError
-    return jsonResponse({ catched_error: msgInError ? rawError.message : rawError }, 500)
+    console.warn(rawError)
+    if (rawError instanceof Object) {
+      if ('message' in rawError && typeof rawError.message === 'string') {
+        return jsonResponseMessage(rawError.message, 500)
+      }
+      return jsonResponse({ catched_error: rawError, code: 500 })
+    }
+    return jsonResponseMessage('non-printable error, not an Object!', 500)
   }
 })
