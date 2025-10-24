@@ -16,18 +16,12 @@ const Watchword: Component<WatchwordProps> = (props) => {
   let watchwordElement!: HTMLInputElement
 
   return (
-    <>
-      <label for='watchword'>
-        Parola d'ordine: 
-        <span id='watchword-hint' classList={{invalid: !props.valid()}}>
-          {props.valid() ? 'valida' : 'non valida'}
-        </span>
-      </label>
-      <input id='watchword' type='password' name='watchword' required
-             ref={watchwordElement}
-             onKeyUp={() => checkWatchword(watchwordElement.value)}
-             classList={{invalid: !props.valid()}} />
-    </>
+    <div class='watchword' classList={{invalid: !props.valid()}}>
+      <input type='password' name='watchword' required placeholder={'parola d\'ordine'}
+             autocomplete='off' ref={watchwordElement}
+             onKeyUp={() => checkWatchword(watchwordElement.value)} />
+      <p>parola {props.valid() ? 'valida' : 'non valida'}</p>
+    </div>
   )
 }
 

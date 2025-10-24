@@ -1,9 +1,16 @@
-#watchword
-  border-color: green
+@use '../variables'
+
+div.watchword
+  display: flex
+  flex-direction: column
+  border: 2px solid green
+  border-radius: 12px
+  background-color: green
   &.invalid
     border-color: red
-
-#watchword-hint
-  color: green
-  &.invalid
-    color: red
+    background-color: red
+  input
+    border: none
+  p
+    font-size: variables.$font-size-small
+    padding: 0 15px
