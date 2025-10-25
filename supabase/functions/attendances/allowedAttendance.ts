@@ -1,5 +1,6 @@
 import type { SupabaseClient } from 'jsr:@supabase/supabase-js@2'
 import type { Database } from '../_shared/database.types.ts'
+import { FunctionReturn } from '../_shared/mixed.types.ts';
 
 const validTimes = {
   start: 20,
@@ -7,33 +8,36 @@ const validTimes = {
 }
 
 
+const errorMessage = (message: string, code: number) => ({ error: { message, code } })
+
 export async function allowedAttendance(supabaseAdmin: SupabaseClient<Database>,
                                         group: number,
                                         nowInRome: Temporal.ZonedDateTime,
-                                        userId: string) {
+                                        userId: string): FunctionReturn {
 
   const { data: attendances, error: attendancesError } = await supabaseAdmin
     .from('attendances')
     .select('marked_day,user_id,group_id')
     .eq('marked_day', nowInRome.toPlainDate().toString())
     .eq('user_id', userId)
-  if (attendancesError) return { message: attendancesError.message, code: 500 }
+  if (attendancesError) return errorMessage(attendancesError.message, 500)
   if (attendances.length > 0) return {
-    message: 'attendance already set!',
-    groupSetted: attendances[0].group_id,
-    daySetted: nowInRome.dayOfWeek,
-    code: 403
+    error: {
+      message: 'attendance already set!',
+      code: 403,
+      extra: { groupSetted: attendances[0].group_id, daySetted: nowInRome.dayOfWeek }
+    }
   }
 
   const { data: groups, error: groupsError } = await supabaseAdmin
     .from('groups')
     .select('id,days_of_week')
     .eq('id', group)
-  if (groupsError) return { message: groupsError.message, code: 500 }
-  if (groups.length !== 1) return { message: 'non-existent group!', code: 400 }
+  if (groupsError) return errorMessage(groupsError.message, 500)
+  if (groups.length !== 1) return errorMessage('non-existent group!', 400)
   const allowedDay = groups[0].days_of_week.includes(nowInRome.dayOfWeek)
   const allowedTime = nowInRome.hour >= validTimes.start && nowInRome.hour < validTimes.end
-  if (!allowedDay || !allowedTime) return { message: 'day or time not allowed!', code: 403 }
+  if (!allowedDay || !allowedTime) return errorMessage('day or time not allowed!', 403)
 
-  return { message: 'ok', code: 200 }
+  return { error: null }
 }

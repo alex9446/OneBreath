@@ -3,7 +3,7 @@ import 'jsr:@supabase/functions-js@2/edge-runtime.d.ts'
 import { createClient } from 'jsr:@supabase/supabase-js@2'
 import type { Database } from '../_shared/database.types.ts'
 import { corsHeaders } from '../_shared/cors.ts'
-import { jsonResponse, jsonResponseMessage } from './jsonResponse.ts'
+import { jsonResponse, jsonResponseMessage } from '../_shared/jsonResponse.ts'
 import { validateUser } from '../_shared/validateUser.ts'
 import { allowedAttendance } from './allowedAttendance.ts'
 import { setAttendance } from './setAttendance.ts'
@@ -33,21 +33,22 @@ Deno.serve(async (req: Request) => {
     // @uml - user valid?
     const validate = await validateUser(req.headers.get('Authorization'), supabaseAdmin)
     if (validate.error) return jsonResponse(validate.error)
+    if (!validate.data) return jsonResponseMessage('no data in validateUser!', 401)  // theoretically never executed
     const userId = validate.data.userId
 
     const nowInRome = Temporal.Now.zonedDateTimeISO('Europe/Rome')
 
     // @uml - can set attendance?
     const allowed = await allowedAttendance(supabaseAdmin, group, nowInRome, userId)
-    const extra = {group_setted: allowed.groupSetted, day_setted: allowed.daySetted}
-    if (allowed.code !== 200) return jsonResponseMessage(allowed.message, allowed.code, extra)
+    if (allowed.error) return jsonResponse(allowed.error)
 
     if (action === 'verify') return jsonResponseMessage('attendance markable', 200,
                                                         { day_of_week: nowInRome.dayOfWeek })
     if (action === 'set') {
       // @uml - attendance setted?
       const setted = await setAttendance(supabaseAdmin, group, nowInRome, userId)
-      return jsonResponseMessage(setted.message, setted.code)
+      if (setted.error) return jsonResponse(setted.error)
+      return jsonResponseMessage('attendance marked', 200)
     }
 
     return jsonResponseMessage('I\'m a teapot', 418)
