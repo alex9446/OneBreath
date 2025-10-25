@@ -1,25 +1,32 @@
-export type Extra = {
-  groupSetted?: number
-  daySetted?: number
-  day_of_week?: number
-}
-
 type Error = {
   message: string
   code: number
-  extra?: Extra
 }
 
-export type FunctionReturn = Promise<{
-  data?: { userId: string }
-  error: Error | null
+export type FunctionReturn<T> = Promise<{
+  data: T
+  error: null
+} | {
+  data: null
+  error: Error
 }>
+
+export type Extra = {
+  alreadySet: true
+  groupSetted: number
+  daySetted: number
+} | {
+  alreadySet: false
+  DTnotAllowed: true
+} | {
+  alreadySet: false
+  DTnotAllowed: false
+  dayOfWeek: number
+}
 
 export type ResponseBody = {
   message: string
   code: number
-  extra?: Extra
-} | {
-  catched_error: unknown
-  code: number
+  extra: Extra | null
+  catched_error?: unknown
 }

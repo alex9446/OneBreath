@@ -4,10 +4,12 @@ import { FunctionReturn } from './mixed.types.ts'
 import * as uuid from 'jsr:@std/uuid@1'
 
 
-const errorMessage = (message: string) => ({ error: { message, code: 401 } })
+type ReturnType = FunctionReturn<{ userId: string }>
+
+const errorMessage = (message: string) => ({ data: null, error: { message, code: 401 } })
 
 export async function validateUser(authorization_header: string | null,
-                                   supabaseAdmin: SupabaseClient<Database>): FunctionReturn {
+                                   supabaseAdmin: SupabaseClient<Database>): ReturnType {
   if (!authorization_header) return errorMessage('missing authorization header!')
   const token = authorization_header.replace('Bearer ', '')
   const { data, error } = await supabaseAdmin.auth.getClaims(token)

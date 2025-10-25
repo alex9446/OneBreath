@@ -1,6 +1,6 @@
 import type { SupabaseClient } from 'jsr:@supabase/supabase-js@2'
 import type { Database } from '../_shared/database.types.ts'
-import { FunctionReturn } from '../_shared/mixed.types.ts';
+import { Extra, FunctionReturn } from '../_shared/mixed.types.ts';
 
 const validTimes = {
   start: 20,
@@ -8,12 +8,12 @@ const validTimes = {
 }
 
 
-const errorMessage = (message: string, code: number) => ({ error: { message, code } })
+const errorMessage = (message: string, code: number) => ({ data: null, error: { message, code } })
 
 export async function allowedAttendance(supabaseAdmin: SupabaseClient<Database>,
                                         group: number,
                                         nowInRome: Temporal.ZonedDateTime,
-                                        userId: string): FunctionReturn {
+                                        userId: string): FunctionReturn<Extra> {
 
   const { data: attendances, error: attendancesError } = await supabaseAdmin
     .from('attendances')
@@ -22,11 +22,12 @@ export async function allowedAttendance(supabaseAdmin: SupabaseClient<Database>,
     .eq('user_id', userId)
   if (attendancesError) return errorMessage(attendancesError.message, 500)
   if (attendances.length > 0) return {
-    error: {
-      message: 'attendance already set!',
-      code: 403,
-      extra: { groupSetted: attendances[0].group_id, daySetted: nowInRome.dayOfWeek }
-    }
+    data: {
+      alreadySet: true,
+      groupSetted: attendances[0].group_id,
+      daySetted: nowInRome.dayOfWeek
+    },
+    error: null
   }
 
   const { data: groups, error: groupsError } = await supabaseAdmin
@@ -37,7 +38,20 @@ export async function allowedAttendance(supabaseAdmin: SupabaseClient<Database>,
   if (groups.length !== 1) return errorMessage('non-existent group!', 400)
   const allowedDay = groups[0].days_of_week.includes(nowInRome.dayOfWeek)
   const allowedTime = nowInRome.hour >= validTimes.start && nowInRome.hour < validTimes.end
-  if (!allowedDay || !allowedTime) return errorMessage('day or time not allowed!', 403)
+  if (!allowedDay || !allowedTime) return {
+    data: {
+      alreadySet: false,
+      DTnotAllowed: true
+    },
+    error: null
+  }
 
-  return { error: null }
+  return {
+    data: {
+      alreadySet: false,
+      DTnotAllowed: false,
+      dayOfWeek: nowInRome.dayOfWeek
+    },
+    error: null
+  }
 }

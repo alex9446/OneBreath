@@ -32,34 +32,36 @@ Deno.serve(async (req: Request) => {
 
     // @uml - user valid?
     const validate = await validateUser(req.headers.get('Authorization'), supabaseAdmin)
-    if (validate.error) return jsonResponse(validate.error)
-    if (!validate.data) return jsonResponseMessage('no data in validateUser!', 401)  // theoretically never executed
+    if (validate.error) return jsonResponseMessage(validate.error.message, validate.error.code)
     const userId = validate.data.userId
 
     const nowInRome = Temporal.Now.zonedDateTimeISO('Europe/Rome')
 
     // @uml - can set attendance?
     const allowed = await allowedAttendance(supabaseAdmin, group, nowInRome, userId)
-    if (allowed.error) return jsonResponse(allowed.error)
+    if (allowed.error) return jsonResponseMessage(allowed.error.message, allowed.error.code)
 
-    if (action === 'verify') return jsonResponseMessage('attendance markable', 200,
-                                                        { day_of_week: nowInRome.dayOfWeek })
+    const allowedCode = action === 'verify' ? 200 : 403
+    if (allowed.data.alreadySet) return jsonResponseMessage('attendance already set!', allowedCode, allowed.data)
+    if (allowed.data.DTnotAllowed) return jsonResponseMessage('day or time not allowed!', allowedCode, allowed.data)
+    if (action === 'verify') return jsonResponseMessage('attendance markable', 200, allowed.data)
+
     if (action === 'set') {
       // @uml - attendance setted?
       const setted = await setAttendance(supabaseAdmin, group, nowInRome, userId)
-      if (setted.error) return jsonResponse(setted.error)
+      if (setted.error) return jsonResponseMessage(setted.error.message, setted.error.code)
       return jsonResponseMessage('attendance marked', 200)
     }
 
     return jsonResponseMessage('I\'m a teapot', 418)
   } catch (rawError) {
-    console.warn(rawError)
     if (rawError instanceof Object) {
       if ('message' in rawError && typeof rawError.message === 'string') {
         return jsonResponseMessage(rawError.message, 500)
       }
-      return jsonResponse({ catched_error: rawError, code: 500 })
+      const message = 'error not displayable on screen, it\'s an Object!'
+      return jsonResponse({ message, catched_error: rawError, code: 500, extra: null })
     }
-    return jsonResponseMessage('non-printable error, not an Object!', 500)
+    return jsonResponseMessage('error not displayable on screen, not an Object!', 500)
   }
 })
