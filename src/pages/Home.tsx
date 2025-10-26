@@ -1,11 +1,12 @@
-import CheckLogin from '../components/CheckLogin'
+import RequireLogin from '../components/RequireLogin'
 import Attendance from '../components/Attendance'
 import './Home.sass'
 
 const Home = () => (
   <main id='home-page'>
-    <CheckLogin />
-    <Attendance />
+    <RequireLogin>
+      <Attendance />
+    </RequireLogin>
   </main>
 )
 
