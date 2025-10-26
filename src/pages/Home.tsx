@@ -1,5 +1,6 @@
 import RequireLogin from '../components/RequireLogin'
 import Attendance from '../components/Attendance'
+import FakeButton from '../components/FakeButton'
 import './Home.sass'
 
 const Home = () => (
@@ -7,6 +8,7 @@ const Home = () => (
     <RequireLogin>
       <Attendance />
     </RequireLogin>
+    <FakeButton href='/settings'>Impostazioni</FakeButton>
   </main>
 )
 

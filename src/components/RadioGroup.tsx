@@ -8,7 +8,7 @@ const FallbackGroups = () => {
   return range.map((id) => (
     <div>
       <input type='radio' name='group' id={`group${id}`} required value={0} />
-      <label for={`group${id}`}>Caricamento gruppo {id}...</label>
+      <label for={`group${id}`}>Caricamento {id}...</label>
     </div>
   ))
 }

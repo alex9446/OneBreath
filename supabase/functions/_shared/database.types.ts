@@ -85,6 +85,7 @@ export type Database = {
           group_id: number
           id: string
           last_name: string
+          leaderboard: boolean
           watchword: string
         }
         Insert: {
@@ -92,6 +93,7 @@ export type Database = {
           group_id: number
           id: string
           last_name: string
+          leaderboard?: boolean
           watchword: string
         }
         Update: {
@@ -99,6 +101,7 @@ export type Database = {
           group_id?: number
           id?: string
           last_name?: string
+          leaderboard?: boolean
           watchword?: string
         }
         Relationships: [

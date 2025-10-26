@@ -1,15 +1,15 @@
 import { createSignal } from 'solid-js'
-import { action, redirect, useNavigate, useSubmission } from '@solidjs/router'
+import { action, redirect, useSubmission } from '@solidjs/router'
 import { useSupabase } from '../utils/context'
 import { setGroupInLS } from '../utils/mixed'
 import RadioGroup from '../components/RadioGroup'
 import Watchword from '../components/Watchword'
 import ErrorBox from '../components/ErrorBox'
 import OrLine from '../components/OrLine'
+import FakeButton from '../components/FakeButton'
 
 const Register = () => {
   const [watchwordValid, setWatchwordValid] = createSignal(false)
-  const navigate = useNavigate()
   const supabaseClient = useSupabase()
 
   const createUser = action(async (formData: FormData) => {
@@ -45,7 +45,7 @@ const Register = () => {
       </form>
       <ErrorBox>{submissions.error}</ErrorBox>
       <OrLine />
-      <button onClick={() => navigate('/login')}>Login</button>
+      <FakeButton href='/login'>Login</FakeButton>
     </main>
   )
 }
