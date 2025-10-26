@@ -1,4 +1,4 @@
-import { Extra, ResponseBody } from './mixed.types.ts';
+import { Extra, ResponseBody } from './mixed.types.ts'
 import { corsHeaders } from './cors.ts'
 
 

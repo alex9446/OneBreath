@@ -1,6 +1,6 @@
 import type { SupabaseClient } from 'jsr:@supabase/supabase-js@2'
 import type { Database } from '../_shared/database.types.ts'
-import { FunctionReturn } from '../_shared/mixed.types.ts';
+import { FunctionReturn } from '../_shared/mixed.types.ts'
 
 
 export async function setAttendance(supabaseAdmin: SupabaseClient<Database>,

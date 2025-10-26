@@ -18,6 +18,8 @@ export type Extra = {
 } | {
   alreadySet: false
   DTnotAllowed: true
+  allowedDays: number[]
+  startTime: number
 } | {
   alreadySet: false
   DTnotAllowed: false

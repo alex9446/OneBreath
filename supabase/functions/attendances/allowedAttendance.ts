@@ -1,6 +1,6 @@
 import type { SupabaseClient } from 'jsr:@supabase/supabase-js@2'
 import type { Database } from '../_shared/database.types.ts'
-import { Extra, FunctionReturn } from '../_shared/mixed.types.ts';
+import { Extra, FunctionReturn } from '../_shared/mixed.types.ts'
 
 const validTimes = {
   start: 20,
@@ -36,12 +36,15 @@ export async function allowedAttendance(supabaseAdmin: SupabaseClient<Database>,
     .eq('id', group)
   if (groupsError) return errorMessage(groupsError.message, 500)
   if (groups.length !== 1) return errorMessage('non-existent group!', 400)
-  const allowedDay = groups[0].days_of_week.includes(nowInRome.dayOfWeek)
-  const allowedTime = nowInRome.hour >= validTimes.start && nowInRome.hour < validTimes.end
-  if (!allowedDay || !allowedTime) return {
+  const allowedDays = groups[0].days_of_week
+  const todayIsAllowedDay = allowedDays.includes(nowInRome.dayOfWeek)
+  const nowIsAllowedTime = nowInRome.hour >= validTimes.start && nowInRome.hour < validTimes.end
+  if (!todayIsAllowedDay || !nowIsAllowedTime) return {
     data: {
       alreadySet: false,
-      DTnotAllowed: true
+      DTnotAllowed: true,
+      allowedDays,
+      startTime: validTimes.start
     },
     error: null
   }
