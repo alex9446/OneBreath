@@ -48,7 +48,7 @@ Deno.serve(async (req: Request) => {
 
     if (action === 'set') {
       // @uml - attendance setted?
-      const setted = await setAttendance(supabaseAdmin, group, nowInRome, userId)
+      const setted = await setAttendance(supabaseAdmin, group, allowed.data.dayToMarkPlainDate, userId)
       if (setted.error) return jsonResponseMessage(setted.error.message, setted.error.code)
       return jsonResponseMessage('attendance marked', 200)
     }

@@ -24,6 +24,7 @@ export type Extra = {
   alreadySet: false
   DTnotAllowed: false
   dayOfWeek: number
+  dayToMarkPlainDate: string
 }
 
 export type ResponseBody = {
