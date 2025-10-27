@@ -1,7 +1,8 @@
+import { lazy } from 'solid-js'
 import RequireLogin from '../components/RequireLogin'
-import Attendance from '../components/Attendance'
 import FakeButton from '../components/FakeButton'
 import './Home.sass'
+const Attendance = lazy(() => import('../components/Attendance'))
 
 const Home = () => (
   <main id='home-page'>

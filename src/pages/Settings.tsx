@@ -4,6 +4,8 @@ import { getGroupFromLS, setGroupInLS } from '../utils/mixed'
 import { useSupabase } from '../utils/context'
 import SelectGroup from '../components/SelectGroup'
 import ErrorBox from '../components/ErrorBox'
+import OrLine from '../components/OrLine'
+import FakeButton from '../components/FakeButton'
 import './Settings.sass'
 
 const Settings = () => {
@@ -38,6 +40,8 @@ const Settings = () => {
         </div>
         <input type='submit' value='Salva' disabled={submissions.pending} />
         <ErrorBox>{submissions.error}</ErrorBox>
+        <OrLine />
+        <FakeButton href='/'>Torna indietro</FakeButton>
       </form>
     </main>
   )
