@@ -8,6 +8,7 @@ import './index.sass'
 const Login = lazy(() => import('./pages/Login'))
 const Register = lazy(() => import('./pages/Register'))
 const Settings = lazy(() => import('./pages/Settings'))
+const Leaderboard = lazy(() => import('./pages/Leaderboard'))
 
 const root = document.getElementById('root')
 
@@ -18,6 +19,7 @@ render(
       <Route path='/login' component={Login} />
       <Route path='/register' component={Register} />
       <Route path='/settings' component={Settings} />
+      <Route path='/leaderboard' component={Leaderboard} />
     </Router>
   ),
   root!

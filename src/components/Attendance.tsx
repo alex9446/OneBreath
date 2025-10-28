@@ -1,5 +1,5 @@
 import { createResource, Show, type Component } from 'solid-js'
-import type { ResponseBody } from '../utils/mixed.types'
+import type { AttendancesExtra, ResponseBody } from '../utils/functions.types'
 import { useSupabase } from '../utils/context'
 import { getGroupFromLS } from '../utils/mixed'
 import invokeAttendances from '../utils/invokeAttendances'
@@ -8,7 +8,7 @@ import { DayOfWeek, DaysOfWeek } from './DayOfWeek'
 import GroupName from './GroupName'
 import SetAttendance from './SetAttendance'
 
-type ManageProps = {response: ResponseBody, groupId: number, refetch: Function}
+type ManageProps = {response: ResponseBody<AttendancesExtra>, groupId: number, refetch: Function}
 
 const ManageResource: Component<ManageProps> = (props) => {
   const extra = props.response.extra
