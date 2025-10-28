@@ -36,7 +36,7 @@ const Settings = () => {
         <SelectGroup defaultOption={groupId} />
         <div class='checkbox-input'>
           <input type='checkbox' name='leaderboard' id='leaderboard' checked={profile()?.leaderboard} />
-          <label for='leaderboard'>Mostrami nella leaderboard</label>
+          <label for='leaderboard'>Mostrami nella classifica presenze</label>
         </div>
         <input type='submit' value='Salva' disabled={submissions.pending} />
         <ErrorBox>{submissions.error}</ErrorBox>

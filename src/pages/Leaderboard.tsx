@@ -1,4 +1,5 @@
 import { createResource, For, Suspense } from 'solid-js'
+import { A } from '@solidjs/router'
 import { getGroupFromLS } from '../utils/mixed'
 import { useSupabase } from '../utils/context'
 import invokeLeaderboard from '../utils/invokeLeaderboard'
@@ -27,6 +28,7 @@ const Leaderboard = () => {
           </For>
         </div>
       </Suspense>
+      <p class='hide-hint'>ℹ️ <A href='/settings'>Puoi nasconderti da questa lista</A></p>
       <FakeButton href='/'>Torna indietro</FakeButton>
     </main>
   )

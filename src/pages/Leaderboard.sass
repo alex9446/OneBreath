@@ -1,3 +1,5 @@
+@use '../variables'
+
 #leaderboard-page
   align-items: center
   > p
@@ -18,3 +20,5 @@
       border-bottom: 1px dotted white
     :nth-child(even)
       text-align: right
+  .hide-hint
+    font-size: variables.$font-size-small
