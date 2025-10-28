@@ -13,17 +13,22 @@ const Register = () => {
   const supabaseClient = useSupabase()
 
   const createUser = action(async (formData: FormData) => {
+    const formGet = (name: string) => formData.get(name)!.toString()
     if (!watchwordValid()) throw 'Parola d\'ordine non valida'
-    const groupId = formData.get('group')!.toString()
-    if (groupId === '0') throw 'Group not selected'
+    const groupId = formGet('group')
+    const firstName = formGet('first-name').trim()
+    const lastName = formGet('last-name').trim()
+    if (groupId === '0') throw 'Gruppo non selezionato'
+    if (!firstName || !lastName) throw 'Nome e/o cognome assenti'
+
     const { error } = await supabaseClient.auth.signUp({
-      email: formData.get('email')!.toString(),
-      password: formData.get('password')!.toString(),
+      email: formGet('email'),
+      password: formGet('password'),
       options: {data: {
-        first_name: formData.get('first-name')!.toString(),
-        last_name: formData.get('last-name')!.toString(),
+        first_name: firstName,
+        last_name: lastName,
         group_id: groupId,
-        watchword: formData.get('watchword')!.toString()
+        watchword: formGet('watchword')
       }}
     })
     if (error) throw error.message
