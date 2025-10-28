@@ -3,10 +3,11 @@ import 'jsr:@supabase/functions-js@2/edge-runtime.d.ts'
 import { createClient } from 'jsr:@supabase/supabase-js@2'
 import type { Database } from '../_shared/database.types.ts'
 import { corsHeaders } from '../_shared/cors.ts'
-import { jsonResponse, jsonResponseMessage } from '../_shared/jsonResponse.ts'
+import { jsonResponseMessage } from '../_shared/jsonResponse.ts'
 import { validateUser } from '../_shared/validateUser.ts'
 import { allowedAttendance } from './allowedAttendance.ts'
 import { setAttendance } from './setAttendance.ts'
+import { manageRawError } from '../_shared/manageRawError.ts'
 
 const validActions = ['verify', 'set', 'make_coffee']
 
@@ -55,13 +56,6 @@ Deno.serve(async (req: Request) => {
 
     return jsonResponseMessage('I\'m a teapot', 418)
   } catch (rawError) {
-    if (rawError instanceof Object) {
-      if ('message' in rawError && typeof rawError.message === 'string') {
-        return jsonResponseMessage(rawError.message, 500)
-      }
-      const message = 'error not displayable on screen, it\'s an Object!'
-      return jsonResponse({ message, catched_error: rawError, code: 500, extra: null })
-    }
-    return jsonResponseMessage('error not displayable on screen, not an Object!', 500)
+    return manageRawError(rawError)
   }
 })

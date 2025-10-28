@@ -1,6 +1,6 @@
 import type { SupabaseClient } from 'jsr:@supabase/supabase-js@2'
 import type { Database } from '../_shared/database.types.ts'
-import { Extra, FunctionReturn } from '../_shared/mixed.types.ts'
+import { AttendancesExtra, FunctionReturn } from '../_shared/mixed.types.ts'
 
 const validTimes = {
   start: 20,
@@ -13,7 +13,7 @@ const errorMessage = (message: string, code: number) => ({ data: null, error: { 
 export async function allowedAttendance(supabaseAdmin: SupabaseClient<Database>,
                                         group: number,
                                         nowInRome: Temporal.ZonedDateTime,
-                                        userId: string): FunctionReturn<Extra> {
+                                        userId: string): FunctionReturn<AttendancesExtra> {
   const dayToMark = nowInRome.hour < validTimes.end ? nowInRome.subtract({ days: 1 }) : nowInRome
   const dayToMarkPlainDate = dayToMark.toPlainDate().toString()
 

@@ -116,7 +116,23 @@ export type Database = {
       }
     }
     Views: {
-      [_ in never]: never
+      leaderboard: {
+        Row: {
+          // manual edit to fix this issue: https://github.com/orgs/supabase/discussions/14151
+          apg: number
+          first_name: string
+          group_id: number
+        }
+        Relationships: [
+          {
+            foreignKeyName: "attendances_group_id_fkey"
+            columns: ["group_id"]
+            isOneToOne: false
+            referencedRelation: "groups"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
     }
     Functions: {
       [_ in never]: never

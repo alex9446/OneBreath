@@ -11,7 +11,7 @@ export type FunctionReturn<T> = Promise<{
   error: Error
 }>
 
-export type Extra = {
+export type AttendancesExtra = {
   alreadySet: true
   groupSetted: number
   daySetted: number
@@ -27,9 +27,14 @@ export type Extra = {
   dayToMarkPlainDate: string
 }
 
-export type ResponseBody = {
+export type LeaderboardExtra = {
+  first_name: string
+  apg: number
+}[]
+
+export type ResponseBody<T> = {
   message: string
   code: number
-  extra: Extra | null
+  extra: T | null
   catched_error?: unknown
 }

@@ -1,8 +1,8 @@
-import { Extra, ResponseBody } from './mixed.types.ts'
+import { ResponseBody } from './mixed.types.ts'
 import { corsHeaders } from './cors.ts'
 
 
-export function jsonResponse(body: ResponseBody) {
+export function jsonResponse<ExtraType>(body: ResponseBody<ExtraType>) {
   if (body.code !== 200) console.warn(body)
 
   return new Response(JSON.stringify(body), {
@@ -11,6 +11,6 @@ export function jsonResponse(body: ResponseBody) {
   })
 }
 
-export function jsonResponseMessage(message: string, code: number, extra?: Extra) {
-  return jsonResponse({ message, code, extra: extra ?? null })
+export function jsonResponseMessage<ExtraType>(message: string, code: number, extra?: ExtraType) {
+  return jsonResponse<ExtraType>({ message, code, extra: extra ?? null })
 }
