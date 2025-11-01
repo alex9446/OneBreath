@@ -1,11 +1,8 @@
-import { Show, type ParentComponent } from 'solid-js'
+import type { ParentComponent } from 'solid-js'
+import manageRawError from '../utils/manageRawError'
 
 const ErrorBox: ParentComponent = (props) => {
-  return (
-    <Show when={typeof props.children === 'string'}>
-      <p style='color:red'>{props.children}</p>
-    </Show>
-  )
+  return <p style='color:red'>{manageRawError(props.children)}</p>
 }
 
 export default ErrorBox

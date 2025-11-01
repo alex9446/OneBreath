@@ -1,7 +1,6 @@
 import { createResource, For, Suspense } from 'solid-js'
 import { A } from '@solidjs/router'
 import { getGroupFromLS } from '../utils/mixed'
-import { useSupabase } from '../utils/context'
 import invokeLeaderboard from '../utils/invokeLeaderboard'
 import GroupName from '../components/GroupName'
 import FakeButton from '../components/FakeButton'
@@ -9,11 +8,8 @@ import './Leaderboard.sass'
 
 const Leaderboard = () => {
   const groupId = getGroupFromLS()
-  const supabaseClient = useSupabase()
 
-  const [leaderboard] = createResource(groupId, async (gid) => {
-    return await invokeLeaderboard(supabaseClient, gid)
-  })
+  const [leaderboard] = createResource(groupId, async (gid) => await invokeLeaderboard(gid))
 
   return (
     <main id='leaderboard-page'>

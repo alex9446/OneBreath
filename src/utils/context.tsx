@@ -1,8 +1,8 @@
-import { createClient, type SupabaseClient } from '@supabase/supabase-js'
 import { createContext, useContext, type ParentComponent } from 'solid-js'
-import { type Database } from './database.types'
+import { createClient } from '@supabase/supabase-js'
+import type { SupabaseClientDB } from './mixed.types'
 
-const supabaseContext = createContext<SupabaseClient<Database>>()
+const supabaseContext = createContext<SupabaseClientDB>()
 
 export const Provider: ParentComponent = (props) => {
   const supabase = createClient(

@@ -1,8 +1,8 @@
-import { FunctionsHttpError, type SupabaseClient } from '@supabase/supabase-js'
-import type { Database } from './database.types'
+import { FunctionsHttpError } from '@supabase/supabase-js'
+import type { SupabaseClientDB } from './mixed.types'
 import type { AttendancesExtra, ResponseBody } from './functions.types'
 
-const invokeAttendances = async ( supabaseClient: SupabaseClient<Database>,
+const invokeAttendances = async ( supabaseClient: SupabaseClientDB,
                                   action: 'verify' | 'set',
                                   groupId: number ): Promise<ResponseBody<AttendancesExtra>> => {
   const { data, error } = await supabaseClient.functions.invoke('attendances', {

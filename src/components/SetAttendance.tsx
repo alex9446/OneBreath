@@ -10,7 +10,7 @@ const SetAttendance: Component<{ groupId: number, refetch: Function }> = (props)
   const set = action(async (groupId: number) => {
     const data = await invokeAttendances(supabaseClient, 'set', groupId)
     if (data.code !== 200) throw data.message
-    props.refetch()
+    await props.refetch()
   })
   const useSet = useAction(set)
   const submissions = useSubmission(set)

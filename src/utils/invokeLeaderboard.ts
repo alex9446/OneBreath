@@ -1,9 +1,9 @@
-import { FunctionsHttpError, type SupabaseClient } from '@supabase/supabase-js'
-import type { Database } from './database.types'
+import { FunctionsHttpError } from '@supabase/supabase-js'
 import type { LeaderboardExtra, ResponseBody } from './functions.types'
+import { useSupabase } from './context'
 
-const invokeLeaderboard = async ( supabaseClient: SupabaseClient<Database>,
-                                  groupId: number ): Promise<ResponseBody<LeaderboardExtra>> => {
+const invokeLeaderboard = async ( groupId: number ): Promise<ResponseBody<LeaderboardExtra>> => {
+  const supabaseClient = useSupabase()
   const { data, error } = await supabaseClient.functions.invoke('leaderboard', {
     body: { 'group': groupId }
   })
