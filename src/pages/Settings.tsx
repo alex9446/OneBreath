@@ -6,6 +6,7 @@ import SelectGroup from '../components/SelectGroup'
 import ErrorBox from '../components/ErrorBox'
 import OrLine from '../components/OrLine'
 import FakeButton from '../components/FakeButton'
+import LogoutButton from '../components/LogoutButton'
 import './Settings.sass'
 
 const Settings = () => {
@@ -43,6 +44,7 @@ const Settings = () => {
       <ErrorBox>{submission.error}</ErrorBox>
       <OrLine />
       <FakeButton href='/'>Torna indietro</FakeButton>
+      <LogoutButton />
     </main>
   )
 }

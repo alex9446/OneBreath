@@ -3,6 +3,7 @@ import { lazy } from 'solid-js'
 import { render } from 'solid-js/web'
 import { Route, Router } from '@solidjs/router'
 import { Provider } from './utils/context'
+import RequireLogin from './components/RequireLogin'
 import Home from './pages/Home'
 import './index.sass'
 const Login = lazy(() => import('./pages/Login'))
@@ -16,14 +17,16 @@ const root = document.getElementById('root')
 render(
   () => (
     <Router root={Provider}>
-      <Route path='/' component={Home} />
       <Route path='/login' component={Login} />
       <Route path='/register' component={Register} />
-      <Route path='/settings'>
-        <Route path='/' component={Settings} />
-        <Route path='/notifications' component={Notifications} />
+      <Route component={RequireLogin}>
+        <Route path='/' component={Home} />
+        <Route path='/settings'>
+          <Route path='/' component={Settings} />
+          <Route path='/notifications' component={Notifications} />
+        </Route>
+        <Route path='/leaderboard' component={Leaderboard} />
       </Route>
-      <Route path='/leaderboard' component={Leaderboard} />
     </Router>
   ),
   root!

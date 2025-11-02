@@ -12,7 +12,7 @@ const RequireLogin: ParentComponent = (props) => {
   })
 
   return (
-    <Show when={loggedIn()} fallback={<p>Verifica login...</p>}>
+    <Show when={loggedIn()} fallback={<main><p>Verifica login...</p></main>}>
       {props.children}
     </Show>
   )
