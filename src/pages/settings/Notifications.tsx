@@ -13,28 +13,36 @@ const Notifications = () => {
     await refetch()
   })
   const useActivate = useAction(activate)
-  const activateSubmissions = useSubmission(activate)
+  const activateSubmission = useSubmission(activate)
+  const activateClick = () => {
+    activateSubmission.clear() // workaround to remove the last submission error
+    useActivate()
+  }
 
   const deactivate = action(async () => {
     await unsubscribeUser()
     await refetch()
   })
   const useDeactivate = useAction(deactivate)
-  const deactivateSubmissions = useSubmission(deactivate)
+  const deactivateSubmission = useSubmission(deactivate)
+  const deactivateClick = () => {
+    deactivateSubmission.clear() // workaround to remove the last submission error
+    useDeactivate()
+  }
 
   return (
     <main id='notifications-page'>
       <Show when={subscription()} fallback={
-        <button onClick={useActivate} disabled={activateSubmissions.pending}>
+        <button onClick={activateClick} disabled={activateSubmission.pending}>
           Attiva notifiche
         </button>
       }>
-        <button onClick={useDeactivate} disabled={deactivateSubmissions.pending}>
+        <button onClick={deactivateClick} disabled={deactivateSubmission.pending}>
           Disattiva notifiche
         </button>
       </Show>
-      <ErrorBox>{activateSubmissions.error}</ErrorBox>
-      <ErrorBox>{deactivateSubmissions.error}</ErrorBox>
+      <ErrorBox>{activateSubmission.error}</ErrorBox>
+      <ErrorBox>{deactivateSubmission.error}</ErrorBox>
     </main>
   )
 }

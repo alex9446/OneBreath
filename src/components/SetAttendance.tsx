@@ -13,16 +13,18 @@ const SetAttendance: Component<{ groupId: number, refetch: Function }> = (props)
     await props.refetch()
   })
   const useSet = useAction(set)
-  const submissions = useSubmission(set)
-
-  const onClickEvent = () => useSet(props.groupId)
+  const submission = useSubmission(set)
+  const onClickEvent = () => {
+    submission.clear() // workaround to remove the last submission error
+    useSet(props.groupId)
+  }
 
   return (
     <>
-      <button onClick={onClickEvent} disabled={submissions.pending}>
-        {submissions.pending ? 'Invio...' : 'Si'}
+      <button onClick={onClickEvent} disabled={submission.pending}>
+        {submission.pending ? 'Invio...' : 'Si'}
       </button>
-      <ErrorBox>{submissions.error}</ErrorBox>
+      <ErrorBox>{submission.error}</ErrorBox>
     </>
   )
 }

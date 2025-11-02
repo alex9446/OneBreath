@@ -27,7 +27,7 @@ const Settings = () => {
     setGroupInLS(group_id)
     throw redirect('/')
   })
-  const submissions = useSubmission(saveSettings)
+  const submission = useSubmission(saveSettings)
 
   return (
     <main id='settings-page'>
@@ -38,11 +38,11 @@ const Settings = () => {
           <input type='checkbox' name='leaderboard' id='leaderboard' checked={profile()?.leaderboard} />
           <label for='leaderboard'>Mostrami nella classifica presenze</label>
         </div>
-        <input type='submit' value='Salva' disabled={submissions.pending} />
-        <ErrorBox>{submissions.error}</ErrorBox>
-        <OrLine />
-        <FakeButton href='/'>Torna indietro</FakeButton>
+        <input type='submit' value='Salva' disabled={submission.pending} />
       </form>
+      <ErrorBox>{submission.error}</ErrorBox>
+      <OrLine />
+      <FakeButton href='/'>Torna indietro</FakeButton>
     </main>
   )
 }

@@ -35,7 +35,7 @@ const Register = () => {
     setGroupInLS(groupId)
     throw redirect('/')
   })
-  const submissions = useSubmission(createUser)
+  const submission = useSubmission(createUser)
 
   return (
     <main id='register-page'>
@@ -46,9 +46,9 @@ const Register = () => {
         <input type='text' name='last-name' required placeholder='cognome' />
         <RadioGroup />
         <Watchword valid={watchwordValid} setValid={setWatchwordValid} />
-        <input type='submit' value='Crea account' disabled={submissions.pending} />
+        <input type='submit' value='Crea account' disabled={submission.pending} />
       </form>
-      <ErrorBox>{submissions.error}</ErrorBox>
+      <ErrorBox>{submission.error}</ErrorBox>
       <OrLine />
       <FakeButton href='/login'>Login</FakeButton>
     </main>

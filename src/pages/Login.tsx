@@ -19,16 +19,16 @@ const Login = () => {
     setGroupInLS(profile.group_id)
     throw redirect('/')
   })
-  const submissions = useSubmission(logonUser)
+  const submission = useSubmission(logonUser)
 
   return (
     <main id='login-page'>
       <form method='post' action={logonUser}>
         <input type='email' name='email' required placeholder='email' />
         <input type='password' name='password' required minLength='6' placeholder='password' />
-        <input type='submit' value='Login' disabled={submissions.pending} />
+        <input type='submit' value='Login' disabled={submission.pending} />
       </form>
-      <ErrorBox>{submissions.error}</ErrorBox>
+      <ErrorBox>{submission.error}</ErrorBox>
       <OrLine />
       <FakeButton href='/register'>Crea account</FakeButton>
     </main>
