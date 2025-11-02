@@ -1,5 +1,5 @@
 const manageRawError = (rawError: unknown) => {
-  if (!rawError) return ''
+  if (!rawError) return null
   if (typeof rawError === 'string') return rawError
   if (rawError instanceof Object && 'message' in rawError && typeof rawError.message === 'string') {
     return rawError.message

@@ -4,7 +4,8 @@ declare const self: ServiceWorkerGlobalScope
 // self.addEventListener('install', () => self.skipWaiting())
 
 self.addEventListener('push', (event) => {
-  const title = 'Eri presente in piscina? Segna la presenza!'
+  if (!event.data) return
+  const title = event.data.text()
   const options: NotificationOptions = {
     icon: '/icon.svg'
   }

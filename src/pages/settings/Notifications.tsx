@@ -3,6 +3,8 @@ import { action, useAction, useSubmission } from '@solidjs/router'
 import { useSupabase } from '../../utils/context'
 import { getSubscription, subscribeUser, unsubscribeUser } from '../../utils/subscribeUser'
 import ErrorBox from '../../components/ErrorBox'
+import FakeButton from '../../components/FakeButton'
+import './Notification.sass'
 
 const Notifications = () => {
   const supabaseClient = useSupabase()
@@ -43,6 +45,18 @@ const Notifications = () => {
       </Show>
       <ErrorBox>{activateSubmission.error}</ErrorBox>
       <ErrorBox>{deactivateSubmission.error}</ErrorBox>
+      <FakeButton href='/settings'>Torna indietro</FakeButton>
+      <p class='notice'>
+        <b>Avviso:</b> anche se qui hai le notifiche attive non è detto che tu le riceva,
+        questo può dipendere dalle impostazioni generali del dispositivo e app browser,
+        esecuzione dell'app browser in backgroud oppure altre restrizioni specifiche del dispositivo.
+        <br /><br />
+        Maggiori info sulle notifiche web ai link sotto:<br />
+        <a href='https://support.google.com/chrome/answer/3220216?hl=it' target='_blank'>Chrome</a><br />
+        <a href='https://support.mozilla.org/it/kb/notifiche-push' target='_blank'>Firefox</a><br />
+        <a href='https://support.apple.com/it-it/guide/safari/sfri40734' target='_blank'>Safari</a><br />
+        <a href='https://support.microsoft.com/it-it/microsoft-edge/gestire-le-notifiche-dei-siti-web-in-microsoft-edge-0c555609-5bf2-479d-a59d-fb30a0b80b2b' target='_blank'>Edge</a>
+      </p>
     </main>
   )
 }
