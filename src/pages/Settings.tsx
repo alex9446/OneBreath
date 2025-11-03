@@ -43,6 +43,7 @@ const Settings = () => {
       </form>
       <ErrorBox>{submission.error}</ErrorBox>
       <OrLine />
+      <FakeButton href='/settings/notifications'>Notifiche</FakeButton>
       <FakeButton href='/'>Torna indietro</FakeButton>
       <LogoutButton />
     </main>
