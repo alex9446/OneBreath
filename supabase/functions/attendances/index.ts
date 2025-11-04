@@ -1,6 +1,5 @@
 // Setup type definitions for built-in Supabase Runtime APIs
-import 'jsr:@supabase/functions-js@2/edge-runtime.d.ts'
-import { createClient } from 'jsr:@supabase/supabase-js@2'
+import { createClient } from '@supabase/supabase-js'
 import type { Database } from '../_shared/database.types.ts'
 import { corsHeaders } from '../_shared/cors.ts'
 import { jsonResponseMessage } from '../_shared/jsonResponse.ts'

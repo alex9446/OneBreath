@@ -1,1 +1,1 @@
-../../supabase/functions/_shared/mixed.types.ts
+../../shared/functions.types.ts

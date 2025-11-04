@@ -1,1 +1,1 @@
-../../supabase/functions/_shared/database.types.ts
+../../shared/database.types.ts

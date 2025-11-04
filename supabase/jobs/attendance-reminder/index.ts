@@ -3,18 +3,21 @@ import { createClient } from '@supabase/supabase-js'
 import { Database } from '../_shared/database.types.ts'
 
 const supabaseAdmin = createClient<Database>(
-  process.env.SUPABASE_URL!,
-  process.env.SECRET_FUNCTIONS_KEY!
+  Deno.env.get('SUPABASE_URL')!,
+  Deno.env.get('SECRET_FUNCTIONS_KEY')!
 )
 
 webpush.setVapidDetails(
   'https://github.com/alex9446/OneBreath',
-  process.env.VAPID_PUBLIC_KEY!,
-  process.env.VAPID_PRIVATE_KEY!
+  Deno.env.get('VAPID_PUBLIC_KEY')!,
+  Deno.env.get('VAPID_PRIVATE_KEY')!
 )
 
 const { data: subscriptions, error } = await supabaseAdmin.from('subscriptions').select('*')
-if (error) process.exit(error.message)
+if (error) {
+  console.error(error)
+  Deno.exit(1)
+}
 
 for (const subscription of subscriptions) {
   const subscription_json = subscription.subscription_json?.toString()
@@ -38,6 +41,7 @@ for (const subscription of subscriptions) {
   try {
     const { error } = await supabaseAdmin.from('subscriptions')
       .update({ last_status_code: push_status_code }).eq('id', subscription.id)
+    if (error) throw error
   } catch (error) {
     console.error('when update last_status_code, subscription: ', subscription.id)
     console.error(error)

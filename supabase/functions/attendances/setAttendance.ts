@@ -1,4 +1,4 @@
-import type { SupabaseClient } from 'jsr:@supabase/supabase-js@2'
+import type { SupabaseClient } from '@supabase/supabase-js'
 import type { Database } from '../_shared/database.types.ts'
 import { FunctionReturn } from '../_shared/mixed.types.ts'
 

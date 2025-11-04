@@ -1,6 +1,7 @@
 {
   "deno.enable": true,
-  "deno.enablePaths": ["supabase/functions"],
+  "deno.enablePaths": ["supabase/"],
+  "deno.config": "deno.json",
   "deno.lint": true,
   "editor.tabSize": 2
 }

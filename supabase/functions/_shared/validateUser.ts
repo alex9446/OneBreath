@@ -1,7 +1,7 @@
-import type { SupabaseClient } from 'jsr:@supabase/supabase-js@2'
+import type { SupabaseClient } from '@supabase/supabase-js'
+import { validate } from 'uuid'
 import type { Database } from '../_shared/database.types.ts'
 import { FunctionReturn } from './mixed.types.ts'
-import * as uuid from 'jsr:@std/uuid@1'
 
 
 type ReturnType = FunctionReturn<{ userId: string }>
@@ -17,6 +17,6 @@ export async function validateUser(authorization_header: string | null,
   if (!data) return errorMessage('no data in getClaims!')
   const { claims: { sub: userId, role } } = data
   if (role !== 'authenticated') return errorMessage('unauthenticated role!')
-  if (!uuid.validate(userId)) return errorMessage('userId not valid!')
+  if (!validate(userId)) return errorMessage('userId not valid!')
   return { data: { userId }, error: null }
 }
