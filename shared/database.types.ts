@@ -142,10 +142,9 @@ export type Database = {
     Views: {
       leaderboard: {
         Row: {
-          // manual edit to fix this issue: https://github.com/orgs/supabase/discussions/14151
-          apg: number
-          first_name: string
-          group_id: number
+          apg: number | null
+          first_name: string | null
+          group_id: number | null
         }
         Relationships: [
           {
@@ -156,6 +155,14 @@ export type Database = {
             referencedColumns: ["id"]
           },
         ]
+      }
+      myattendances: {
+        Row: {
+          group_name: string | null
+          marked_day: string | null
+          user_id: string | null
+        }
+        Relationships: []
       }
     }
     Functions: {

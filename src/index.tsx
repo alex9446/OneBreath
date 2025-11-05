@@ -11,6 +11,7 @@ const Register = lazy(() => import('./pages/Register'))
 const Settings = lazy(() => import('./pages/Settings'))
 const Notifications = lazy(() => import('./pages/settings/Notifications'))
 const Leaderboard = lazy(() => import('./pages/Leaderboard'))
+const MyAttendances = lazy(() => import('./pages/MyAttendances'))
 
 const root = document.getElementById('root')
 
@@ -26,6 +27,7 @@ render(
           <Route path='/notifications' component={Notifications} />
         </Route>
         <Route path='/leaderboard' component={Leaderboard} />
+        <Route path='/myattendances' component={MyAttendances} />
       </Route>
     </Router>
   ),

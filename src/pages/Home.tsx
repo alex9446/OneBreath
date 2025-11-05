@@ -8,6 +8,7 @@ const Home = () => (
     <Attendance />
     <FakeButton href='/settings'>Impostazioni</FakeButton>
     <FakeButton href='/leaderboard'>Classifica presenze</FakeButton>
+    <FakeButton href='/myattendances'>Le mie presenze</FakeButton>
   </main>
 )
 

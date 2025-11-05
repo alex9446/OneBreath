@@ -1,6 +1,6 @@
 @use '../variables'
 
-#leaderboard-page
+#myattendances-page
   align-items: center
   > p
     text-align: center
@@ -10,7 +10,7 @@
     overflow-x: scroll
     display: grid
     grid-template-columns: min-content 1fr
-    row-gap: 10px
+    gap: 10px
     align-items: center
     font-size: variables.$font-size-small
     font-weight: 300
@@ -22,5 +22,3 @@
       border-bottom: 1px dotted white
     :nth-child(even)
       text-align: right
-  .hide-hint
-    font-size: variables.$font-size-small
