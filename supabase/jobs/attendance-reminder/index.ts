@@ -1,5 +1,5 @@
-import webpush from 'web-push'
 import { createClient } from '@supabase/supabase-js'
+import { setVapidDetails, sendNotification } from 'web-push'
 import { Database } from '../_shared/database.types.ts'
 
 const supabaseAdmin = createClient<Database>(
@@ -7,43 +7,39 @@ const supabaseAdmin = createClient<Database>(
   Deno.env.get('SECRET_FUNCTIONS_KEY')!
 )
 
-webpush.setVapidDetails(
+setVapidDetails(
   'https://github.com/alex9446/OneBreath',
   Deno.env.get('VAPID_PUBLIC_KEY')!,
   Deno.env.get('VAPID_PRIVATE_KEY')!
 )
 
-const { data: subscriptions, error } = await supabaseAdmin.from('subscriptions').select('*')
+const { data, error } = await supabaseAdmin.from('subscriptions').select('id,subscription_json')
 if (error) {
   console.error(error)
   Deno.exit(1)
 }
 
-for (const subscription of subscriptions) {
+const updateLastStatusCode = async (subscriptionId: string, code: number = 1) => {
+  const { error } = await supabaseAdmin.from('subscriptions')
+    .update({ last_status_code: code }).eq('id', subscriptionId)
+  if (error) throw error
+}
+
+for (const subscription of data) {
   const subscription_json = subscription.subscription_json?.toString()
   if (!subscription_json) {
-    console.warn('empty subscription: ', subscription.id)
+    console.warn('empty subscription:', subscription.id)
     continue
   }
 
-  let push_status_code = -1
-  try {
-    push_status_code = (await webpush.sendNotification(
-      JSON.parse(subscription_json),
-      'Eri presente in piscina? Segna la presenza!',
-      { TTL: 60*60*12 } // 12 hours
-    )).statusCode
-  } catch (error) {
-    console.error('when push error, subscription: ', subscription.id)
-    console.error(error)
-  }
-
-  try {
-    const { error } = await supabaseAdmin.from('subscriptions')
-      .update({ last_status_code: push_status_code }).eq('id', subscription.id)
-    if (error) throw error
-  } catch (error) {
-    console.error('when update last_status_code, subscription: ', subscription.id)
-    console.error(error)
-  }
+  sendNotification(
+    JSON.parse(subscription_json),
+    'Eri presente in piscina? Segna la presenza!',
+    { TTL: 60*60*12 } // 12 hours
+  ).then((result) => { throw result }).catch(
+    (result) => updateLastStatusCode(subscription.id, result.statusCode)
+  ).catch((error) => {
+    console.warn('during subscription:', subscription.id)
+    console.warn(error)
+  })
 }
