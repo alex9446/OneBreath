@@ -1,4 +1,4 @@
-import { jsonResponse, jsonResponseMessage } from '../_shared/jsonResponse.ts'
+import { jsonResponse, jsonResponseMessage } from './jsonResponse.ts'
 
 export function manageRawError(rawError: unknown) {
   if (rawError instanceof Object) {

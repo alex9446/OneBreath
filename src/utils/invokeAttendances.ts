@@ -1,5 +1,5 @@
 import { FunctionsHttpError } from '@supabase/supabase-js'
-import type { SupabaseClientDB } from './mixed.types'
+import type { SupabaseClientDB } from './shortcut.types'
 import type { AttendancesExtra, ResponseBody } from './functions.types'
 
 const invokeAttendances = async ( supabaseClient: SupabaseClientDB,

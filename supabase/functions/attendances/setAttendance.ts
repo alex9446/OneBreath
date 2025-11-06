@@ -1,9 +1,8 @@
-import type { SupabaseClient } from '@supabase/supabase-js'
-import type { Database } from '../_shared/database.types.ts'
+import { SupabaseClientDB } from '../_shared/shortcut.types.ts'
 import { FunctionReturn } from '../_shared/mixed.types.ts'
 
 
-export async function setAttendance(supabaseAdmin: SupabaseClient<Database>,
+export async function setAttendance(supabaseAdmin: SupabaseClientDB,
                                     group: number,
                                     dayToMarkPlainDate: string,
                                     userId: string): FunctionReturn<null> {

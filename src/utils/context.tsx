@@ -1,6 +1,6 @@
 import { createContext, useContext, type ParentComponent } from 'solid-js'
 import { createClient } from '@supabase/supabase-js'
-import type { SupabaseClientDB } from './mixed.types'
+import type { SupabaseClientDB } from './shortcut.types'
 
 const supabaseContext = createContext<SupabaseClientDB>()
 

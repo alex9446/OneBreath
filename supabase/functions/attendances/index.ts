@@ -35,10 +35,8 @@ Deno.serve(async (req: Request) => {
     if (validate.error) return jsonResponseMessage(validate.error.message, validate.error.code)
     const userId = validate.data.userId
 
-    const nowInRome = Temporal.Now.zonedDateTimeISO('Europe/Rome')
-
     // @uml - can set attendance?
-    const allowed = await allowedAttendance(supabaseAdmin, group, nowInRome, userId)
+    const allowed = await allowedAttendance(supabaseAdmin, group, userId)
     if (allowed.error) return jsonResponseMessage(allowed.error.message, allowed.error.code)
 
     const allowedCode = action === 'verify' ? 200 : 403

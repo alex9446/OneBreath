@@ -1,5 +1,5 @@
 import { base64ToUint8Array } from './mixed'
-import type { SupabaseClientDB } from './mixed.types'
+import type { SupabaseClientDB } from './shortcut.types'
 
 const getUserId = async (supabaseClient: SupabaseClientDB) => {
   const { data: { session }, error } = await supabaseClient.auth.getSession()

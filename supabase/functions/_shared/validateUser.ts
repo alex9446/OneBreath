@@ -1,15 +1,12 @@
-import type { SupabaseClient } from '@supabase/supabase-js'
 import { validate } from 'uuid'
-import type { Database } from '../_shared/database.types.ts'
+import { SupabaseClientDB } from './shortcut.types.ts'
 import { FunctionReturn } from './mixed.types.ts'
 
-
-type ReturnType = FunctionReturn<{ userId: string }>
 
 const errorMessage = (message: string) => ({ data: null, error: { message, code: 401 } })
 
 export async function validateUser(authorization_header: string | null,
-                                   supabaseAdmin: SupabaseClient<Database>): ReturnType {
+                                   supabaseAdmin: SupabaseClientDB): FunctionReturn<{ userId: string }> {
   if (!authorization_header) return errorMessage('missing authorization header!')
   const token = authorization_header.replace('Bearer ', '')
   const { data, error } = await supabaseAdmin.auth.getClaims(token)
