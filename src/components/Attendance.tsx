@@ -6,6 +6,7 @@ import invokeAttendances from '../utils/invokeAttendances'
 import ErrorBox from './ErrorBox'
 import { DayOfWeek, DaysOfWeek } from './DayOfWeek'
 import GroupName from './GroupName'
+import RemoveAttendance from './RemoveAttendance'
 import SetAttendance from './SetAttendance'
 
 type ManageProps = {response: ResponseBody<AttendancesExtra>, groupId: number, refetch: Function}
@@ -14,9 +15,10 @@ const ManageResource: Component<ManageProps> = (props) => {
   const extra = props.response.extra
   if (props.response.code !== 200) return <ErrorBox>{props.response.message}</ErrorBox>
   if (!extra) return <ErrorBox>{'Non dovresti mai vedere questo errore 🤫 - ' + props.response.message}</ErrorBox>
-  if (extra.alreadySet) return (
+  if (extra.alreadySet) return (<>
     <p>Presenza di <DayOfWeek day={extra.daySetted} /> a <GroupName id={extra.groupSetted} /> confermata!</p>
-  )
+    <RemoveAttendance groupId={props.groupId} refetch={props.refetch} />
+  </>)
   if (extra.DTnotAllowed) return (<>
     <p>Segnatura presenza a <GroupName id={props.groupId} /> non attiva.</p>
     <p class='more-info'>
@@ -26,7 +28,6 @@ const ManageResource: Component<ManageProps> = (props) => {
   return (<>
     <p>Eri presente <DayOfWeek day={extra.dayOfWeek} /> a <GroupName id={props.groupId} />?</p>
     <SetAttendance groupId={props.groupId} refetch={props.refetch} />
-    <p class='non-cancelable'>Azione non annullabile</p>
   </>)
 }
 

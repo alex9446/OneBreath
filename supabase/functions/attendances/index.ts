@@ -5,10 +5,11 @@ import { corsHeaders } from '../_shared/cors.ts'
 import { jsonResponseMessage } from '../_shared/jsonResponse.ts'
 import { validateUser } from '../_shared/validateUser.ts'
 import { allowedAttendance } from './allowedAttendance.ts'
+import { removeAttendance } from './removeAttendance.ts'
 import { setAttendance } from './setAttendance.ts'
 import { manageRawError } from '../_shared/manageRawError.ts'
 
-const validActions = ['verify', 'set', 'make_coffee']
+const validActions = ['remove', 'verify', 'set', 'make_coffee']
 
 console.info(`Edge function "attendances" up and running!`)
 
@@ -39,9 +40,16 @@ Deno.serve(async (req: Request) => {
     const allowed = await allowedAttendance(supabaseAdmin, group, userId)
     if (allowed.error) return jsonResponseMessage(allowed.error.message, allowed.error.code)
 
+    if (action === 'remove' && allowed.data.alreadySet) {
+      const removed = await removeAttendance(supabaseAdmin, allowed.data.daySettedPlainDate, userId)
+      if (removed.error) return jsonResponseMessage(removed.error.message, removed.error.code)
+      return jsonResponseMessage('attendance removed', 200)
+    }
+
     const allowedCode = action === 'verify' ? 200 : 403
     if (allowed.data.alreadySet) return jsonResponseMessage('attendance already set!', allowedCode, allowed.data)
     if (allowed.data.DTnotAllowed) return jsonResponseMessage('day or time not allowed!', allowedCode, allowed.data)
+    if (action === 'remove') return jsonResponseMessage('no attendance already recorded', 403, allowed.data)
     if (action === 'verify') return jsonResponseMessage('attendance markable', 200, allowed.data)
 
     if (action === 'set') {

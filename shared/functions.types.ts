@@ -15,6 +15,7 @@ export type AttendancesExtra = {
   alreadySet: true
   groupSetted: number
   daySetted: number
+  daySettedPlainDate: string
 } | {
   alreadySet: false
   DTnotAllowed: true

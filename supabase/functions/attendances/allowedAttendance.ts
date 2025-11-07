@@ -26,7 +26,8 @@ export async function allowedAttendance(supabaseAdmin: SupabaseClientDB,
     data: {
       alreadySet: true,
       groupSetted: attendances[0].group_id,
-      daySetted: dayToMark.dayOfWeek
+      daySetted: dayToMark.dayOfWeek,
+      daySettedPlainDate: dayToMarkPlainDate
     },
     error: null
   }

@@ -3,7 +3,7 @@ import type { SupabaseClientDB } from './shortcut.types'
 import type { AttendancesExtra, ResponseBody } from './functions.types'
 
 const invokeAttendances = async ( supabaseClient: SupabaseClientDB,
-                                  action: 'verify' | 'set',
+                                  action: 'remove' | 'verify' | 'set',
                                   groupId: number ): Promise<ResponseBody<AttendancesExtra>> => {
   const { data, error } = await supabaseClient.functions.invoke('attendances', {
     body: { 'action': action, 'group': groupId }
