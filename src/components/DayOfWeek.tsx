@@ -7,5 +7,5 @@ export const DayOfWeek: Component<{ day: number }> = (props) => (
 )
 
 export const DaysOfWeek: Component<{ days: number[] }> = (props) => (
-  <span class='days-of-week'>{props.days.map(day => daysOfWeek[day]).join(', ')}</span>
+  <span class='days-of-week'>{props.days.map((day) => daysOfWeek[day]).join(', ')}</span>
 )

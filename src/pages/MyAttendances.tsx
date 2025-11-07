@@ -1,5 +1,7 @@
 import { createResource, For, Suspense } from 'solid-js'
 import { useSupabase } from '../utils/context'
+import { getFirstChars } from '../utils/mixed'
+import GroupLegend from '../components/GroupLegend'
 import FakeButton from '../components/FakeButton'
 import './MyAttendances.sass'
 
@@ -15,12 +17,13 @@ const MyAttendances = () => {
   return (
     <main id='myattendances-page'>
       <p>Le mie presenze</p>
+      <GroupLegend />
       <Suspense fallback='Caricamento...'>
-        <div>
+        <div class='grid'>
           <p>Data</p><p>Gruppo</p>
           <For each={myattendances()}>
             {(attendance) => (<>
-              <p>{attendance.marked_day}</p><p>{attendance.group_name}</p>
+              <p>{attendance.marked_day}</p><p>{getFirstChars(attendance.group_name)}</p>
             </>)}
           </For>
         </div>

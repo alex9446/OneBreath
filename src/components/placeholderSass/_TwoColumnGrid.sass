@@ -1,0 +1,18 @@
+@use '../../variables'
+
+%two-column-grid
+  width: 100%
+  max-width: 500px
+  overflow-x: scroll
+  display: grid
+  grid-template-columns: min-content 1fr
+  align-items: center
+  font-size: variables.$font-size-small
+  font-weight: 300
+  :nth-child(-n+2)
+    align-self: end
+    font-weight: 500
+    margin-bottom: 5px
+    border-bottom: 1px dotted white
+  :nth-child(even)
+    text-align: right

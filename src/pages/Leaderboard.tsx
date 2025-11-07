@@ -15,7 +15,7 @@ const Leaderboard = () => {
     <main id='leaderboard-page'>
       <p>Classifica presenze <GroupName id={groupId} /></p>
       <Suspense fallback='Caricamento...'>
-        <div>
+        <div class='grid'>
           <p>Nome</p><p>Numero presenze</p>
           <For each={leaderboard()?.extra}>
             {(attendance) => (<>

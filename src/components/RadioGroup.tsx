@@ -1,4 +1,4 @@
-import { createResource, For, Suspense } from 'solid-js'
+import { createResource, For } from 'solid-js'
 import { fetchGroups } from '../utils/fetchGroups'
 import './RadioGroup.sass'
 
@@ -19,17 +19,14 @@ const RadioGroup = () => {
   return (
     <fieldset class='radio-input'>
       <legend>Seleziona gruppo:</legend>
-      <Suspense fallback={<FallbackGroups />}>
-        <For each={groups()}>
-          {(group) => (
-            <div>
-              <input type='radio' name='group' id={`group${group.id}`}
-                     required value={group.id} />
-              <label for={`group${group.id}`}>{group.name}</label>
-            </div>
-          )}
-        </For>
-      </Suspense>
+      <For each={groups()} fallback={<FallbackGroups />}>
+        {(group) => (
+          <div>
+            <input type='radio' name='group' id={`group${group.id}`} required value={group.id} />
+            <label for={`group${group.id}`}>{group.name}</label>
+          </div>
+        )}
+      </For>
     </fieldset>
   )
 }
