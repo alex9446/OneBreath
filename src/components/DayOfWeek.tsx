@@ -1,4 +1,5 @@
 import type { Component } from 'solid-js'
+import './DayOfWeek.sass'
 
 const daysOfWeek = ['domenica','lunedì','martedì','mercoledì','giovedì','venerdì','sabato','domenica']
 

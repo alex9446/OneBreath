@@ -8,6 +8,7 @@ import { DayOfWeek, DaysOfWeek } from './DayOfWeek'
 import GroupName from './GroupName'
 import RemoveAttendance from './RemoveAttendance'
 import SetAttendance from './SetAttendance'
+import './Attendance.sass'
 
 type ManageProps = {response: ResponseBody<AttendancesExtra>, groupId: number, refetch: Function}
 

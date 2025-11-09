@@ -17,20 +17,22 @@ main
     display: flex
     flex-direction: column
     gap: 20px
-  input, button, select, .fake-button
-    padding: 0 15px
-    height: 50px
-    border: 2px solid transparent
-    border-radius: 10px
-  input:user-invalid
-      border-color: red
-  input[type=submit], button, .fake-button
-    height: auto
-    min-height: 50px
-    color: inherit
-    background-color: #4c5f87
-    text-align: center
-    text-transform: uppercase
-    cursor: pointer
-    &:disabled
-      background-color: #697287
+
+input, button, select, .fake-button
+  padding: 0 15px
+  height: 50px
+  border: 2px solid transparent
+  border-radius: 10px
+input:user-invalid
+  border-color: red
+input[type=submit], button, .fake-button
+  height: auto
+  min-height: 50px
+  color: white
+  background-color: #4c5f87
+  text-align: center
+  text-transform: uppercase
+  white-space: normal
+  cursor: pointer
+  &:disabled
+    background-color: #697287
