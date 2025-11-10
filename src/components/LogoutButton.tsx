@@ -18,7 +18,8 @@ const LogoutButton = () => {
   }
 
   return (<>
-    <button onClick={onClickEvent} disabled={submission.pending}>Logout</button>
+    <button onClick={onClickEvent} disabled={submission.pending}
+            style='background-color: #b62324'>Logout</button>
     <ErrorBox>{submission.error}</ErrorBox>
   </>)
 }

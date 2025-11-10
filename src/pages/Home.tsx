@@ -1,16 +1,16 @@
 import { lazy } from 'solid-js'
-import OrLine from '../components/OrLine'
 import FakeButton from '../components/FakeButton'
 const Attendance = lazy(() => import('../components/Attendance'))
 
-const Home = () => (
+const Home = () => (<>
   <main id='home-page'>
     <Attendance />
-    <OrLine />
+  </main>
+  <footer>
     <FakeButton href='/settings'>Impostazioni</FakeButton>
     <FakeButton href='/leaderboard'>Classifica presenze</FakeButton>
     <FakeButton href='/myattendances'>Le mie presenze</FakeButton>
-  </main>
-)
+  </footer>
+</>)
 
 export default Home

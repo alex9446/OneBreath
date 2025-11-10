@@ -11,7 +11,7 @@ const Leaderboard = () => {
 
   const [leaderboard] = createResource(groupId, async (gid) => await invokeLeaderboard(gid))
 
-  return (
+  return (<>
     <main id='leaderboard-page'>
       <p>Classifica presenze <GroupName id={groupId} /></p>
       <Suspense fallback='Caricamento...'>
@@ -25,9 +25,11 @@ const Leaderboard = () => {
         </div>
       </Suspense>
       <p class='hide-hint'>ℹ️ <A href='/settings'>Puoi nasconderti da questa lista</A></p>
-      <FakeButton href='/'>Torna indietro</FakeButton>
     </main>
-  )
+    <footer>
+      <FakeButton href='/'>Torna indietro</FakeButton>
+    </footer>
+  </>)
 }
 
 export default Leaderboard

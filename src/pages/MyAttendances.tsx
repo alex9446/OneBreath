@@ -14,7 +14,7 @@ const MyAttendances = () => {
     return myattendances
   })
 
-  return (
+  return (<>
     <main id='myattendances-page'>
       <p>Le mie presenze</p>
       <GroupLegend />
@@ -28,9 +28,11 @@ const MyAttendances = () => {
           </For>
         </div>
       </Suspense>
-      <FakeButton href='/'>Torna indietro</FakeButton>
     </main>
-  )
+    <footer>
+      <FakeButton href='/'>Torna indietro</FakeButton>
+    </footer>
+  </>)
 }
 
 export default MyAttendances

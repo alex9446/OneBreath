@@ -4,7 +4,6 @@ import { getGroupFromLS, setGroupInLS } from '../utils/mixed'
 import { useSupabase } from '../utils/context'
 import SelectGroup from '../components/SelectGroup'
 import ErrorBox from '../components/ErrorBox'
-import OrLine from '../components/OrLine'
 import FakeButton from '../components/FakeButton'
 import LogoutButton from '../components/LogoutButton'
 import './Settings.sass'
@@ -30,7 +29,7 @@ const Settings = () => {
   })
   const submission = useSubmission(saveSettings)
 
-  return (
+  return (<>
     <main id='settings-page'>
       <form method='post' action={saveSettings}>
         <input type='hidden' name='id' value={profile()?.id} required />
@@ -42,12 +41,13 @@ const Settings = () => {
         <input type='submit' value='Salva' disabled={submission.pending} />
       </form>
       <ErrorBox>{submission.error}</ErrorBox>
-      <OrLine />
+    </main>
+    <footer>
+      <LogoutButton />
       <FakeButton href='/settings/notifications'>Notifiche</FakeButton>
       <FakeButton href='/'>Torna indietro</FakeButton>
-      <LogoutButton />
-    </main>
-  )
+    </footer>
+  </>)
 }
 
 export default Settings

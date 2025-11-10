@@ -32,7 +32,7 @@ const Notifications = () => {
     useDeactivate()
   }
 
-  return (
+  return (<>
     <main id='notifications-page'>
       <Show when={subscription()} fallback={
         <button onClick={activateClick} disabled={activateSubmission.pending}>
@@ -45,7 +45,6 @@ const Notifications = () => {
       </Show>
       <ErrorBox>{activateSubmission.error}</ErrorBox>
       <ErrorBox>{deactivateSubmission.error}</ErrorBox>
-      <FakeButton href='/settings'>Torna indietro</FakeButton>
       <p class='notice'>
         <b>Avviso:</b> anche se qui hai le notifiche attive non è detto che tu le riceva,
         questo può dipendere dalle impostazioni generali del dispositivo e app browser,
@@ -58,7 +57,10 @@ const Notifications = () => {
         <a href='https://support.microsoft.com/it-it/microsoft-edge/gestire-le-notifiche-dei-siti-web-in-microsoft-edge-0c555609-5bf2-479d-a59d-fb30a0b80b2b' target='_blank'>Edge</a>
       </p>
     </main>
-  )
+    <footer>
+      <FakeButton href='/settings'>Torna indietro</FakeButton>
+    </footer>
+  </>)
 }
 
 export default Notifications
