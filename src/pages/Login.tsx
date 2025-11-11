@@ -14,7 +14,8 @@ const Login = () => {
       password: formData.get('password')!.toString()
     })
     if (signInError) throw signInError.message
-    const { data: profile, error: profilesError } = await supabaseClient.from('profiles').select('group_id').eq('id', auth.user.id).single()
+    const { data: profile, error: profilesError } = await supabaseClient.from('profiles')
+      .select('group_id').eq('id', auth.user.id).single()
     if (profilesError) throw profilesError.message
     setGroupInLS(profile.group_id)
     throw redirect('/')

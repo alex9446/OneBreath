@@ -13,7 +13,8 @@ const Settings = () => {
   const supabaseClient = useSupabase()
 
   const [profile] = createResource(async () => {
-    const { data: profile, error } = await supabaseClient.from('profiles').select('id,leaderboard').single()
+    const { data: profile, error } = await supabaseClient.from('profiles')
+      .select('id,leaderboard').single()
     if (error) throw error.message
     return profile
   })
@@ -22,7 +23,8 @@ const Settings = () => {
     const id = formData.get('id')!.toString()
     const group_id = parseInt(formData.get('group')!.toString())
     const leaderboard = formData.get('leaderboard') ? true : false
-    const { error } = await supabaseClient.from('profiles').update({group_id, leaderboard}).eq('id', id)
+    const { error } = await supabaseClient.from('profiles')
+      .update({ group_id, leaderboard }).eq('id', id)
     if (error) throw error.message
     setGroupInLS(group_id)
     throw redirect('/')

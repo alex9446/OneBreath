@@ -25,7 +25,8 @@ Deno.serve(async (req: Request) => {
     const validate = await validateUser(req.headers.get('Authorization'), supabaseAdmin)
     if (validate.error) return jsonResponseMessage(validate.error.message, validate.error.code)
 
-    const { data: leaderboard, error } = await supabaseAdmin.from('leaderboard').select('first_name,apg').eq('group_id', group)
+    const { data: leaderboard, error } = await supabaseAdmin.from('leaderboard')
+      .select('first_name,apg').eq('group_id', group)
     if (error) return jsonResponseMessage(error.message, 500)
 
     return jsonResponseMessage('leaderboard', 200, leaderboard)

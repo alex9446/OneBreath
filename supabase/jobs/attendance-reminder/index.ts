@@ -2,6 +2,9 @@ import { createClient } from '@supabase/supabase-js'
 import { setVapidDetails, sendNotification } from 'web-push'
 import { Database } from '../_shared/database.types.ts'
 
+console.info(`Job "attendance-reminder" started!`)
+
+
 const supabaseAdmin = createClient<Database>(
   Deno.env.get('SUPABASE_URL')!,
   Deno.env.get('SECRET_FUNCTIONS_KEY')!
@@ -13,7 +16,8 @@ setVapidDetails(
   Deno.env.get('VAPID_PRIVATE_KEY')!
 )
 
-const { data, error } = await supabaseAdmin.from('subscriptions').select('id,subscription_json')
+const { data, error } = await supabaseAdmin.from('subscriptions')
+  .select('id,subscription_json')
 if (error) {
   console.error(error)
   Deno.exit(1)

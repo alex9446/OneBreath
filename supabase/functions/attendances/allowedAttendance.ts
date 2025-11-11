@@ -17,10 +17,8 @@ export async function allowedAttendance(supabaseAdmin: SupabaseClientDB,
   const dayToMarkPlainDate = dayToMark.toPlainDate().toString()
 
   const { data: attendances, error: attendancesError } = await supabaseAdmin
-    .from('attendances')
-    .select('marked_day,user_id,group_id')
-    .eq('marked_day', dayToMarkPlainDate)
-    .eq('user_id', userId)
+    .from('attendances').select('marked_day,user_id,group_id')
+    .eq('marked_day', dayToMarkPlainDate).eq('user_id', userId)
   if (attendancesError) return errorMessage(attendancesError.message, 500)
   if (attendances.length > 0) return {
     data: {
@@ -33,9 +31,7 @@ export async function allowedAttendance(supabaseAdmin: SupabaseClientDB,
   }
 
   const { data: groups, error: groupsError } = await supabaseAdmin
-    .from('groups')
-    .select('id,days_of_week')
-    .eq('id', group)
+    .from('groups').select('id,days_of_week').eq('id', group)
   if (groupsError) return errorMessage(groupsError.message, 500)
   if (groups.length !== 1) return errorMessage('non-existent group!', 400)
   const allowedDays = groups[0].days_of_week

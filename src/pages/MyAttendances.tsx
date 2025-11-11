@@ -9,7 +9,8 @@ const MyAttendances = () => {
   const supabaseClient = useSupabase()
 
   const [myattendances] = createResource(async () => {
-    const { data: myattendances, error } = await supabaseClient.from('myattendances').select('marked_day,group_name')
+    const { data: myattendances, error } = await supabaseClient.from('myattendances')
+      .select('marked_day,group_name')
     if (error) throw error.message
     return myattendances
   })
