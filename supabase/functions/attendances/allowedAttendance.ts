@@ -16,25 +16,24 @@ export async function allowedAttendance(supabaseAdmin: SupabaseClientDB,
   const dayToMark = nowInRome.hour < validTimes.end ? nowInRome.subtract({ days: 1 }) : nowInRome
   const dayToMarkPlainDate = dayToMark.toPlainDate().toString()
 
-  const { data: attendances, error: attendancesError } = await supabaseAdmin
+  const { data: attendanceRow, error: attendanceError } = await supabaseAdmin
     .from('attendances').select('marked_day,user_id,group_id')
-    .eq('marked_day', dayToMarkPlainDate).eq('user_id', userId)
-  if (attendancesError) return errorMessage(attendancesError.message, 500)
-  if (attendances.length > 0) return {
+    .eq('marked_day', dayToMarkPlainDate).eq('user_id', userId).maybeSingle()
+  if (attendanceError) return errorMessage(attendanceError.message, 500)
+  if (attendanceRow) return {
     data: {
       alreadySet: true,
-      groupSetted: attendances[0].group_id,
+      groupSetted: attendanceRow.group_id,
       daySetted: dayToMark.dayOfWeek,
       daySettedPlainDate: dayToMarkPlainDate
     },
     error: null
   }
 
-  const { data: groups, error: groupsError } = await supabaseAdmin
-    .from('groups').select('id,days_of_week').eq('id', group)
-  if (groupsError) return errorMessage(groupsError.message, 500)
-  if (groups.length !== 1) return errorMessage('non-existent group!', 400)
-  const allowedDays = groups[0].days_of_week
+  const { data: groupRow, error: groupError } = await supabaseAdmin
+    .from('groups').select('id,days_of_week').eq('id', group).single()
+  if (groupError) return errorMessage(groupError.message, 500)
+  const allowedDays = groupRow.days_of_week
   const todayIsAllowedDay = allowedDays.includes(dayToMark.dayOfWeek)
   const nowIsAllowedTime = dayToMark.hour >= validTimes.start || dayToMark.hour < validTimes.end
   if (!todayIsAllowedDay || !nowIsAllowedTime) return {
