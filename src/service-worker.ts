@@ -6,9 +6,14 @@ declare const self: ServiceWorkerGlobalScope
 self.addEventListener('push', (event) => {
   if (!event.data) return
   const title = event.data.text()
-  const options: NotificationOptions = {
-    icon: '/icon.svg'
+  const options = {
+    icon: '/icon.svg',
+    actions: { action: 'open', title: 'Apri' }
   }
 
   event.waitUntil(self.registration.showNotification(title, options))
+})
+
+self.addEventListener('notificationclick', (event) => {
+  event.waitUntil(self.clients.openWindow('/'))
 })
