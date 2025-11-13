@@ -8,7 +8,7 @@ self.addEventListener('push', (event) => {
   const title = event.data.text()
   const options = {
     icon: '/icon.svg',
-    actions: { action: 'open', title: 'Apri' }
+    actions: [{ action: 'open', title: 'Apri' }]
   }
 
   event.waitUntil(self.registration.showNotification(title, options))
