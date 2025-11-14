@@ -1,9 +1,22 @@
 import { action, redirect, useSubmission } from '@solidjs/router'
+import type { SupabaseClientDB } from '../utils/shortcut.types'
+import { setAdminInLS, setGroupInLS } from '../utils/mixed'
 import { useSupabase } from '../utils/context'
-import { setGroupInLS } from '../utils/mixed'
 import ErrorBox from '../components/ErrorBox'
 import OrLine from '../components/OrLine'
 import FakeButton from '../components/FakeButton'
+
+const fillLocalStorage = async (supabaseClient: SupabaseClientDB, userId: string) => {
+  const { data: profile, error: profileError } = await supabaseClient.from('profiles')
+    .select('group_id').eq('id', userId).single()
+  if (profileError) throw profileError.message
+  setGroupInLS(profile.group_id)
+
+  const { data: admin, error: adminError } = await supabaseClient.from('admins')
+    .select('level').eq('id', userId).maybeSingle()
+  if (adminError) throw adminError.message
+  setAdminInLS(admin ? admin.level : 0)
+}
 
 const Login = () => {
   const supabaseClient = useSupabase()
@@ -14,10 +27,7 @@ const Login = () => {
       password: formData.get('password')!.toString()
     })
     if (signInError) throw signInError.message
-    const { data: profile, error: profilesError } = await supabaseClient.from('profiles')
-      .select('group_id').eq('id', auth.user.id).single()
-    if (profilesError) throw profilesError.message
-    setGroupInLS(profile.group_id)
+    await fillLocalStorage(supabaseClient, auth.user.id)
     throw redirect('/')
   })
   const submission = useSubmission(logonUser)

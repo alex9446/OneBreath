@@ -12,18 +12,21 @@ export const watchwordIsValid = async (word: string) => {
   return validHash === await sha256(word)
 }
 
-export const setGroupInLS = (groupId: string | number) => {
-  localStorage.setItem('group_id', groupId.toString())
+const setKeyNumInLS = (keyName: string, numValue: string | number) => {
+  localStorage.setItem(keyName, numValue.toString())
 }
 
-export const getGroupFromLS = () => {
-  const groupId = parseInt(localStorage.getItem('group_id') ?? '')
-  if (isNaN(groupId)) {
-    console.warn('group_id cookie is NaN')
-    return 1
-  }
-  return groupId
+const getKeyNumInLS = (keyName: string, defaultNaN: number) => {
+  const keyValue = parseInt(localStorage.getItem(keyName) ?? '')
+  if (isNaN(keyValue)) return defaultNaN
+  return keyValue
 }
+
+export const setGroupInLS = (groupId: string | number) => setKeyNumInLS('group_id', groupId)
+export const getGroupFromLS = () => getKeyNumInLS('group_id', 1)
+
+export const setAdminInLS = (adminLevel: number) => setKeyNumInLS('admin_level', adminLevel)
+export const getAdminInLS = () => getKeyNumInLS('admin_level', 0)
 
 export const base64ToUint8Array = (base64String: string) => {
   const padding = '='.repeat((4 - base64String.length % 4) % 4)
