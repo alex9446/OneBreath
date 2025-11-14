@@ -2,7 +2,7 @@ import { SupabaseClientDB } from '../_shared/shortcut.types.ts'
 import { AttendancesExtra, FunctionReturn } from '../_shared/mixed.types.ts'
 
 const validTimes = {
-  start: 20,
+  start: 16,
   end: 12  // of next day
 }
 
