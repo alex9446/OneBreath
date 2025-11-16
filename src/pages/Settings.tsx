@@ -2,6 +2,7 @@ import { createResource } from 'solid-js'
 import { action, redirect, useSubmission } from '@solidjs/router'
 import { getGroupFromLS, setGroupInLS } from '../utils/mixed'
 import { useSupabase } from '../utils/context'
+import { getUserId } from '../utils/mixed.supabase'
 import SelectGroup from '../components/SelectGroup'
 import ErrorBox from '../components/ErrorBox'
 import FakeButton from '../components/FakeButton'
@@ -13,8 +14,9 @@ const Settings = () => {
   const supabaseClient = useSupabase()
 
   const [profile] = createResource(async () => {
+    const userId = await getUserId(supabaseClient)
     const { data: profile, error } = await supabaseClient.from('profiles')
-      .select('id,leaderboard').single()
+      .select('id,leaderboard').eq('id', userId).single()
     if (error) throw error.message
     return profile
   })

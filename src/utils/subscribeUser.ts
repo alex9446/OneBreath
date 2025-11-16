@@ -1,12 +1,6 @@
 import { base64ToUint8Array } from './mixed'
 import type { SupabaseClientDB } from './shortcut.types'
-
-const getUserId = async (supabaseClient: SupabaseClientDB) => {
-  const { data: { session }, error } = await supabaseClient.auth.getSession()
-  if (error) throw error.message
-  if (!session) throw 'session is null'
-  return session.user.id
-}
+import { getUserId } from './mixed.supabase'
 
 export const getSubscription = async () => {
   const registration = await navigator.serviceWorker.ready

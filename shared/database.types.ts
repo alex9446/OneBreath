@@ -156,7 +156,7 @@ export type Database = {
           },
         ]
       }
-      myattendances: {
+      pretty_attendances: {
         Row: {
           group_name: string | null
           marked_day: string | null

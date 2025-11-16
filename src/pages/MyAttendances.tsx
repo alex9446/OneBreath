@@ -1,5 +1,6 @@
 import { createResource, For, Suspense } from 'solid-js'
 import { useSupabase } from '../utils/context'
+import { getUserId } from '../utils/mixed.supabase'
 import { getFirstChars } from '../utils/mixed'
 import GroupLegend from '../components/GroupLegend'
 import FakeButton from '../components/FakeButton'
@@ -9,8 +10,9 @@ const MyAttendances = () => {
   const supabaseClient = useSupabase()
 
   const [myattendances] = createResource(async () => {
-    const { data: myattendances, error } = await supabaseClient.from('myattendances')
-      .select('marked_day,group_name')
+    const userId = await getUserId(supabaseClient)
+    const { data: myattendances, error } = await supabaseClient.from('pretty_attendances')
+      .select('marked_day,group_name').eq('user_id', userId)
     if (error) throw error.message
     return myattendances
   })

@@ -1,4 +1,4 @@
-create view public.myattendances
+create view public.pretty_attendances
 with
   (security_invoker = true) as
 select

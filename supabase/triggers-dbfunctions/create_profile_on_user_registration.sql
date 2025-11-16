@@ -11,6 +11,8 @@ begin
 end;
 $$;
 
+revoke execute on function private.handle_new_user from anon, authenticated;
+
 -- trigger the function every time a user is created
 create trigger on_auth_user_created
   after insert on auth.users
