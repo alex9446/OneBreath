@@ -1,5 +1,5 @@
 -- inserts a row into public.profiles
-create function public.handle_new_user()
+create function private.handle_new_user()
 returns trigger
 language plpgsql
 security definer set search_path = ''
@@ -14,4 +14,4 @@ $$;
 -- trigger the function every time a user is created
 create trigger on_auth_user_created
   after insert on auth.users
-  for each row execute procedure public.handle_new_user();
+  for each row execute procedure private.handle_new_user();
