@@ -1,0 +1,15 @@
+# all pages, default, 10 minutes, 1 hour
+/*
+  cache-control: public,max-age=600,stale-while-revalidate=3600
+
+# assets, contain fingerprints, 1 week, 2 weeks
+/assets/*
+  cache-control: public,max-age=604800,stale-while-revalidate=1209600
+
+# fonts - reset - icon, rarely change, 1 hour, 1 week
+/fonts/*
+  cache-control: public,max-age=3600,stale-while-revalidate=604800
+/reset.css
+  cache-control: public,max-age=3600,stale-while-revalidate=604800
+/icon.svg
+  cache-control: public,max-age=3600,stale-while-revalidate=604800
