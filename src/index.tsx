@@ -4,17 +4,18 @@ import { render } from 'solid-js/web'
 import { Route, Router } from '@solidjs/router'
 import { Provider } from './utils/context'
 import RequireLogin from './components/RequireLogin'
-import Home from './pages/Home'
 import RequireAdmin from './components/RequireAdmin'
 import './index.sass'
 const Maintenance = lazy(() => import('./pages/Maintenance'))
 const Login = lazy(() => import('./pages/Login'))
 const Register = lazy(() => import('./pages/Register'))
+const Home = lazy(() => import('./pages/Home'))
 const Settings = lazy(() => import('./pages/Settings'))
 const Notifications = lazy(() => import('./pages/settings/Notifications'))
 const Leaderboard = lazy(() => import('./pages/Leaderboard'))
 const MyAttendances = lazy(() => import('./pages/MyAttendances'))
 const Staff = lazy(() => import('./pages/Staff'))
+const Athletes = lazy(() => import('./pages/staff/Athletes'))
 const NotFound = lazy(() => import('./pages/NotFound'))
 
 const root = document.getElementById('root')
@@ -36,7 +37,10 @@ render(() => {
         <Route path='/leaderboard' component={Leaderboard} />
         <Route path='/myattendances' component={MyAttendances} />
         <Route component={RequireAdmin}>
-          <Route path='/staff' component={Staff} />
+          <Route path='/staff'>
+            <Route path='/' component={Staff} />
+            <Route path='/athletes' component={Athletes} />
+          </Route>
         </Route>
       </Route>
       <Route path='*' component={NotFound} />
