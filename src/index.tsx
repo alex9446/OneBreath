@@ -7,6 +7,7 @@ import RequireLogin from './components/RequireLogin'
 import Home from './pages/Home'
 import RequireAdmin from './components/RequireAdmin'
 import './index.sass'
+const Maintenance = lazy(() => import('./pages/Maintenance'))
 const Login = lazy(() => import('./pages/Login'))
 const Register = lazy(() => import('./pages/Register'))
 const Settings = lazy(() => import('./pages/Settings'))
@@ -14,11 +15,15 @@ const Notifications = lazy(() => import('./pages/settings/Notifications'))
 const Leaderboard = lazy(() => import('./pages/Leaderboard'))
 const MyAttendances = lazy(() => import('./pages/MyAttendances'))
 const Staff = lazy(() => import('./pages/Staff'))
+const NotFound = lazy(() => import('./pages/NotFound'))
 
 const root = document.getElementById('root')
 
-render(
-  () => (
+render(() => {
+  if (['true', '1', 'yes'].includes(import.meta.env.VITE_MAINTENANCE)) {
+    return <Router><Route path='*' component={Maintenance} /></Router>
+  }
+  return (
     <Router root={Provider}>
       <Route path='/login' component={Login} />
       <Route path='/register' component={Register} />
@@ -34,10 +39,10 @@ render(
           <Route path='/staff' component={Staff} />
         </Route>
       </Route>
+      <Route path='*' component={NotFound} />
     </Router>
-  ),
-  root!
-)
+  )
+}, root!)
 
 if (import.meta.env.PROD) {
   if ('serviceWorker' in navigator) {
