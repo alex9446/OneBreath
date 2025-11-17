@@ -1,11 +1,12 @@
 import FakeButton from '../components/FakeButton'
+import GoBack from '../components/GoBack'
 
 const Staff = () => (<>
   <main id='staff-page'>
-    <FakeButton href='/staff/athletes'>Lista atleti</FakeButton>
+    <FakeButton href='athletes'>Lista atleti</FakeButton>
   </main>
   <footer>
-    <FakeButton href='/'>Torna indietro</FakeButton>
+    <GoBack />
   </footer>
 </>)
 

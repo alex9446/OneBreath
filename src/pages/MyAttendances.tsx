@@ -1,5 +1,5 @@
 import UserAttendances from '../components/UserAttendances'
-import FakeButton from '../components/FakeButton'
+import GoBack from '../components/GoBack'
 
 const MyAttendances = () => (<>
   <main id='myattendances-page' style='align-items: center'>
@@ -7,7 +7,7 @@ const MyAttendances = () => (<>
     <UserAttendances />
   </main>
   <footer>
-    <FakeButton href='/'>Torna indietro</FakeButton>
+    <GoBack />
   </footer>
 </>)
 

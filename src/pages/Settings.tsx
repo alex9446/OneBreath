@@ -6,6 +6,7 @@ import { getUserId } from '../utils/mixed.supabase'
 import SelectGroup from '../components/SelectGroup'
 import ErrorBox from '../components/ErrorBox'
 import FakeButton from '../components/FakeButton'
+import GoBack from '../components/GoBack'
 import LogoutButton from '../components/LogoutButton'
 import './Settings.sass'
 
@@ -48,8 +49,8 @@ const Settings = () => {
     </main>
     <footer>
       <LogoutButton />
-      <FakeButton href='/settings/notifications'>Notifiche</FakeButton>
-      <FakeButton href='/'>Torna indietro</FakeButton>
+      <FakeButton href='notifications'>Notifiche</FakeButton>
+      <GoBack />
     </footer>
   </>)
 }

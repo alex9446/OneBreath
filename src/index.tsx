@@ -1,7 +1,8 @@
 /* @refresh reload */
 import { lazy } from 'solid-js'
 import { render } from 'solid-js/web'
-import { Route, Router } from '@solidjs/router'
+import { Route, Router, type MatchFilters } from '@solidjs/router'
+import { validate } from 'uuid'
 import { Provider } from './utils/context'
 import RequireLogin from './components/RequireLogin'
 import RequireAdmin from './components/RequireAdmin'
@@ -16,9 +17,14 @@ const Leaderboard = lazy(() => import('./pages/Leaderboard'))
 const MyAttendances = lazy(() => import('./pages/MyAttendances'))
 const Staff = lazy(() => import('./pages/Staff'))
 const Athletes = lazy(() => import('./pages/staff/Athletes'))
+const Athlete = lazy(() => import('./pages/staff/athletes/Athlete'))
 const NotFound = lazy(() => import('./pages/NotFound'))
 
 const root = document.getElementById('root')
+
+const AthleteFilters: MatchFilters = {
+  id: (uuid: string) => validate(uuid)
+}
 
 render(() => {
   if (['true', '1', 'yes'].includes(import.meta.env.VITE_MAINTENANCE)) {
@@ -39,7 +45,10 @@ render(() => {
         <Route component={RequireAdmin}>
           <Route path='/staff'>
             <Route path='/' component={Staff} />
-            <Route path='/athletes' component={Athletes} />
+            <Route path='/athletes'>
+              <Route path='/' component={Athletes} />
+              <Route path='/:id' component={Athlete} matchFilters={AthleteFilters} />
+            </Route>
           </Route>
         </Route>
       </Route>

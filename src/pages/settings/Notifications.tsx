@@ -3,7 +3,7 @@ import { action, useAction, useSubmission } from '@solidjs/router'
 import { useSupabase } from '../../utils/context'
 import { getSubscription, subscribeUser, unsubscribeUser } from '../../utils/subscribeUser'
 import ErrorBox from '../../components/ErrorBox'
-import FakeButton from '../../components/FakeButton'
+import GoBack from '../../components/GoBack'
 import './Notification.sass'
 
 const Notifications = () => {
@@ -58,7 +58,7 @@ const Notifications = () => {
       </p>
     </main>
     <footer>
-      <FakeButton href='/settings'>Torna indietro</FakeButton>
+      <GoBack />
     </footer>
   </>)
 }

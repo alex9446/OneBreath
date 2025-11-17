@@ -3,7 +3,7 @@ import { A } from '@solidjs/router'
 import { getGroupFromLS } from '../utils/mixed'
 import invokeLeaderboard from '../utils/invokeLeaderboard'
 import GroupName from '../components/GroupName'
-import FakeButton from '../components/FakeButton'
+import GoBack from '../components/GoBack'
 import './Leaderboard.sass'
 
 const Leaderboard = () => {
@@ -27,7 +27,7 @@ const Leaderboard = () => {
       <p class='hide-hint'>ℹ️ <A href='/settings'>Puoi nasconderti da questa lista</A></p>
     </main>
     <footer>
-      <FakeButton href='/'>Torna indietro</FakeButton>
+      <GoBack />
     </footer>
   </>)
 }
