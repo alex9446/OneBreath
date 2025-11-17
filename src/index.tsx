@@ -17,7 +17,6 @@ const Leaderboard = lazy(() => import('./pages/Leaderboard'))
 const MyAttendances = lazy(() => import('./pages/MyAttendances'))
 const Staff = lazy(() => import('./pages/Staff'))
 const Athletes = lazy(() => import('./pages/staff/Athletes'))
-const Athlete = lazy(() => import('./pages/staff/athletes/Athlete'))
 const NotFound = lazy(() => import('./pages/NotFound'))
 
 const root = document.getElementById('root')
@@ -45,10 +44,7 @@ render(() => {
         <Route component={RequireAdmin}>
           <Route path='/staff'>
             <Route path='/' component={Staff} />
-            <Route path='/athletes'>
-              <Route path='/' component={Athletes} />
-              <Route path='/:id' component={Athlete} matchFilters={AthleteFilters} />
-            </Route>
+            <Route path='/athletes/:id?' component={Athletes} matchFilters={AthleteFilters} />
           </Route>
         </Route>
       </Route>

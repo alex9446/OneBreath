@@ -1,8 +1,9 @@
-import { createResource, For, type Component } from 'solid-js'
-import { useNavigate } from '@solidjs/router'
+import { createResource, For, Show, type Component } from 'solid-js'
+import { useNavigate, useParams } from '@solidjs/router'
 import type { Tables } from '../../utils/database.types'
 import { useSupabase } from '../../utils/context'
 import GroupName from '../../components/GroupName'
+import UserAttendances from '../../components/UserAttendances'
 import GoBack from '../../components/GoBack'
 import './Athletes.sass'
 
@@ -21,6 +22,7 @@ const AthleteCard: Component<{ profile: AthleteCardProfile }> = (props) => {
 
 const Athletes = () => {
   const supabaseClient = useSupabase()
+  const params = useParams()
 
   const [profiles] = createResource(async () => {
     const { data: profiles, error } = await supabaseClient.from('profiles')
@@ -30,11 +32,19 @@ const Athletes = () => {
   })
 
   return (<>
-    <main id='athletes-page'>
-      <For each={profiles()} fallback={<p>Caricamento atleti...</p>}>
-        {(profile) => <AthleteCard profile={profile} />}
-      </For>
-    </main>
+    <Show when={params.id} fallback={
+      <main id='athletes-page'>
+        <For each={profiles()} fallback={<p>Caricamento atleti...</p>}>
+          {(profile) => <AthleteCard profile={profile} />}
+        </For>
+      </main>
+    }>
+      {(userId) => (
+        <main id='athlete-page' style='align-items: center'>
+          <UserAttendances id={userId()} />
+        </main>
+      )}
+    </Show>
     <footer>
       <GoBack />
     </footer>
