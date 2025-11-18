@@ -140,6 +140,22 @@ export type Database = {
       }
     }
     Views: {
+      attendances_with_name: {
+        Row: {
+          group_id: number | null
+          marked_day: string | null
+          name: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "attendances_group_id_fkey"
+            columns: ["group_id"]
+            isOneToOne: false
+            referencedRelation: "groups"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       leaderboard: {
         Row: {
           apg: number | null

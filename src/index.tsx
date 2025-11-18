@@ -16,11 +16,15 @@ const Notifications = lazy(() => import('./pages/settings/Notifications'))
 const Leaderboard = lazy(() => import('./pages/Leaderboard'))
 const MyAttendances = lazy(() => import('./pages/MyAttendances'))
 const Staff = lazy(() => import('./pages/Staff'))
+const Attendances = lazy(() => import('./pages/staff/Attendances'))
 const Athletes = lazy(() => import('./pages/staff/Athletes'))
 const NotFound = lazy(() => import('./pages/NotFound'))
 
 const root = document.getElementById('root')
 
+const groupDateFilters: MatchFilters = {
+  groupDate: /^\d+G\d{4}\-\d\d\-\d\d$/
+}
 const AthleteFilters: MatchFilters = {
   id: (uuid: string) => validate(uuid)
 }
@@ -44,6 +48,7 @@ render(() => {
         <Route component={RequireAdmin}>
           <Route path='/staff'>
             <Route path='/' component={Staff} />
+            <Route path='/attendances/:groupDate?' component={Attendances} matchFilters={groupDateFilters} />
             <Route path='/athletes/:id?' component={Athletes} matchFilters={AthleteFilters} />
           </Route>
         </Route>
