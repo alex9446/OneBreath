@@ -6,8 +6,8 @@ import SelectGroup from '../../components/SelectGroup'
 import FakeButton from '../../components/FakeButton'
 import './Attendances.sass'
 
-const splitGroupDate = (groupDate: string): [number, string] => {
-  if (!groupDate) return [ getGroupFromLS(), new Date().toISOString().split('T')[0] ]
+const splitGroupDate = (groupDate: string, today: string): [number, string] => {
+  if (!groupDate) return [ getGroupFromLS(), today ]
   const groupDateSplitted = groupDate.split('G')
   return [ parseInt(groupDateSplitted[0]), groupDateSplitted[1] ]
 }
@@ -16,10 +16,11 @@ const Attendances = () => {
   const navigate = useNavigate()
   const supabaseClient = useSupabase()
   const params = useParams()
-  const [defaultGroup, defaultDate] = splitGroupDate(params.groupDate)
+  const todayDate = new Date().toISOString().split('T')[0]
+  const [defaultGroup, defaultDate] = splitGroupDate(params.groupDate, todayDate)
 
-  const [attendances] = createResource(
-    () => splitGroupDate(params.groupDate),
+  const [attendances, {mutate}] = createResource(
+    () => splitGroupDate(params.groupDate, todayDate),
     async ([group, date]) => {
       const { data: attendances, error } = await supabaseClient.from('attendances_with_name')
         .select('name').eq('group_id', group).eq('marked_day', date)
@@ -32,14 +33,16 @@ const Attendances = () => {
   let inputDate!: HTMLInputElement
 
   const onInputEvent = () => {
+    mutate([])
     navigate(`${params.groupDate ? '..' : '.'}/${selectGroup.value}G${inputDate.value}`)
   }
 
   return (<>
     <main id='attendances-page'>
       <SelectGroup ref={selectGroup} defaultOption={defaultGroup} onInput={onInputEvent} />
-      <input type='date' ref={inputDate} value={defaultDate} required onInput={onInputEvent} />
-      <p>{attendances() === undefined ? 'Caricamento...': `Totale: ${attendances()?.length}`}</p>
+      <input type='date' ref={inputDate} required onInput={onInputEvent}
+             value={defaultDate} max={todayDate} />
+      <p>{attendances.loading ? 'Caricamento...' : `Totale: ${attendances()?.length}`}</p>
       <ul>
         <For each={attendances()}>
           {(attendance) => <li>{attendance.name}</li>}
