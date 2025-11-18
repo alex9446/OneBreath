@@ -31,6 +31,8 @@ const Athletes = () => {
     return profiles
   })
 
+  const profileById = (id: string) => profiles()?.find((p) => p.id === id)
+
   return (<>
     <Show when={params.id} fallback={
       <main id='athletes-page'>
@@ -40,7 +42,10 @@ const Athletes = () => {
       </main>
     }>
       {(userId) => (
-        <main id='athlete-page' style='align-items: center'>
+        <main id='athlete-page'>
+          <Show when={profileById(userId())}>
+            {(profile) => <p>Presenze di {profile().first_name} {profile().last_name}</p>}
+          </Show>
           <UserAttendances id={userId()} />
         </main>
       )}
