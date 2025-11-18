@@ -4,7 +4,7 @@ import { useSupabase } from '../utils/context'
 import invokeAttendances from '../utils/invokeAttendances'
 import ErrorBox from '../components/ErrorBox'
 
-const RemoveAttendance: Component<{ groupId: number, refetch: Function }> = (props) => {
+const RemoveAttendance: Component<{ groupId: number, refetch: () => void }> = (props) => {
   const supabaseClient = useSupabase()
 
   const remove = action(async (groupId: number) => {

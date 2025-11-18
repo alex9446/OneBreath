@@ -10,7 +10,11 @@ import RemoveAttendance from './RemoveAttendance'
 import SetAttendance from './SetAttendance'
 import './Attendance.sass'
 
-type ManageProps = {response: ResponseBody<AttendancesExtra>, groupId: number, refetch: Function}
+type ManageProps = {
+  response: ResponseBody<AttendancesExtra>
+  groupId: number
+  refetch: () => void
+}
 
 const ManageResource: Component<ManageProps> = (props) => {
   const extra = props.response.extra
