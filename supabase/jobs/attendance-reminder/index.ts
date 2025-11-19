@@ -1,5 +1,5 @@
 import { createClient } from '@supabase/supabase-js'
-import { setVapidDetails, sendNotification } from 'web-push'
+import { setVapidDetails, sendNotification, type SendResult } from 'web-push'
 import { Database } from '../_shared/database.types.ts'
 
 console.info(`Job "attendance-reminder" started!`)
@@ -40,9 +40,9 @@ for (const subscription of data) {
     JSON.parse(subscription_json),
     'Eri presente in piscina? Segna la presenza!',
     { TTL: 60*60*12 } // 12 hours
-  ).then((result) => { throw result }).catch(
-    (result) => updateLastStatusCode(subscription.id, result.statusCode)
-  ).catch((error) => {
+  ).then((result: SendResult) => { throw result }).catch(
+    (result: SendResult) => updateLastStatusCode(subscription.id, result.statusCode)
+  ).catch((error: unknown) => {
     console.warn('during subscription:', subscription.id)
     console.warn(error)
   })

@@ -12,7 +12,4 @@ RUN deno install --import-map ./import_map.json
 COPY ./shared/database.types.ts ../_shared/
 COPY ./supabase/jobs/attendance-reminder/index.ts ./
 
-# Compile the main app so that it doesn't need to be compiled each startup/entry.
-RUN deno cache --import-map ./import_map.json ./index.ts
-
 CMD ["run", "--import-map", "./import_map.json", "--allow-env", "--allow-net", "./index.ts"]
