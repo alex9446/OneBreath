@@ -41,7 +41,8 @@ const Register = () => {
     <main id='register-page'>
       <form method='post' action={createUser}>
         <input type='email' name='email' required placeholder='email' />
-        <input type='password' name='password' required minLength='6' placeholder='password' />
+        <input type='password' name='password' required placeholder='password'
+               minLength='6' autocomplete='new-password' />
         <input type='text' name='first-name' required placeholder='nome' />
         <input type='text' name='last-name' required placeholder='cognome' />
         <RadioGroup />

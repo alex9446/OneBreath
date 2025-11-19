@@ -16,7 +16,7 @@ const Attendances = () => {
   const navigate = useNavigate()
   const supabaseClient = useSupabase()
   const params = useParams()
-  const todayDate = new Date().toISOString().split('T')[0]
+  const todayDate = new Date().toLocaleDateString('en-CA')  // en-CA because by default it formats dates as yyyy-mm-dd
   const [defaultGroup, defaultDate] = splitGroupDate(params.groupDate, todayDate)
 
   const [attendances, {mutate}] = createResource(

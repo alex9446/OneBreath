@@ -5,9 +5,10 @@ import { useSupabase } from '../utils/context'
 import { getUserId } from '../utils/mixed.supabase'
 import SelectGroup from '../components/SelectGroup'
 import ErrorBox from '../components/ErrorBox'
+import OrLine from '../components/OrLine'
 import FakeButton from '../components/FakeButton'
-import GoBack from '../components/GoBack'
 import LogoutButton from '../components/LogoutButton'
+import GoBack from '../components/GoBack'
 import './Settings.sass'
 
 const Settings = () => {
@@ -46,6 +47,8 @@ const Settings = () => {
         <input type='submit' value='Salva' disabled={submission.pending} />
       </form>
       <ErrorBox>{submission.error}</ErrorBox>
+      <OrLine />
+      <FakeButton href='changepassword'>Cambia password</FakeButton>
     </main>
     <footer>
       <LogoutButton />

@@ -9,9 +9,11 @@ import RequireAdmin from './components/RequireAdmin'
 import './index.sass'
 const Maintenance = lazy(() => import('./pages/Maintenance'))
 const Login = lazy(() => import('./pages/Login'))
+const ForgottenPassword = lazy(() => import('./pages/login/ForgottenPassword'))
 const Register = lazy(() => import('./pages/Register'))
 const Home = lazy(() => import('./pages/Home'))
 const Settings = lazy(() => import('./pages/Settings'))
+const ChangePassword = lazy(() => import('./pages/settings/ChangePassword'))
 const Notifications = lazy(() => import('./pages/settings/Notifications'))
 const Leaderboard = lazy(() => import('./pages/Leaderboard'))
 const MyAttendances = lazy(() => import('./pages/MyAttendances'))
@@ -35,12 +37,16 @@ render(() => {
   }
   return (
     <Router root={Provider}>
-      <Route path='/login' component={Login} />
+      <Route path='/login'>
+        <Route path='/' component={Login} />
+        <Route path='/forgottenpassword' component={ForgottenPassword} />
+      </Route>
       <Route path='/register' component={Register} />
       <Route component={RequireLogin}>
         <Route path='/' component={Home} />
         <Route path='/settings'>
           <Route path='/' component={Settings} />
+          <Route path='/changepassword' component={ChangePassword} />
           <Route path='/notifications' component={Notifications} />
         </Route>
         <Route path='/leaderboard' component={Leaderboard} />
