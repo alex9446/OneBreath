@@ -1,12 +1,21 @@
 import { createSignal, Show } from 'solid-js'
-import { action, useSubmission } from '@solidjs/router'
+import { action, useLocation, useSubmission } from '@solidjs/router'
 import { useSupabase } from '../../utils/context'
+import { fillLocalStorage, getUserId } from '../../utils/mixed.supabase'
+import manageRawError from '../../utils/manageRawError'
 import ErrorBox from '../../components/ErrorBox'
 import GoBack from '../../components/GoBack'
 
 const ChangePassword = () => {
+  const location = useLocation()
   const supabaseClient = useSupabase()
   const [success, setSuccess] = createSignal(false)
+
+  if (location.search.includes('reset')) {
+    getUserId(supabaseClient)
+      .then((userId) => fillLocalStorage(supabaseClient, userId))
+      .catch((error) => console.error(manageRawError(error)))
+  }
 
   const setNewPassword = action(async (formData: FormData) => {
     const { error } = await supabaseClient.auth.updateUser({
