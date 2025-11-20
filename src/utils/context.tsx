@@ -1,6 +1,7 @@
 import { createContext, useContext, type ParentComponent } from 'solid-js'
 import { createClient } from '@supabase/supabase-js'
 import type { SupabaseClientDB } from './shortcut.types'
+import DomainChangeAlert from '../components/DomainChangeAlert'
 
 const supabaseContext = createContext<SupabaseClientDB>()
 
@@ -11,7 +12,10 @@ export const Provider: ParentComponent = (props) => {
   )
 
   return (
-    <supabaseContext.Provider value={supabase}>{props.children}</supabaseContext.Provider>
+    <supabaseContext.Provider value={supabase}>
+      <DomainChangeAlert />
+      {props.children}
+    </supabaseContext.Provider>
   )
 }
 
