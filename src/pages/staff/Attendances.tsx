@@ -6,7 +6,7 @@ import SelectGroup from '../../components/SelectGroup'
 import FakeButton from '../../components/FakeButton'
 import './Attendances.sass'
 
-const splitGroupDate = (groupDate: string, today: string): [number, string] => {
+const splitGroupDate = (groupDate: string | undefined, today: string): [number, string] => {
   if (!groupDate) return [ getGroupFromLS(), today ]
   const groupDateSplitted = groupDate.split('G')
   return [ parseInt(groupDateSplitted[0]), groupDateSplitted[1] ]

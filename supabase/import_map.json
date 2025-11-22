@@ -1,6 +1,6 @@
 {
   "imports": {
-    "@supabase/supabase-js": "npm:@supabase/supabase-js@2.76.1",
+    "@supabase/supabase-js": "npm:@supabase/supabase-js@2.84.0",
     "uuid": "npm:uuid@13.0.0",
     "web-push": "npm:web-push@3.6.7"
   }
