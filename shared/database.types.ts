@@ -16,16 +16,19 @@ export type Database = {
     Tables: {
       admins: {
         Row: {
+          added_by: string
           created_at: string
           id: string
           level: number
         }
         Insert: {
+          added_by: string
           created_at?: string
           id: string
           level?: number
         }
         Update: {
+          added_by?: string
           created_at?: string
           id?: string
           level?: number
