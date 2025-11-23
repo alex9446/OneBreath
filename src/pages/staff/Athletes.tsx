@@ -50,9 +50,9 @@ const Athletes = () => {
         </main>
       )}
     </Show>
-    <footer>
+    <nav>
       <GoBack />
-    </footer>
+    </nav>
   </>)
 }
 

@@ -50,11 +50,11 @@ const Settings = () => {
       <OrLine />
       <FakeButton href='changepassword'>Cambia password</FakeButton>
     </main>
-    <footer>
+    <nav>
       <LogoutButton />
       <FakeButton href='notifications'>Notifiche</FakeButton>
       <GoBack />
-    </footer>
+    </nav>
   </>)
 }
 

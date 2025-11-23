@@ -57,9 +57,9 @@ const Notifications = () => {
         <a href='https://support.microsoft.com/it-it/microsoft-edge/gestire-le-notifiche-dei-siti-web-in-microsoft-edge-0c555609-5bf2-479d-a59d-fb30a0b80b2b' target='_blank'>Edge</a>
       </p>
     </main>
-    <footer>
+    <nav>
       <GoBack />
-    </footer>
+    </nav>
   </>)
 }
 

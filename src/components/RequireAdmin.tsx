@@ -6,9 +6,9 @@ const notAdmin = () => (<>
   <main>
     <p>Pagina riservata agli utenti staff</p>
   </main>
-  <footer>
+  <nav>
     <FakeButton href='/'>Torna alla homepage</FakeButton>
-  </footer>
+  </nav>
 </>)
 
 const RequireAdmin: ParentComponent = (props) => (

@@ -4,9 +4,9 @@ const NotFound = () => (<>
   <main id='notfound-page'>
     <p>Pagina non trovata</p>
   </main>
-  <footer>
+  <nav>
     <FakeButton href='/'>Torna alla homepage</FakeButton>
-  </footer>
+  </nav>
 </>)
 
 export default NotFound

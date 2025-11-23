@@ -28,9 +28,9 @@ const ForgottenPassword = () => {
         <ErrorBox>{submission.error}</ErrorBox>
       </Show>
     </main>
-    <footer>
+    <nav>
       <GoBack />
-    </footer>
+    </nav>
   </>)
 }
 

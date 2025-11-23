@@ -6,9 +6,9 @@ const Staff = () => (<>
     <FakeButton href='athletes'>Lista atleti</FakeButton>
     <FakeButton href='attendances'>Storico presenze</FakeButton>
   </main>
-  <footer>
+  <nav>
     <GoBack />
-  </footer>
+  </nav>
 </>)
 
 export default Staff

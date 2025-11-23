@@ -7,14 +7,14 @@ const Home = () => (<>
   <main id='home-page'>
     <Attendance />
   </main>
-  <footer>
+  <nav>
     <Show when={getAdminInLS() >= 1}>
       <FakeButton color='darkorange' href='/staff'>Accesso staff</FakeButton>
     </Show>
     <FakeButton href='/settings'>Impostazioni</FakeButton>
     <FakeButton href='/leaderboard'>Classifica presenze</FakeButton>
     <FakeButton href='/myattendances'>Le mie presenze</FakeButton>
-  </footer>
+  </nav>
 </>)
 
 export default Home

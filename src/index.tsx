@@ -3,7 +3,7 @@ import { lazy } from 'solid-js'
 import { render } from 'solid-js/web'
 import { Route, Router, type MatchFilters } from '@solidjs/router'
 import { validate } from 'uuid'
-import { Provider } from './utils/context'
+import RootComponent from './components/RootComponent'
 import RequireLogin from './components/RequireLogin'
 import RequireAdmin from './components/RequireAdmin'
 import './index.sass'
@@ -36,7 +36,7 @@ render(() => {
     return <Router><Route path='*' component={Maintenance} /></Router>
   }
   return (
-    <Router root={Provider}>
+    <Router root={RootComponent}>
       <Route path='/login'>
         <Route path='/' component={Login} />
         <Route path='/forgottenpassword' component={ForgottenPassword} />

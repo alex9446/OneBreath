@@ -26,9 +26,9 @@ const Leaderboard = () => {
       </Suspense>
       <p class='hide-hint'>ℹ️ <A href='/settings'>Puoi nasconderti da questa lista</A></p>
     </main>
-    <footer>
+    <nav>
       <GoBack />
-    </footer>
+    </nav>
   </>)
 }
 

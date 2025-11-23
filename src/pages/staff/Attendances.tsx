@@ -49,9 +49,9 @@ const Attendances = () => {
         </For>
       </ul>
     </main>
-    <footer>
+    <nav>
       <FakeButton href={params.groupDate ? '../..' : '..'}>Torna indietro</FakeButton>
-    </footer>
+    </nav>
   </>)
 }
 

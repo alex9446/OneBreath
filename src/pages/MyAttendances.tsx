@@ -6,9 +6,9 @@ const MyAttendances = () => (<>
     <p style='text-align: center'>Le mie presenze</p>
     <UserAttendances />
   </main>
-  <footer>
+  <nav>
     <GoBack />
-  </footer>
+  </nav>
 </>)
 
 export default MyAttendances
