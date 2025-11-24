@@ -3,6 +3,7 @@ import { useNavigate, useParams } from '@solidjs/router'
 import type { Tables } from '../../utils/database.types'
 import { useSupabase } from '../../utils/context'
 import GroupName from '../../components/GroupName'
+import Title from '../../components/Title'
 import Athlete from './athletes/Athlete'
 import GoBack from '../../components/GoBack'
 import './Athletes.sass'
@@ -42,6 +43,7 @@ const Athletes = () => {
   const isAdmin = (id: string) => admins()?.includes(id) ?? false
 
   return (<>
+    <Title>Area staff &gt; Atleti</Title>
     <Show when={params.id} fallback={
       <main id='athletes-page'>
         <For each={profiles()} fallback={<p>Caricamento atleti...</p>}>

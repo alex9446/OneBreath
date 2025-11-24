@@ -2,6 +2,7 @@ import { createResource, Show } from 'solid-js'
 import { action, useAction, useSubmission } from '@solidjs/router'
 import { useSupabase } from '../../utils/context'
 import { getSubscription, subscribeUser, unsubscribeUser } from '../../utils/subscribeUser'
+import Title from '../../components/Title'
 import ErrorBox from '../../components/ErrorBox'
 import GoBack from '../../components/GoBack'
 import './Notification.sass'
@@ -33,6 +34,7 @@ const Notifications = () => {
   }
 
   return (<>
+    <Title>Impostazioni &gt; Notifiche</Title>
     <main id='notifications-page'>
       <Show when={subscription()} fallback={
         <button onClick={activateClick} disabled={activateSubmission.pending}>

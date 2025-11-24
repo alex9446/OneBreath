@@ -2,6 +2,7 @@ import { createResource, For } from 'solid-js'
 import { A, useNavigate, useParams } from '@solidjs/router'
 import { getGroupFromLS } from '../../utils/mixed'
 import { useSupabase } from '../../utils/context'
+import Title from '../../components/Title'
 import SelectGroup from '../../components/SelectGroup'
 import FakeButton from '../../components/FakeButton'
 import './Attendances.sass'
@@ -40,6 +41,7 @@ const Attendances = () => {
   const backPath = () => params.groupDate ? '../..' : '..'
 
   return (<>
+    <Title>Area staff &gt; Storico presenze</Title>
     <main id='attendances-page'>
       <SelectGroup ref={selectGroup} defaultOption={defaultGroup} onInput={onInputEvent} />
       <input type='date' ref={inputDate} required onInput={onInputEvent}

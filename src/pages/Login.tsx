@@ -1,6 +1,7 @@
 import { A, action, redirect, useSubmission } from '@solidjs/router'
 import { useSupabase } from '../utils/context'
 import { fillLocalStorage } from '../utils/mixed.supabase'
+import Title from '../components/Title'
 import ErrorBox from '../components/ErrorBox'
 import OrLine from '../components/OrLine'
 import FakeButton from '../components/FakeButton'
@@ -20,7 +21,8 @@ const Login = () => {
   })
   const submission = useSubmission(logonUser)
 
-  return (
+  return (<>
+    <Title>Login</Title>
     <main id='login-page'>
       <form method='post' action={logonUser}>
         <input type='email' name='email' required placeholder='email' />
@@ -33,7 +35,7 @@ const Login = () => {
       <OrLine />
       <FakeButton href='/register'>Crea account</FakeButton>
     </main>
-  )
+  </>)
 }
 
 export default Login

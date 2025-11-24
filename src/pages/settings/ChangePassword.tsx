@@ -3,6 +3,7 @@ import { action, useLocation, useSubmission } from '@solidjs/router'
 import { useSupabase } from '../../utils/context'
 import { fillLocalStorage, getUserId } from '../../utils/mixed.supabase'
 import manageRawError from '../../utils/manageRawError'
+import Title from '../../components/Title'
 import ErrorBox from '../../components/ErrorBox'
 import GoBack from '../../components/GoBack'
 
@@ -27,6 +28,7 @@ const ChangePassword = () => {
   const submission = useSubmission(setNewPassword)
 
   return (<>
+    <Title>Impostazioni &gt; Cambia password</Title>
     <main id='changepassword-page'>
       <Show when={!success()} fallback={<p style='color:green'>Password modificata con successo!</p>}>
         <form method='post' action={setNewPassword}>

@@ -3,6 +3,7 @@ import { action, redirect, useSubmission } from '@solidjs/router'
 import { getGroupFromLS, setGroupInLS } from '../utils/mixed'
 import { useSupabase } from '../utils/context'
 import { getUserId } from '../utils/mixed.supabase'
+import Title from '../components/Title'
 import SelectGroup from '../components/SelectGroup'
 import ErrorBox from '../components/ErrorBox'
 import OrLine from '../components/OrLine'
@@ -36,6 +37,7 @@ const Settings = () => {
   const submission = useSubmission(saveSettings)
 
   return (<>
+    <Title>Impostazioni</Title>
     <main id='settings-page'>
       <form method='post' action={saveSettings}>
         <input type='hidden' name='id' value={profile()?.id} required />

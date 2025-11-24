@@ -1,6 +1,7 @@
 import { createSignal, Show } from 'solid-js'
 import { action, useSubmission } from '@solidjs/router'
 import { useSupabase } from '../../utils/context'
+import Title from '../../components/Title'
 import ErrorBox from '../../components/ErrorBox'
 import GoBack from '../../components/GoBack'
 
@@ -19,6 +20,7 @@ const ForgottenPassword = () => {
   const submission = useSubmission(sendReset)
 
   return (<>
+    <Title>Login &gt; Password dimenticata</Title>
     <main id='forgottenpassword-page'>
       <Show when={!success()} fallback={<p style='color:green'>Mail di reset inviata!</p>}>
         <form method='post' action={sendReset}>

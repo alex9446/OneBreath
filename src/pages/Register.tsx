@@ -2,6 +2,7 @@ import { createSignal } from 'solid-js'
 import { action, redirect, useSubmission } from '@solidjs/router'
 import { useSupabase } from '../utils/context'
 import { setGroupInLS } from '../utils/mixed'
+import Title from '../components/Title'
 import RadioGroup from '../components/RadioGroup'
 import Watchword from '../components/Watchword'
 import ErrorBox from '../components/ErrorBox'
@@ -37,7 +38,8 @@ const Register = () => {
   })
   const submission = useSubmission(createUser)
 
-  return (
+  return (<>
+    <Title>Crea account</Title>
     <main id='register-page'>
       <form method='post' action={createUser}>
         <input type='email' name='email' required placeholder='email' />
@@ -53,7 +55,7 @@ const Register = () => {
       <OrLine />
       <FakeButton href='/login'>Login</FakeButton>
     </main>
-  )
+  </>)
 }
 
 export default Register

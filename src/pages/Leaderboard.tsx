@@ -2,6 +2,7 @@ import { createResource, For, Suspense } from 'solid-js'
 import { A } from '@solidjs/router'
 import { getGroupFromLS } from '../utils/mixed'
 import invokeLeaderboard from '../utils/invokeLeaderboard'
+import Title from '../components/Title'
 import GroupName from '../components/GroupName'
 import GoBack from '../components/GoBack'
 import './Leaderboard.sass'
@@ -12,6 +13,7 @@ const Leaderboard = () => {
   const [leaderboard] = createResource(groupId, async (gid) => await invokeLeaderboard(gid))
 
   return (<>
+    <Title>Classifica presenze</Title>
     <main id='leaderboard-page'>
       <p>Classifica presenze <GroupName id={groupId} /></p>
       <Suspense fallback='Caricamento...'>
