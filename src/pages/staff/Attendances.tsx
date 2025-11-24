@@ -1,5 +1,5 @@
 import { createResource, For } from 'solid-js'
-import { useNavigate, useParams } from '@solidjs/router'
+import { A, useNavigate, useParams } from '@solidjs/router'
 import { getGroupFromLS } from '../../utils/mixed'
 import { useSupabase } from '../../utils/context'
 import SelectGroup from '../../components/SelectGroup'
@@ -23,7 +23,7 @@ const Attendances = () => {
     () => splitGroupDate(params.groupDate, todayDate),
     async ([group, date]) => {
       const { data: attendances, error } = await supabaseClient.from('attendances_with_name')
-        .select('name').eq('group_id', group).eq('marked_day', date)
+        .select('user_id,name').eq('group_id', group).eq('marked_day', date)
       if (error) throw error.message
       return attendances
     }
@@ -37,6 +37,8 @@ const Attendances = () => {
     navigate(`${params.groupDate ? '..' : '.'}/${selectGroup.value}G${inputDate.value}`)
   }
 
+  const backPath = () => params.groupDate ? '../..' : '..'
+
   return (<>
     <main id='attendances-page'>
       <SelectGroup ref={selectGroup} defaultOption={defaultGroup} onInput={onInputEvent} />
@@ -45,12 +47,16 @@ const Attendances = () => {
       <p>{attendances.loading ? 'Caricamento...' : `Totale: ${attendances()?.length}`}</p>
       <ul>
         <For each={attendances()}>
-          {(attendance) => <li>{attendance.name}</li>}
+          {(attendance) => (
+            <li>
+              <A href={`${backPath()}/athletes/${attendance.user_id}`}>{attendance.name}</A>
+            </li>
+          )}
         </For>
       </ul>
     </main>
     <nav>
-      <FakeButton href={params.groupDate ? '../..' : '..'}>Torna indietro</FakeButton>
+      <FakeButton href={backPath()}>Torna indietro</FakeButton>
     </nav>
   </>)
 }

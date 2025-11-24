@@ -4,6 +4,7 @@ with
 select
   a.marked_day,
   a.group_id,
+  a.user_id,
   concat(p.first_name, ' ', p.last_name) as name
 from
   public.attendances as a

@@ -19,7 +19,7 @@ type ManageProps = {
 const ManageResource: Component<ManageProps> = (props) => {
   const extra = props.response.extra
   if (props.response.code !== 200) return <ErrorBox>{props.response.message}</ErrorBox>
-  if (!extra) return <ErrorBox>{'Non dovresti mai vedere questo errore 🤫 - ' + props.response.message}</ErrorBox>
+  if (!extra) return <ErrorBox>{`Non dovresti mai vedere questo errore 🤫 - ${props.response.message}`}</ErrorBox>
   if (extra.alreadySet) return (<>
     <p>Presenza di <DayOfWeek day={extra.daySetted} /> a <GroupName id={extra.groupSetted} /> confermata!</p>
     <RemoveAttendance groupId={props.groupId} refetch={props.refetch} />

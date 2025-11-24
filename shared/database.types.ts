@@ -148,6 +148,7 @@ export type Database = {
           group_id: number | null
           marked_day: string | null
           name: string | null
+          user_id: string | null
         }
         Relationships: [
           {
