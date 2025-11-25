@@ -12,7 +12,7 @@ const ForgottenPassword = () => {
   const sendReset = action(async (formData: FormData) => {
     const { error } = await supabaseClient.auth.resetPasswordForEmail(
       formData.get('email')!.toString(),
-      { redirectTo: `${window.location.origin}/settings/changepassword?reset` }
+      { redirectTo: `${import.meta.env.VITE_SITE_URL}/settings/changepassword?reset` }
     )
     if (error) throw error.message
     setSuccess(true)
