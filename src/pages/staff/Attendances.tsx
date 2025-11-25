@@ -9,7 +9,7 @@ import './Attendances.sass'
 
 const splitGroupDate = (groupDate: string | undefined, today: string): [number, string] => {
   if (!groupDate) return [ getGroupFromLS(), today ]
-  const groupDateSplitted = groupDate.split('G')
+  const groupDateSplitted = groupDate.split('g')
   return [ parseInt(groupDateSplitted[0]), groupDateSplitted[1] ]
 }
 
@@ -34,8 +34,9 @@ const Attendances = () => {
   let inputDate!: HTMLInputElement
 
   const onInputEvent = () => {
+    if (!inputDate.value) return
     mutate([])
-    navigate(`${params.groupDate ? '..' : '.'}/${selectGroup.value}G${inputDate.value}`)
+    navigate(`${params.groupDate ? '..' : '.'}/${selectGroup.value}g${inputDate.value}`)
   }
 
   const backPath = () => params.groupDate ? '../..' : '..'
@@ -45,7 +46,7 @@ const Attendances = () => {
     <main id='attendances-page'>
       <SelectGroup ref={selectGroup} defaultOption={defaultGroup} onInput={onInputEvent} />
       <input type='date' ref={inputDate} required onInput={onInputEvent}
-             value={defaultDate} max={todayDate} />
+             value={defaultDate} min='2025-10-23' max={todayDate} />
       <p>{attendances.loading ? 'Caricamento...' : `Totale: ${attendances()?.length}`}</p>
       <ul>
         <For each={attendances()}>

@@ -25,7 +25,7 @@ const NotFound = lazy(() => import('./pages/NotFound'))
 const root = document.getElementById('root')
 
 const groupDateFilters: MatchFilters = {
-  groupDate: /^\d+G\d{4}\-\d\d\-\d\d$/
+  groupDate: /^\d+g\d{4}\-\d\d\-\d\d$/
 }
 const AthleteFilters: MatchFilters = {
   id: (uuid: string) => validate(uuid)
