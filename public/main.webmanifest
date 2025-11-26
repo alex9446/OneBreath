@@ -1,0 +1,56 @@
+{
+  "id": "soci.onebreath",
+  "lang": "it",
+  "name": "Soci OneBreath",
+  "short_name": "Soci OB",
+  "start_url": "/",
+  "display": "minimal-ui",
+  "theme_color": "#00a1d2",
+  "background_color": "#00a1d2",
+  "icons": [
+    {
+      "src": "/manifest-icons/1024.png",
+      "type": "image/png",
+      "sizes": "1024x1024"
+    },
+    {
+      "src": "/manifest-icons/1024-maskable.png",
+      "type": "image/png",
+      "sizes": "1024x1024",
+      "purpose": "maskable"
+    },
+    {
+      "src": "/manifest-icons/512.png",
+      "type": "image/png",
+      "sizes": "512x512"
+    },
+    {
+      "src": "/manifest-icons/512-maskable.png",
+      "type": "image/png",
+      "sizes": "512x512",
+      "purpose": "maskable"
+    },
+    {
+      "src": "/manifest-icons/384.png",
+      "type": "image/png",
+      "sizes": "384x384"
+    },
+    {
+      "src": "/manifest-icons/384-maskable.png",
+      "type": "image/png",
+      "sizes": "384x384",
+      "purpose": "maskable"
+    },
+    {
+      "src": "/manifest-icons/192.png",
+      "type": "image/png",
+      "sizes": "192x192"
+    },
+    {
+      "src": "/manifest-icons/192-maskable.png",
+      "type": "image/png",
+      "sizes": "192x192",
+      "purpose": "maskable"
+    }
+  ]
+}
