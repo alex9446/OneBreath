@@ -1,7 +1,7 @@
-import { createResource, Show } from 'solid-js'
+import { createResource, createSignal, Show } from 'solid-js'
 import { action, useAction, useSubmission } from '@solidjs/router'
 import { useSupabase } from '../../utils/context'
-import { getSubscription, subscribeUser, unsubscribeUser } from '../../utils/subscribeUser'
+import { getSubscription, subscribeIsSupported, subscribeUser, unsubscribeUser } from '../../utils/subscribeUser'
 import Title from '../../components/Title'
 import ErrorBox from '../../components/ErrorBox'
 import GoBack from '../../components/GoBack'
@@ -9,7 +9,10 @@ import './Notification.sass'
 
 const Notifications = () => {
   const supabaseClient = useSupabase()
+  const [subscribeSupported, setSubscribeSupported] = createSignal(false)
   const [subscription, { refetch }] = createResource(getSubscription)
+
+  subscribeIsSupported().then((supported) => setSubscribeSupported(supported), null)
 
   const activate = action(async () => {
     await subscribeUser(supabaseClient)
@@ -37,8 +40,9 @@ const Notifications = () => {
     <Title>Impostazioni &gt; Notifiche</Title>
     <main id='notifications-page'>
       <Show when={subscription()} fallback={
-        <button onClick={activateClick} disabled={activateSubmission.pending}>
-          Attiva notifiche
+        <button onClick={activateClick}
+                disabled={!subscribeSupported() || activateSubmission.pending}>
+          {subscribeSupported() ? 'Attiva notifiche' : 'Non supportate'}
         </button>
       }>
         <button onClick={deactivateClick} disabled={deactivateSubmission.pending}>

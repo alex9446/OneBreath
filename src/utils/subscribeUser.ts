@@ -31,3 +31,13 @@ export const subscribeUser = async (supabaseClient: SupabaseClientDB) => {
 }
 
 export const unsubscribeUser = async () => (await getSubscription())?.unsubscribe()
+
+export const subscribeIsSupported = async () => {
+  if ('serviceWorker' in navigator) {
+    const registration = await navigator.serviceWorker.ready
+    if ('pushManager' in registration && 'subscribe' in registration.pushManager) {
+      return true
+    }
+  }
+  return false
+}
