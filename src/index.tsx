@@ -20,6 +20,7 @@ const MyAttendances = lazy(() => import('./pages/MyAttendances'))
 const Staff = lazy(() => import('./pages/Staff'))
 const Attendances = lazy(() => import('./pages/staff/Attendances'))
 const Athletes = lazy(() => import('./pages/staff/Athletes'))
+const Groups = lazy(() => import('./pages/staff/Groups'))
 const NotFound = lazy(() => import('./pages/NotFound'))
 
 const root = document.getElementById('root')
@@ -56,6 +57,7 @@ render(() => {
             <Route path='/' component={Staff} />
             <Route path='/attendances/:groupDate?' component={Attendances} matchFilters={groupDateFilters} />
             <Route path='/athletes/:id?' component={Athletes} matchFilters={AthleteFilters} />
+            <Route path='/groups' component={Groups} />
           </Route>
         </Route>
       </Route>

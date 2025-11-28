@@ -17,7 +17,7 @@ const Watchword: Component<WatchwordProps> = (props) => {
 
   return (
     <div class='watchword' classList={{invalid: !props.valid()}}>
-      <input type='password' name='watchword' required placeholder={'parola d\'ordine'}
+      <input type='text' name='watchword' required placeholder={'parola d\'ordine'}
              autocomplete='off' ref={watchwordElement}
              onKeyUp={() => checkWatchword(watchwordElement.value)} />
       <p>parola {props.valid() ? 'valida' : 'non valida'}</p>

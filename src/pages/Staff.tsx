@@ -7,6 +7,7 @@ const Staff = () => (<>
   <main id='staff-page'>
     <FakeButton href='athletes'>Lista atleti</FakeButton>
     <FakeButton href='attendances'>Storico presenze</FakeButton>
+    <FakeButton href='groups'>Lista gruppi</FakeButton>
   </main>
   <nav>
     <GoBack />
