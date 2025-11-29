@@ -45,3 +45,11 @@ export const getFirstChars = (sentence: string | null) => {
   if (!sentence) return ''
   return sentence.trim().split(/\s+/).map((word) => word[0]).join('')
 }
+
+const capitalize = (word: string) => (
+  word.charAt(0).toUpperCase() + word.slice(1).toLowerCase()
+)
+
+export const capwords = (str: string, separator: string = ' ') => (
+  str.split(separator).map(capitalize).join(separator)
+)

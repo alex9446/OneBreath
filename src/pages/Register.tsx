@@ -1,7 +1,7 @@
 import { createSignal } from 'solid-js'
 import { action, redirect, useSubmission } from '@solidjs/router'
 import { useSupabase } from '../utils/context'
-import { setGroupInLS } from '../utils/mixed'
+import { capwords, setGroupInLS } from '../utils/mixed'
 import Title from '../components/Title'
 import RadioGroup from '../components/RadioGroup'
 import Watchword from '../components/Watchword'
@@ -17,8 +17,8 @@ const Register = () => {
     const formGet = (name: string) => formData.get(name)!.toString()
     if (!watchwordValid()) throw 'Parola d\'ordine non valida'
     const groupId = formGet('group')
-    const firstName = formGet('first-name').trim()
-    const lastName = formGet('last-name').trim()
+    const firstName = capwords(formGet('first-name').trim())
+    const lastName = capwords(formGet('last-name').trim())
     if (groupId === '0') throw 'Gruppo non selezionato'
     if (!firstName || !lastName) throw 'Nome e/o cognome assenti'
 
