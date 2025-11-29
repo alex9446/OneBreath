@@ -1,10 +1,11 @@
 import Cookies from 'js-cookie'
 import { useSupabase } from './context'
 
-type Groups = {
+type Group = {
   id: number
   name: string
-}[]
+}
+type Groups = Group[]
 
 export const setGroups = (groups: Groups) => {
   Cookies.set('groups_cache', JSON.stringify(groups), { expires: 1 })
@@ -28,4 +29,11 @@ export const fetchGroup = async (id: number) => {
   const group = (await fetchGroups()).find((group) => group.id == id)
   if (!group) throw 'Mismatch with group select'
   return group
+}
+
+export const groupsById = async () => {
+  return (await fetchGroups()).reduce((acc, group) => {
+    acc[group.id] = group
+    return acc
+  }, {} as Record<number, Group>)
 }

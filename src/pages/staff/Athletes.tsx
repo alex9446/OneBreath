@@ -1,29 +1,17 @@
-import { createResource, For, Show, type Component } from 'solid-js'
-import { useNavigate, useParams } from '@solidjs/router'
-import type { Tables } from '../../utils/database.types'
+import { createResource, createSignal, For, Show } from 'solid-js'
+import { useParams } from '@solidjs/router'
 import { useSupabase } from '../../utils/context'
-import GroupName from '../../components/GroupName'
 import Title from '../../components/Title'
+import FilterProfiles from '../../components/FilterProfiles'
+import AthleteCard from '../../components/AthleteCard'
 import Athlete from './athletes/Athlete'
 import GoBack from '../../components/GoBack'
 import './Athletes.sass'
 
-type AthleteCardProfile = Pick<Tables<'profiles'>, 'id' | 'first_name' | 'last_name' | 'group_id'>
-
-const AthleteCard: Component<{ profile: AthleteCardProfile, isAdmin: boolean }> = (props) => {
-  const navigate = useNavigate()
-
-  return (
-    <article onClick={() => navigate(props.profile.id)}>
-      <h5>{props.profile.first_name} {props.profile.last_name}{props.isAdmin ? ' ⭐' : ''}</h5>
-      <p><GroupName id={props.profile.group_id} /></p>
-    </article>
-  )
-}
-
 const Athletes = () => {
   const supabaseClient = useSupabase()
   const params = useParams()
+  const [selectedGroup, setSelectedGroup] = createSignal(0)
 
   const [profiles] = createResource(async () => {
     const { data: profiles, error } = await supabaseClient.from('profiles')
@@ -46,8 +34,13 @@ const Athletes = () => {
     <Title>Area staff &gt; Atleti</Title>
     <Show when={params.id} fallback={
       <main id='athletes-page'>
+        <FilterProfiles profiles={profiles() ?? []} set={setSelectedGroup} />
         <For each={profiles()} fallback={<p>Caricamento atleti...</p>}>
-          {(profile) => <AthleteCard profile={profile} isAdmin={isAdmin(profile.id)} />}
+          {(profile) => (
+            <Show when={selectedGroup() === 0 || selectedGroup() === profile.group_id}>
+              <AthleteCard profile={profile} isAdmin={isAdmin(profile.id)} />
+            </Show>
+          )}
         </For>
       </main>
     }>

@@ -13,11 +13,11 @@ const SelectGroup: Component<SelectGroupProps> = (props) => {
   return (
     <select ref={props.ref} name='group' required onInput={props.onInput}>
       <For each={groups()} fallback={<option value={404}>Caricamento gruppi...</option>}>
-        {(group) => <>
+        {(group) => (
           <option value={group.id} selected={group.id === props.defaultOption}>
             {group.name}
           </option>
-        </>}
+        )}
       </For>
     </select>
   )

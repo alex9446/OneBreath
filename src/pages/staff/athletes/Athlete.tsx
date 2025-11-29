@@ -15,7 +15,7 @@ Affinche la modifica sia visibile, ${name} dovrà effettuare nuovamente il login
 `.trim()
 
 type AthleteProps = {
-  profile: Pick<Tables<'profiles'>, 'id' | 'first_name' | 'last_name' | 'group_id'>
+  profile: Pick<Tables<'profiles'>, 'id' | 'first_name' | 'last_name'>
   admin: boolean
   adminsRefetch: () => void
 }
