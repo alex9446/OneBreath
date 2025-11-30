@@ -42,9 +42,11 @@ console.info(NSA_profiles_ids.length + ' users have not set attendance')
 
 // get who can be notified
 const subscriptions = await supabaseAdmin.from('subscriptions')
-  .select('id,subscription_json').in('user_id', NSA_profiles_ids)
+  .select('id,subscription_json,user_id').in('user_id', NSA_profiles_ids)
 if (subscriptions.error) throw subscriptions.error
-console.info(subscriptions.data.length + ' can be notified')
+const unique_uid = Array.from(new Set(subscriptions.data.map((s) => s.user_id)))
+console.info(unique_uid.length + ' users can be notified')
+console.info(subscriptions.data.length + ' notifications to send')
 
 const updateLastStatusCode = async (subscriptionId: string, code: number = 1) => {
   const last_send_at = new nowInRome().toString()
