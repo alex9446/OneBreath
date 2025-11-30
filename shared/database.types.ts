@@ -121,6 +121,7 @@ export type Database = {
         Row: {
           created_at: string
           id: string
+          last_send_at: string | null
           last_status_code: number | null
           subscription_json: Json
           user_id: string
@@ -128,6 +129,7 @@ export type Database = {
         Insert: {
           created_at?: string
           id?: string
+          last_send_at?: string | null
           last_status_code?: number | null
           subscription_json: Json
           user_id: string
@@ -135,6 +137,7 @@ export type Database = {
         Update: {
           created_at?: string
           id?: string
+          last_send_at?: string | null
           last_status_code?: number | null
           subscription_json?: Json
           user_id?: string
