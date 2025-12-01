@@ -168,6 +168,7 @@ export type Database = {
           apg: number | null
           first_name: string | null
           group_id: number | null
+          last_name: string | null
         }
         Relationships: [
           {

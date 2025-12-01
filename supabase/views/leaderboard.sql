@@ -3,6 +3,7 @@ with
   (security_invoker = true) as
 select
   p.first_name,
+  p.last_name,
   a.group_id,
   count(a.user_id) as apg  -- AttendancesPerGroup
 from

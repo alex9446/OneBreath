@@ -20,7 +20,10 @@ const Leaderboard = () => {
         <div class='grid'>
           <p>Nome</p><p>Numero presenze</p>
           <For each={leaderboard()?.extra}>
-            {(attendance) => <><p>{attendance.first_name}</p><p>{attendance.apg}</p></>}
+            {(attendance) => <>
+              <p>{attendance.first_name} {attendance.last_name}</p>
+              <p>{attendance.apg}</p>
+            </>}
           </For>
         </div>
       </Suspense>

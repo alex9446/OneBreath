@@ -30,6 +30,7 @@ export type AttendancesExtra = {
 
 export type LeaderboardExtra = {
   first_name: string
+  last_name: string
   apg: number
 }[]
 
