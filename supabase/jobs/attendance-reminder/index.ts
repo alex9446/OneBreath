@@ -73,3 +73,5 @@ for (const subscription of subscriptions.data) {
     console.warn(error)
   })
 }
+
+console.info(`Job "attendance-reminder" finished!`)
