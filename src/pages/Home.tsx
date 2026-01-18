@@ -16,6 +16,7 @@ const Home = () => (<>
     <FakeButton href='/settings'>Impostazioni</FakeButton>
     <FakeButton href='/leaderboard'>Classifica presenze</FakeButton>
     <FakeButton href='/myattendances'>Le mie presenze</FakeButton>
+    <FakeButton href='/sportexam'>Visita sportiva</FakeButton>
   </nav>
 </>)
 

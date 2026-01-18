@@ -11,6 +11,7 @@ const Maintenance = lazy(() => import('./pages/Maintenance'))
 const Login = lazy(() => import('./pages/Login'))
 const ForgottenPassword = lazy(() => import('./pages/login/ForgottenPassword'))
 const Register = lazy(() => import('./pages/Register'))
+const SportExam = lazy(() => import('./pages/SportExam'))
 const Home = lazy(() => import('./pages/Home'))
 const Settings = lazy(() => import('./pages/Settings'))
 const ChangePassword = lazy(() => import('./pages/settings/ChangePassword'))
@@ -43,6 +44,7 @@ render(() => {
         <Route path='/forgottenpassword' component={ForgottenPassword} />
       </Route>
       <Route path='/register' component={Register} />
+      <Route path='/sportexam' component={SportExam} />
       <Route component={RequireLogin}>
         <Route path='/' component={Home} />
         <Route path='/settings'>

@@ -117,6 +117,27 @@ export type Database = {
           },
         ]
       }
+      sportexam_contacts: {
+        Row: {
+          id: number
+          name: string
+          notes: string | null
+          phone_number: string
+        }
+        Insert: {
+          id: number
+          name: string
+          notes?: string | null
+          phone_number: string
+        }
+        Update: {
+          id?: number
+          name?: string
+          notes?: string | null
+          phone_number?: string
+        }
+        Relationships: []
+      }
       subscriptions: {
         Row: {
           created_at: string
