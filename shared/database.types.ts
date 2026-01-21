@@ -123,18 +123,21 @@ export type Database = {
           name: string
           notes: string | null
           phone_number: string
+          zone: Database["public"]["Enums"]["zones"]
         }
         Insert: {
           id: number
           name: string
           notes?: string | null
           phone_number: string
+          zone: Database["public"]["Enums"]["zones"]
         }
         Update: {
           id?: number
           name?: string
           notes?: string | null
           phone_number?: string
+          zone?: Database["public"]["Enums"]["zones"]
         }
         Relationships: []
       }
@@ -214,7 +217,7 @@ export type Database = {
       [_ in never]: never
     }
     Enums: {
-      [_ in never]: never
+      zones: "Livorno" | "Cecina" | "Follonica"
     }
     CompositeTypes: {
       [_ in never]: never
@@ -341,6 +344,8 @@ export type CompositeTypes<
 
 export const Constants = {
   public: {
-    Enums: {},
+    Enums: {
+      zones: ["Livorno", "Cecina", "Follonica"],
+    },
   },
 } as const
