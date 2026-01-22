@@ -2,7 +2,7 @@ import { createResource, For } from 'solid-js'
 import { useSupabase } from '../utils/context'
 import { contactsByZone } from '../utils/mixed.supabase'
 import Title from '../components/Title'
-import FakeButton from '../components/FakeButton'
+import FakeButtonNative from '../components/FakeButtonNative'
 import GoBack from '../components/GoBack'
 import './SportExam.sass'
 
@@ -18,7 +18,7 @@ const SportExam = () => {
   return (<>
     <Title>Visita sportiva</Title>
     <main id='sportexam-page'>
-      <FakeButton href={sportexamRequestUrl}>Scarica modulo</FakeButton>
+      <FakeButtonNative href={sportexamRequestUrl} newPage>Scarica modulo</FakeButtonNative>
       <For each={contacts()}>
         {(contactsWithZone) => (<>
           <hr />

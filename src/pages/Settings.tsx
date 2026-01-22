@@ -9,6 +9,7 @@ import ErrorBox from '../components/ErrorBox'
 import OrLine from '../components/OrLine'
 import FakeButton from '../components/FakeButton'
 import LogoutButton from '../components/LogoutButton'
+import FakeButtonNative from '../components/FakeButtonNative'
 import GoBack from '../components/GoBack'
 import './Settings.sass'
 
@@ -55,6 +56,9 @@ const Settings = () => {
     <nav>
       <LogoutButton />
       <FakeButton href='notifications'>Notifiche</FakeButton>
+      <FakeButtonNative href='https://www.onebreath.it/informativa-protezione-dati/' newPage>
+        Informativa protezione dati
+      </FakeButtonNative>
       <GoBack />
     </nav>
   </>)
