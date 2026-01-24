@@ -1,7 +1,7 @@
 import { createClient } from '@supabase/supabase-js'
 import { setVapidDetails, sendNotification, type SendResult } from 'web-push'
 import { Database } from '../_shared/database.types.ts'
-import nowInRome from "./nowInRome.ts";
+import nowInRome from "./nowInRome.ts"
 
 console.info(`Job "attendance-reminder" started!`)
 

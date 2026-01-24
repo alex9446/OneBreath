@@ -25,3 +25,6 @@ dist-ssr
 bin
 supabase/.temp
 supabase/functions/test
+
+# Google API
+*saf*
