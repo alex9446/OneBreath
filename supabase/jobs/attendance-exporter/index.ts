@@ -1,8 +1,10 @@
 import { createClient } from '@supabase/supabase-js'
 import { google } from 'googleapis'
 import { Database } from '../_shared/database.types.ts'
-import { craftAddSheet, craftAttendancesRows, craftBoolValidation,
-         craftDaysRow, craftRange } from './craftBatchUpdate.ts'
+import {
+  craftAddSheet, craftAlert, craftBoolValidation, craftDaysRow, craftDeleteSheet, craftRange,
+  craftResizeColumns, craftUpdateCells, craftUserRows
+} from './craftBatchUpdate.ts'
 
 console.info(`Job "attendance-exporter" started!`)
 
@@ -33,31 +35,40 @@ const namesById = new ExtendedMap(
   profiles.data.map((profile) => [profile.id, `${profile.first_name} ${profile.last_name}`])
 )
 
-const lastMonth = Temporal.Now.plainDateISO().subtract({ months: 1 })
-const lastMonthFirstDate = lastMonth.with({ day: 1 }).toString()
-const lastMonthLastDate = lastMonth.with({ day: lastMonth.daysInMonth }).toString()
+const yesterday = Temporal.Now.plainDateISO('Europe/Rome').subtract({ days: 1 })
+const monthLocaleString = yesterday.toLocaleString('it-IT', { month: 'long' })
+const monthFirstDate = yesterday.with({ day: 1 }).toString()
 
 const attendances = await supabaseAdmin.from('attendances')
   .select('marked_day,user_id,group_id')
-  .gte('marked_day', lastMonthFirstDate)
-  .lte('marked_day', lastMonthLastDate)
+  .gte('marked_day', monthFirstDate)
+  .lte('marked_day', yesterday.toString())
 if (attendances.error) throw attendances.error
 
 const aData = attendances.data
-const aHashMap = new Map(aData.map((a) => [`${a.user_id}_${a.marked_day}`, a]))
-const days = Array.from(new Set(aData.map((a) => a.marked_day))).sort()
-const userIds = Array.from(new Set(aData.map((a) => a.user_id)))
 
-const necessaryColumns = days.length + 1
-const necessaryRows = userIds.length + 1
+const unique = <T>(array: T[]) => Array.from(new Set(array))
+const markedGroups = unique(aData.map((a) => a.group_id)).sort()
 
-const attendanceRows = userIds.map((userId) => {
-  const row = days.map((day) => {
-    const entry = aHashMap.get(`${userId}_${day}`)
-    return entry ? groupsById.getNotNull(entry.group_id) : null
-  })
-  return { name: namesById.getNotNull(userId), attendances_group: row }
-}).toSorted((a, b) => a.name.localeCompare(b.name))
+const sheets = markedGroups.map((group) => {
+  const groupAttendances = aData.filter((a) => a.group_id === group)
+  const days = unique(groupAttendances.map((a) => a.marked_day)).sort()
+  const userIds = unique(groupAttendances.map((a) => a.user_id))
+  const attendancesHash = groupAttendances.map((a) => `${a.marked_day}_${a.user_id}`)
+
+  return {
+    sheetTitle: `${groupsById.getNotNull(group)} - ${monthLocaleString}`,
+    // you need to change the formula if you expect more than 99 groups
+    sheetId: yesterday.year * 10000 + yesterday.month * 100 + group,
+    necessaryColumns: days.length + 1,
+    necessaryRows: userIds.length + 1,
+    days,
+    userRows: userIds.map((userId) => {
+      const attendant = days.map((day) => attendancesHash.includes(`${day}_${userId}`))
+      return { name: namesById.getNotNull(userId), attendant }
+    }).toSorted((a, b) => a.name.localeCompare(b.name))
+  }
+})
 
 const auth = new google.auth.JWT({
   email: serviceAccountInfo.client_email,
@@ -67,29 +78,43 @@ const auth = new google.auth.JWT({
 
 const service = google.sheets({ version: 'v4', auth })
 
-const sheetTitle = `${lastMonth.year}-${lastMonth.month}`
-const sheetId = lastMonth.year * 100 + lastMonth.month
-
-const response = await service.spreadsheets.batchUpdate({
-  spreadsheetId,
-  requestBody: { requests: [ craftAddSheet(sheetTitle, sheetId) ] }
-})
-if (!response.ok) Deno.exit(1)
-
-service.spreadsheets.batchUpdate({
-  spreadsheetId,
-  requestBody: {
-    requests: [
-      craftBoolValidation(craftRange(sheetId, 1, necessaryRows, 1, necessaryColumns)),
-      {
-        updateCells: {
-          range: craftRange(sheetId, 0, necessaryRows, 0, necessaryColumns),
-          fields: 'userEnteredValue,note',
-          rows: [craftDaysRow('Soci', days), ...craftAttendancesRows(attendanceRows)]
-        }
+for (const sheet of sheets) {
+  const sheetsList = (await service.spreadsheets.get({
+    spreadsheetId,
+    fields: 'sheets.properties.sheetId'
+  })).data.sheets || []
+  if (sheetsList.some((es) => es.properties?.sheetId === sheet.sheetId)) {
+    await service.spreadsheets.batchUpdate({
+      spreadsheetId,
+      requestBody: {
+        requests: [ craftDeleteSheet(sheet.sheetId) ]
       }
-    ]
+    })
   }
-})
+
+  service.spreadsheets.batchUpdate({
+    spreadsheetId,
+    requestBody: {
+      requests: [
+        craftAddSheet(sheet.sheetTitle, sheet.sheetId),
+        craftBoolValidation(craftRange(
+          sheet.sheetId, 1, sheet.necessaryRows, 1, sheet.necessaryColumns
+        )),
+        craftUpdateCells(
+          craftRange(sheet.sheetId, 0, sheet.necessaryRows + 2, 0, sheet.necessaryColumns),
+          [
+            craftDaysRow('Soci', sheet.days),
+            ...craftUserRows(sheet.userRows)
+          ]
+        ),
+        craftResizeColumns(sheet.sheetId, 0, 1, 200),
+        craftUpdateCells(
+          craftRange(sheet.sheetId, sheet.necessaryRows + 1, sheet.necessaryRows + 2, 0, 1),
+          [ craftAlert('ATTENZIONE: non modificare, verrà sovrascritto!') ]
+        )
+      ]
+    }
+  })
+}
 
 console.info(`Job "attendance-exporter" finished!`)
