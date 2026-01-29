@@ -8,7 +8,7 @@ type Group = {
 type Groups = Group[]
 
 export const setGroups = (groups: Groups) => {
-  Cookies.set('groups_cache', JSON.stringify(groups), { expires: 1 })
+  Cookies.set('groups_cache', JSON.stringify(groups), { expires: 4 })
 }
 
 export const getGroups = (): Groups => JSON.parse(Cookies.get('groups_cache') ?? '[]')
