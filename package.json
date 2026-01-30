@@ -10,7 +10,7 @@
   },
   "dependencies": {
     "@solidjs/router": "^0.15.4",
-    "@supabase/supabase-js": "^2.91.1",
+    "@supabase/supabase-js": "^2.93.3",
     "@types/js-cookie": "^3.0.6",
     "@types/web-push": "^3.6.4",
     "googleapis": "^170.1.0",
