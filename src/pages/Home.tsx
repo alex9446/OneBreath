@@ -13,10 +13,7 @@ const Home = () => (<>
     <Show when={getAdminInLS() >= 1}>
       <FakeButton color='darkorange' href='/staff'>Area staff</FakeButton>
     </Show>
-    <FakeButton href='/settings'>Impostazioni</FakeButton>
-    <FakeButton href='/leaderboard'>Classifica presenze</FakeButton>
-    <FakeButton href='/myattendances'>Le mie presenze</FakeButton>
-    <FakeButton href='/sportexam'>Visita sportiva</FakeButton>
+    <FakeButton href='/menu'>Menu</FakeButton>
   </nav>
 </>)
 

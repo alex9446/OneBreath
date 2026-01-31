@@ -6,10 +6,7 @@ import { getUserId } from '../utils/mixed.supabase'
 import Title from '../components/Title'
 import SelectGroup from '../components/SelectGroup'
 import ErrorBox from '../components/ErrorBox'
-import OrLine from '../components/OrLine'
 import FakeButton from '../components/FakeButton'
-import LogoutButton from '../components/LogoutButton'
-import FakeButtonNative from '../components/FakeButtonNative'
 import GoBack from '../components/GoBack'
 import './Settings.sass'
 
@@ -50,15 +47,10 @@ const Settings = () => {
         <input type='submit' value='Salva' disabled={submission.pending} />
       </form>
       <ErrorBox>{submission.error}</ErrorBox>
-      <OrLine />
-      <FakeButton href='changepassword'>Cambia password</FakeButton>
     </main>
     <nav>
-      <LogoutButton />
+      <FakeButton href='changepassword'>Cambia password</FakeButton>
       <FakeButton href='notifications'>Notifiche</FakeButton>
-      <FakeButtonNative href='https://www.onebreath.it/informativa-protezione-dati/' newPage>
-        Informativa protezione dati
-      </FakeButtonNative>
       <GoBack />
     </nav>
   </>)

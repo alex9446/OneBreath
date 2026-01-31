@@ -13,6 +13,7 @@ const ForgottenPassword = lazy(() => import('./pages/login/ForgottenPassword'))
 const Register = lazy(() => import('./pages/Register'))
 const SportExam = lazy(() => import('./pages/SportExam'))
 const Home = lazy(() => import('./pages/Home'))
+const Menu = lazy(() => import('./pages/Menu'))
 const Settings = lazy(() => import('./pages/Settings'))
 const ChangePassword = lazy(() => import('./pages/settings/ChangePassword'))
 const Notifications = lazy(() => import('./pages/settings/Notifications'))
@@ -47,6 +48,7 @@ render(() => {
       <Route path='/sportexam' component={SportExam} />
       <Route component={RequireLogin}>
         <Route path='/' component={Home} />
+        <Route path='/menu' component={Menu} />
         <Route path='/settings'>
           <Route path='/' component={Settings} />
           <Route path='/changepassword' component={ChangePassword} />
