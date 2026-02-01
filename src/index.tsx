@@ -19,6 +19,7 @@ const ChangePassword = lazy(() => import('./pages/settings/ChangePassword'))
 const Notifications = lazy(() => import('./pages/settings/Notifications'))
 const Leaderboard = lazy(() => import('./pages/Leaderboard'))
 const MyAttendances = lazy(() => import('./pages/MyAttendances'))
+const Tutorial = lazy(() => import('./pages/Tutorial'))
 const Staff = lazy(() => import('./pages/Staff'))
 const Attendances = lazy(() => import('./pages/staff/Attendances'))
 const Athletes = lazy(() => import('./pages/staff/Athletes'))
@@ -56,6 +57,7 @@ render(() => {
         </Route>
         <Route path='/leaderboard' component={Leaderboard} />
         <Route path='/myattendances' component={MyAttendances} />
+        <Route path='/tutorial' component={Tutorial} />
         <Route component={RequireAdmin}>
           <Route path='/staff'>
             <Route path='/' component={Staff} />
