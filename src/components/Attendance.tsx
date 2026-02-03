@@ -24,10 +24,11 @@ const ManageResource: Component<ManageProps> = (props) => {
     <p>Presenza di <DayOfWeek day={extra.daySetted} /> a <GroupName id={extra.groupSetted} /> confermata!</p>
     <RemoveAttendance groupId={props.groupId} refetch={props.refetch} />
   </>)
-  if (extra.DTnotAllowed) return (<>
+  if (extra.DayNotAllowed) return (<>
     <p>Segnatura presenza a <GroupName id={props.groupId} /> non attiva.</p>
     <p class='more-info'>
-      Ritorna qui dopo le ore {extra.startTime} dei seguenti giorni: <DaysOfWeek days={extra.allowedDays} />.
+      Ritorna qui nei seguenti giorni: <DaysOfWeek days={extra.allowedDays} />.<br />
+      Dalle ore {extra.startTime} avrai {extra.openingTime}H di tempo per segnarti!
     </p>
   </>)
   return (<>

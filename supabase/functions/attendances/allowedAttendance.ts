@@ -1,10 +1,7 @@
 import { SupabaseClientDB } from '../_shared/shortcut.types.ts'
 import { AttendancesExtra, FunctionReturn } from '../_shared/mixed.types.ts'
 
-const validTimes = {
-  start: 16,
-  end: 12  // of next day
-}
+const startTime = 16
 
 
 const errorMessage = (message: string, code: number) => ({ data: null, error: { message, code } })
@@ -13,7 +10,7 @@ export async function allowedAttendance(supabaseAdmin: SupabaseClientDB,
                                         group: number,
                                         userId: string): FunctionReturn<AttendancesExtra> {
   const nowInRome = Temporal.Now.zonedDateTimeISO('Europe/Rome')
-  const dayToMark = nowInRome.hour < validTimes.end ? nowInRome.subtract({ days: 1 }) : nowInRome
+  const dayToMark = nowInRome.hour < startTime ? nowInRome.subtract({ days: 1 }) : nowInRome
   const dayToMarkPlainDate = dayToMark.toPlainDate().toString()
 
   const { data: attendanceRow, error: attendanceError } = await supabaseAdmin
@@ -35,13 +32,14 @@ export async function allowedAttendance(supabaseAdmin: SupabaseClientDB,
   if (groupError) return errorMessage(groupError.message, 500)
   const allowedDays = groupRow.days_of_week
   const todayIsAllowedDay = allowedDays.includes(dayToMark.dayOfWeek)
-  const nowIsAllowedTime = dayToMark.hour >= validTimes.start || dayToMark.hour < validTimes.end
-  if (!todayIsAllowedDay || !nowIsAllowedTime) return {
+  if (!todayIsAllowedDay) return {
     data: {
       alreadySet: false,
-      DTnotAllowed: true,
+      DTnotAllowed: true, // deprecated, maintained for front-end compatibility
+      DayNotAllowed: true,
       allowedDays,
-      startTime: validTimes.start
+      startTime,
+      openingTime: 24
     },
     error: null
   }
@@ -49,7 +47,8 @@ export async function allowedAttendance(supabaseAdmin: SupabaseClientDB,
   return {
     data: {
       alreadySet: false,
-      DTnotAllowed: false,
+      DTnotAllowed: false, // deprecated, maintained for front-end compatibility
+      DayNotAllowed: false,
       dayOfWeek: dayToMark.dayOfWeek,
       dayToMarkPlainDate
     },

@@ -18,12 +18,15 @@ export type AttendancesExtra = {
   daySettedPlainDate: string
 } | {
   alreadySet: false
-  DTnotAllowed: true
+  DTnotAllowed: true  // deprecated, maintained for front-end compatibility
+  DayNotAllowed: true
   allowedDays: number[]
   startTime: number
+  openingTime: number
 } | {
   alreadySet: false
-  DTnotAllowed: false
+  DTnotAllowed: false // deprecated, maintained for front-end compatibility
+  DayNotAllowed: false
   dayOfWeek: number
   dayToMarkPlainDate: string
 }
