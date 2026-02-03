@@ -3,6 +3,7 @@ import type { Tables } from '../utils/database.types'
 import { groupsById } from '../utils/fetchGroups'
 
 type FilterProfilesProps = {
+  defaultOption: number
   profiles: Pick<Tables<'profiles'>, 'group_id'>[]
   set: Setter<number>
 }
@@ -25,7 +26,9 @@ const FilterProfiles: Component<FilterProfilesProps> = (props) => {
       <option value={0}>Mostra tutti - {props.profiles.length}</option>
       <For each={groupCounts()}>
         {([group_id, count]) => (
-          <option value={group_id}>{groupName(group_id)} - {count}</option>
+          <option value={group_id} selected={group_id === props.defaultOption}>
+            {groupName(group_id)} - {count}
+          </option>
         )}
       </For>
     </select>

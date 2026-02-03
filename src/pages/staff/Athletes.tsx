@@ -34,7 +34,8 @@ const Athletes = () => {
     <Title>Area staff &gt; Atleti</Title>
     <Show when={params.id} fallback={
       <main id='athletes-page'>
-        <FilterProfiles profiles={profiles() ?? []} set={setSelectedGroup} />
+        <FilterProfiles profiles={profiles() ?? []} set={setSelectedGroup}
+                        defaultOption={selectedGroup()} />
         <For each={profiles()} fallback={<p>Caricamento atleti...</p>}>
           {(profile) => (
             <Show when={selectedGroup() === 0 || selectedGroup() === profile.group_id}>
