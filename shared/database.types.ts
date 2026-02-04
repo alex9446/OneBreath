@@ -69,16 +69,19 @@ export type Database = {
           days_of_week: number[]
           id: number
           name: string
+          spreadsheet_id: string | null
         }
         Insert: {
           days_of_week?: number[]
           id?: number
           name: string
+          spreadsheet_id?: string | null
         }
         Update: {
           days_of_week?: number[]
           id?: number
           name?: string
+          spreadsheet_id?: string | null
         }
         Relationships: []
       }

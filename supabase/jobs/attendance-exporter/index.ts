@@ -23,11 +23,12 @@ const supabaseAdmin = createClient<Database>(
 )
 
 const serviceAccountInfo = JSON.parse(atob(Deno.env.get('SERVICE_ACCOUNT_INFO')!))
-const spreadsheetId = Deno.env.get('SPREADSHEET_ID')!
 
-const groups = await supabaseAdmin.from('groups').select('id,name')
+const groups = await supabaseAdmin.from('groups').select('id,spreadsheet_id')
 if (groups.error) throw groups.error
-const groupsById = new ExtendedMap(groups.data.map((group) => [group.id, group.name]))
+const spreadsheetByGroupId = new Map(
+  groups.data.map((group) => [group.id, group.spreadsheet_id])
+)
 
 const profiles = await supabaseAdmin.from('profiles').select('id,first_name,last_name')
 if (profiles.error) throw profiles.error
@@ -55,11 +56,17 @@ const sheets = markedGroups.map((group) => {
   const days = unique(groupAttendances.map((a) => a.marked_day)).sort()
   const userIds = unique(groupAttendances.map((a) => a.user_id))
   const attendancesHash = groupAttendances.map((a) => `${a.marked_day}_${a.user_id}`)
+  const spreadsheetId = spreadsheetByGroupId.get(group)
+
+  if (!spreadsheetId) {
+    console.error(`Missing spreadsheet_id for group ${group}` )
+    return null
+  }
 
   return {
-    sheetTitle: `${groupsById.getNotNull(group)} - ${monthLocaleString}`,
-    // you need to change the formula if you expect more than 99 groups
-    sheetId: yesterday.year * 10000 + yesterday.month * 100 + group,
+    spreadsheetId,
+    sheetTitle: monthLocaleString,
+    sheetId: yesterday.year * 100 + yesterday.month,
     necessaryColumns: days.length + 1,
     necessaryRows: userIds.length + 1,
     days,
@@ -79,6 +86,9 @@ const auth = new google.auth.JWT({
 const service = google.sheets({ version: 'v4', auth })
 
 for (const sheet of sheets) {
+  if (!sheet) continue
+  const spreadsheetId = sheet.spreadsheetId
+
   const sheetsList = (await service.spreadsheets.get({
     spreadsheetId,
     fields: 'sheets.properties.sheetId'
