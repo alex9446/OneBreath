@@ -8,12 +8,9 @@ import {
 
 console.info(`Job "attendance-exporter" started!`)
 
-class ExtendedMap<K, V> extends Map<K, V> {
-  getNotNull(key: K): V {
-    const v = this.get(key)
-    if (v === undefined) throw 'key not found'
-    return v
-  }
+const defineOrThrow = <T>(value: T) => {
+  if (value === undefined) throw new Error('value is undefined')
+  return value
 }
 
 
@@ -32,7 +29,7 @@ const spreadsheetByGroupId = new Map(
 
 const profiles = await supabaseAdmin.from('profiles').select('id,first_name,last_name')
 if (profiles.error) throw profiles.error
-const namesById = new ExtendedMap(
+const namesById = new Map(
   profiles.data.map((profile) => [profile.id, `${profile.first_name} ${profile.last_name}`])
 )
 
@@ -72,7 +69,7 @@ const sheets = markedGroups.map((group) => {
     days,
     userRows: userIds.map((userId) => {
       const attendant = days.map((day) => attendancesHash.includes(`${day}_${userId}`))
-      return { name: namesById.getNotNull(userId), attendant }
+      return { name: defineOrThrow(namesById.get(userId)), attendant }
     }).toSorted((a, b) => a.name.localeCompare(b.name))
   }
 })
@@ -89,17 +86,19 @@ for (const sheet of sheets) {
   if (!sheet) continue
   const spreadsheetId = sheet.spreadsheetId
 
-  const sheetsList = (await service.spreadsheets.get({
-    spreadsheetId,
-    fields: 'sheets.properties.sheetId'
-  })).data.sheets || []
-  if (sheetsList.some((es) => es.properties?.sheetId === sheet.sheetId)) {
+  try {
     await service.spreadsheets.batchUpdate({
       spreadsheetId,
       requestBody: {
         requests: [ craftDeleteSheet(sheet.sheetId) ]
       }
     })
+  } catch (err: unknown) {
+    if (!(
+      typeof err === 'object' && err !== null &&
+      'message' in err && typeof err.message === 'string' &&
+      err.message.includes(`No sheet with id: ${sheet.sheetId}`)
+    )) throw err
   }
 
   service.spreadsheets.batchUpdate({
