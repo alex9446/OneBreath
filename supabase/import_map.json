@@ -1,7 +1,7 @@
 {
   "imports": {
-    "googleapis": "npm:googleapis@170.1.0",
-    "@supabase/supabase-js": "npm:@supabase/supabase-js@2.93.3",
+    "googleapis": "npm:googleapis@171.4.0",
+    "@supabase/supabase-js": "npm:@supabase/supabase-js@2.95.3",
     "uuid": "npm:uuid@13.0.0",
     "web-push": "npm:web-push@3.6.7"
   }
