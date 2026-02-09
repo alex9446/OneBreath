@@ -21,7 +21,7 @@ const UploadCertificate = () => {
     const file = formData.get('file')!
 
     const { data, error } = await supabaseClient.storage.from('test-upload')
-      .upload(userId, file)
+      .upload(userId, file, { upsert: true })
     if (error) throw error.message
     return data.id
   })

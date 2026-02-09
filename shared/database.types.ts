@@ -64,6 +64,24 @@ export type Database = {
           },
         ]
       }
+      certificates: {
+        Row: {
+          expiration: string
+          object_id: string
+          user_id: string
+        }
+        Insert: {
+          expiration: string
+          object_id: string
+          user_id: string
+        }
+        Update: {
+          expiration?: string
+          object_id?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
       groups: {
         Row: {
           days_of_week: number[]
