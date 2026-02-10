@@ -62,7 +62,7 @@ const sheets = markedGroups.map((group) => {
 
   return {
     spreadsheetId,
-    sheetTitle: monthLocaleString,
+    sheetTitle: `${monthLocaleString} ${yesterday.year}`,
     sheetId: yesterday.year * 100 + yesterday.month,
     necessaryColumns: days.length + 1,
     necessaryRows: userIds.length + 1,
