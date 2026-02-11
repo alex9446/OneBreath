@@ -11,10 +11,13 @@ const UploadCertificate = () => {
   const supabaseClient = useSupabase()
   const todayDate = new Date().toLocaleDateString('en-CA')  // en-CA because by default it formats dates as yyyy-mm-dd
 
-  const [allowedMimeTypes] = createResource(async () => {
-    const { data, error } = await supabaseClient.storage.getBucket('test-upload')
+  const [bucketMetadata] = createResource(async () => {
+    const { data, error } = await supabaseClient.storage.getBucket('certificates')
     if (error) throw error.message
-    return data.allowed_mime_types?.join(', ') ?? ''
+    return {
+      allowedMimeTypes: data.allowed_mime_types?.join(', ') ?? '',
+      fileSizeLimitInMB: (data.file_size_limit ?? 0) / 1000 / 1000
+    }
   })
 
   const uploadAction = action(async (formData: FormData) => {
@@ -22,10 +25,10 @@ const UploadCertificate = () => {
     const file = formData.get('file')!
     const date = formData.get('date')!.toString()
 
-    const { data, error: uploadError } = await supabaseClient.storage.from('test-upload')
+    const { data, error: uploadError } = await supabaseClient.storage.from('certificates')
       .upload(userId, file, { upsert: true })
     if (uploadError) throw uploadError.message
-    
+
     const { error: upsertError } = await supabaseClient.from('certificates')
       .upsert({ object_id: data.id, user_id: userId, expiration: date })
     if (upsertError) throw upsertError.message
@@ -37,17 +40,24 @@ const UploadCertificate = () => {
   return (<>
     <Title>Carica certificato</Title>
     <main id='uploadcertificate-page'>
-      <form method='post' action={uploadAction} enctype='multipart/form-data'>
-        <input type='file' name='file' accept={allowedMimeTypes()}
-               disabled={allowedMimeTypes.loading} required />
-        <label for='date'>Data di scadenza:</label>
-        <input id='date' type='date' name='date' min={todayDate} required />
-        <input type='submit' value='Invia' disabled={allowedMimeTypes.loading} />
-      </form>
-      <ErrorBox>{submission.error}</ErrorBox>
-      <Show when={submission.result?.ok}>
+      <Show when={submission.result?.ok} fallback={
+        <form method='post' action={uploadAction} enctype='multipart/form-data'>
+          <input type='file' name='file' accept={bucketMetadata()?.allowedMimeTypes}
+                disabled={bucketMetadata.loading} required />
+          <p class='size-limit'>
+            Dimensione massima {(bucketMetadata()?.fileSizeLimitInMB ?? 0)}MB
+          </p>
+          <label>
+            Data di scadenza:
+            <input type='date' name='date' min={todayDate} required />
+          </label>
+          <input type='submit' value={submission.pending ? 'Invio...' : 'Invia'}
+                 disabled={bucketMetadata.loading || submission.pending} />
+        </form>
+      }>
         <p style='color:green'>Certificato inviato con successo!</p>
       </Show>
+      <ErrorBox>{submission.error}</ErrorBox>
     </main>
     <nav>
       <GoBack />

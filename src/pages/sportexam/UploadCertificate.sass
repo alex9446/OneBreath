@@ -1,4 +1,17 @@
+@use '../../variables'
+
 #uploadcertificate-page
   input[type=file]
     padding: 0
     height: initial
+  .size-limit
+    font-size: variables.$font-size-x-small
+    color: lightgray
+  label
+    display: flex
+    flex-wrap: wrap
+    align-items: baseline
+    column-gap: 10px
+    input
+      flex-grow: 1
+      max-width: 100%

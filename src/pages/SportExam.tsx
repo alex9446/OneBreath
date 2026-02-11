@@ -3,6 +3,7 @@ import { useSupabase } from '../utils/context'
 import { contactsByZone } from '../utils/mixed.supabase'
 import Title from '../components/Title'
 import FakeButtonNative from '../components/FakeButtonNative'
+import FakeButton from '../components/FakeButton'
 import GoBack from '../components/GoBack'
 import './SportExam.sass'
 
@@ -19,6 +20,7 @@ const SportExam = () => {
     <Title>Visita sportiva</Title>
     <main id='sportexam-page'>
       <FakeButtonNative href={sportexamRequestUrl} newPage>Scarica modulo</FakeButtonNative>
+      <FakeButton href='uploadcertificate'>Carica certificato</FakeButton>
       <For each={contacts()}>
         {(contactsWithZone) => (<>
           <hr />
