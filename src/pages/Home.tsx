@@ -2,6 +2,7 @@ import { Show } from 'solid-js'
 import { A } from '@solidjs/router'
 import { getAdminInLS } from '../utils/mixed'
 import Title from '../components/Title'
+import AthleteStatus from '../components/AthleteStatus'
 import Attendance from '../components/Attendance'
 import FakeButton from '../components/FakeButton'
 import './Home.sass'
@@ -9,6 +10,7 @@ import './Home.sass'
 const Home = () => (<>
   <Title>Homepage</Title>
   <main id='home-page'>
+    <AthleteStatus />
     <Attendance />
   </main>
   <nav>

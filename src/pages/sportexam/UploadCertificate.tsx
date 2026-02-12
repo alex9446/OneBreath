@@ -1,6 +1,7 @@
 import { createResource, Show } from 'solid-js'
 import { action, useSubmission } from '@solidjs/router'
 import { useSupabase } from '../../utils/context'
+import { getTodayDate } from '../../utils/mixed'
 import { getUserId } from '../../utils/mixed.supabase'
 import Title from '../../components/Title'
 import ErrorBox from '../../components/ErrorBox'
@@ -9,7 +10,6 @@ import './UploadCertificate.sass'
 
 const UploadCertificate = () => {
   const supabaseClient = useSupabase()
-  const todayDate = new Date().toLocaleDateString('en-CA')  // en-CA because by default it formats dates as yyyy-mm-dd
 
   const [bucketMetadata] = createResource(async () => {
     const { data, error } = await supabaseClient.storage.getBucket('certificates')
@@ -49,7 +49,7 @@ const UploadCertificate = () => {
           </p>
           <label>
             Data di scadenza:
-            <input type='date' name='date' min={todayDate} required />
+            <input type='date' name='date' min={getTodayDate()} required />
           </label>
           <input type='submit' value={submission.pending ? 'Invio...' : 'Invia'}
                  disabled={bucketMetadata.loading || submission.pending} />

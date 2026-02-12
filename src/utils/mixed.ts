@@ -53,3 +53,13 @@ const capitalize = (word: string) => (
 export const capwords = (str: string, separator: string = ' ') => (
   str.split(separator).map(capitalize).join(separator)
 )
+
+export const getTodayDate = () => (
+  // en-CA because by default it formats dates as yyyy-mm-dd
+  new Date().toLocaleDateString('en-CA')
+)
+
+export const diffDays = (date1: string, date2: string) => {
+  const diffTime = new Date(date2).getTime() - new Date(date1).getTime()
+  return Math.floor(diffTime / (1000 * 60 * 60 * 24))
+}

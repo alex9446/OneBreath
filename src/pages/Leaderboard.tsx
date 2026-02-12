@@ -10,7 +10,7 @@ import './Leaderboard.sass'
 const Leaderboard = () => {
   const groupId = getGroupFromLS()
 
-  const [leaderboard] = createResource(groupId, async (gid) => await invokeLeaderboard(gid))
+  const [leaderboard] = createResource(groupId, (gid) => invokeLeaderboard(gid))
 
   return (<>
     <Title>Classifica presenze</Title>

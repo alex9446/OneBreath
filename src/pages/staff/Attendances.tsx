@@ -1,6 +1,6 @@
 import { createResource, For } from 'solid-js'
 import { A, useNavigate, useParams } from '@solidjs/router'
-import { getGroupFromLS } from '../../utils/mixed'
+import { getGroupFromLS, getTodayDate } from '../../utils/mixed'
 import { useSupabase } from '../../utils/context'
 import Title from '../../components/Title'
 import SelectGroup from '../../components/SelectGroup'
@@ -17,7 +17,7 @@ const Attendances = () => {
   const navigate = useNavigate()
   const supabaseClient = useSupabase()
   const params = useParams()
-  const todayDate = new Date().toLocaleDateString('en-CA')  // en-CA because by default it formats dates as yyyy-mm-dd
+  const todayDate = getTodayDate()
   const [defaultGroup, defaultDate] = splitGroupDate(params.groupDate, todayDate)
 
   const [attendances, {mutate}] = createResource(
