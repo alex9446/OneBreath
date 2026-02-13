@@ -12,6 +12,7 @@ const Menu = () => (<>
     <FakeButton href='/myattendances'>Le mie presenze</FakeButton>
     <FakeButton href='/tutorial'>Video tutorial</FakeButton>
     <FakeButton href='/sportexam'>Visita sportiva</FakeButton>
+    <FakeButton href='/payments'>Pagamenti</FakeButton>
     <FakeButtonNative href='https://www.onebreath.it/informativa-protezione-dati/' newPage>
       Informativa protezione dati
     </FakeButtonNative>

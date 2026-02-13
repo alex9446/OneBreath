@@ -40,7 +40,8 @@ const UploadCertificate = () => {
   return (<>
     <Title>Carica certificato</Title>
     <main id='uploadcertificate-page'>
-      <Show when={submission.result?.ok} fallback={
+      <Show when={submission.result?.ok} fallback={<>
+        <p style='text-align: center'>Carica certificato</p>
         <form method='post' action={uploadAction} enctype='multipart/form-data'>
           <input type='file' name='file' accept={bucketMetadata()?.allowedMimeTypes}
                 disabled={bucketMetadata.loading} required />
@@ -54,7 +55,7 @@ const UploadCertificate = () => {
           <input type='submit' value={submission.pending ? 'Invio...' : 'Invia'}
                  disabled={bucketMetadata.loading || submission.pending} />
         </form>
-      }>
+      </>}>
         <p style='color:green'>Certificato inviato con successo!</p>
       </Show>
       <ErrorBox>{submission.error}</ErrorBox>

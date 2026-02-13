@@ -103,6 +103,21 @@ export type Database = {
         }
         Relationships: []
       }
+      payments: {
+        Row: {
+          expiration: string
+          user_id: string
+        }
+        Insert: {
+          expiration: string
+          user_id: string
+        }
+        Update: {
+          expiration?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
       profiles: {
         Row: {
           first_name: string

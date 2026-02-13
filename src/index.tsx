@@ -14,6 +14,7 @@ const Register = lazy(() => import('./pages/Register'))
 const SportExam = lazy(() => import('./pages/SportExam'))
 const UploadCertificate = lazy(() => import('./pages/sportexam/UploadCertificate'))
 const Home = lazy(() => import('./pages/Home'))
+const Status = lazy(() => import('./pages/Status'))
 const Menu = lazy(() => import('./pages/Menu'))
 const Settings = lazy(() => import('./pages/Settings'))
 const ChangePassword = lazy(() => import('./pages/settings/ChangePassword'))
@@ -21,6 +22,8 @@ const Notifications = lazy(() => import('./pages/settings/Notifications'))
 const Leaderboard = lazy(() => import('./pages/Leaderboard'))
 const MyAttendances = lazy(() => import('./pages/MyAttendances'))
 const Tutorial = lazy(() => import('./pages/Tutorial'))
+const Payments = lazy(() => import('./pages/Payments'))
+const PoolPayment = lazy(() => import('./pages/payments/PoolPayment'))
 const Staff = lazy(() => import('./pages/Staff'))
 const Attendances = lazy(() => import('./pages/staff/Attendances'))
 const Athletes = lazy(() => import('./pages/staff/Athletes'))
@@ -51,6 +54,7 @@ render(() => {
       <Route component={RequireLogin}>
         <Route path='/sportexam/uploadcertificate' component={UploadCertificate} />
         <Route path='/' component={Home} />
+        <Route path='/status' component={Status} />
         <Route path='/menu' component={Menu} />
         <Route path='/settings'>
           <Route path='/' component={Settings} />
@@ -60,6 +64,10 @@ render(() => {
         <Route path='/leaderboard' component={Leaderboard} />
         <Route path='/myattendances' component={MyAttendances} />
         <Route path='/tutorial' component={Tutorial} />
+        <Route path='/payments'>
+          <Route path='/' component={Payments} />
+          <Route path='/poolpayment' component={PoolPayment} />
+        </Route>
         <Route component={RequireAdmin}>
           <Route path='/staff'>
             <Route path='/' component={Staff} />
