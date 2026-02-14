@@ -1,5 +1,5 @@
 import type { SupabaseClientDB } from './shortcut.types'
-import { setAdminInLS, setGroupInLS } from './mixed'
+import { expirationStatus, setAdminInLS, setGroupInLS } from './mixed'
 import type { Enums, Tables } from './database.types'
 
 export const getUserId = async (supabaseClient: SupabaseClientDB) => {
@@ -35,4 +35,26 @@ export const contactsByZone = async (supabaseClient: SupabaseClientDB) => {
     zone: Enums<'zones'>,
     contacts: Omit<Tables<'sportexam_contacts'>, 'id'>[]
   }>)
+}
+
+export const userStatus = async (supabaseClient: SupabaseClientDB) => {
+  const userId = await getUserId(supabaseClient)
+  const { data: certData, error: certError } = await supabaseClient.from('certificates')
+    .select('expiration').eq('user_id', userId).maybeSingle()
+  if (certError) throw certError.message
+  const { data: paymentData, error: paymentError } = await supabaseClient.from('payments')
+    .select('expiration').eq('user_id', userId).maybeSingle()
+  if (paymentError) throw paymentError.message
+
+  const certificate = expirationStatus(certData, 30)
+  const payment = expirationStatus(paymentData, 10)
+  return {
+    certificate,
+    payment,
+    global: {
+      notfound: certificate.notfound || payment.notfound,
+      expired: certificate.expired || payment.expired,
+      almostExpired: certificate.almostExpired || payment.almostExpired
+    }
+  }
 }

@@ -1,19 +1,22 @@
+@keyframes blinker
+  90%
+    opacity: 0
+
 a.athlete-status
   display: flex
   flex-wrap: wrap
   column-gap: 10px
   color: green
-  &.notfound
-    color: black
   &.almostExpired
     color: darkorange
-  &.expired
+  &.expired, &.notfound
     color: red
+    p
+      animation: blinker 1.5s step-end infinite
   svg
     fill: green
-    &.notfound
-      fill: black
     &.almostExpired
       fill: darkorange
-    &.expired
+    &.expired, &.notfound
       fill: red
+      animation: blinker 1.5s step-end infinite
