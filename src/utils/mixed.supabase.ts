@@ -50,7 +50,9 @@ export const userStatus = async (supabaseClient: SupabaseClientDB) => {
   const payment = expirationStatus(paymentData, 10)
   return {
     certificate,
+    certificateExpiration: certData?.expiration,
     payment,
+    paymentExpiration: paymentData?.expiration,
     global: {
       notfound: certificate.notfound || payment.notfound,
       expired: certificate.expired || payment.expired,

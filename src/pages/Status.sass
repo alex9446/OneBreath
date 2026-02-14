@@ -1,0 +1,16 @@
+@use '../variables'
+
+#status-page
+  article
+    display: flex
+    flex-direction: column
+    gap: 15px
+    color: green
+    &.almostExpired
+      color: orange
+    &.expired, &.notfound
+      color: red
+    h3
+      font-weight: normal
+    p
+      font-size: variables.$font-size-small

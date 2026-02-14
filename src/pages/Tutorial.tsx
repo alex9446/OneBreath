@@ -50,7 +50,7 @@ const Tutorial = () => {
         {(video) => (
           <article>
             <h5>{video.title}</h5>
-            <video controls preload='metadata' style={{ 'max-height': '80svh' }}>
+            <video controls preload='metadata'>
               <source type='video/webm' src={video.webmUrl} />
               <source type='video/mp4' src={video.mp4Url} />
             </video>

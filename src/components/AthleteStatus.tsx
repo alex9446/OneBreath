@@ -11,7 +11,7 @@ const AthleteStatus = () => {
   const [status] = createResource(() => userStatus(supabaseClient))
 
   return (
-    <A href='/sportexam/uploadcertificate'
+    <A href='/status'
        class='athlete-status' classList={status()?.global}>
       <p>Stato profilo:</p>
       <Icon path={mdiClipboardPulseOutline} title='stato certificato'
