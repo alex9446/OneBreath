@@ -1,6 +1,6 @@
 import Title from '../components/Title'
 import FakeButton from '../components/FakeButton'
-import FakeButtonNative from '../components/FakeButtonNative'
+import DataPolicyLink from '../components/DataPolicyLink'
 import LogoutButton from '../components/LogoutButton'
 import GoBack from '../components/GoBack'
 
@@ -13,9 +13,7 @@ const Menu = () => (<>
     <FakeButton href='/tutorial'>Video tutorial</FakeButton>
     <FakeButton href='/sportexam'>Visita sportiva</FakeButton>
     <FakeButton href='/payments'>Pagamenti</FakeButton>
-    <FakeButtonNative href='https://www.onebreath.it/informativa-protezione-dati/' newPage>
-      Informativa protezione dati
-    </FakeButtonNative>
+    <DataPolicyLink />
   </main>
   <nav>
     <LogoutButton />

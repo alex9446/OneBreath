@@ -11,7 +11,7 @@ const SportExam = () => {
   const supabaseClient = useSupabase()
 
   const sportexamRequestUrl = supabaseClient.storage.from('public-documents')
-    .getPublicUrl('Richiesta Vistita Medica v26.pdf')
+    .getPublicUrl('Richiesta Vistita Medica v26.pdf', { download: true })
     .data.publicUrl
 
   const [contacts] = createResource(() => contactsByZone(supabaseClient))

@@ -1,8 +1,9 @@
-import { createResource, Match, Suspense, Switch, type Component } from 'solid-js'
+import { createResource, Match, Show, Suspense, Switch, type Component } from 'solid-js'
 import { getDateLocaleIT } from '../utils/mixed'
 import { useSupabase } from '../utils/context'
-import { userStatus } from '../utils/mixed.supabase'
+import { getUserId, userStatus } from '../utils/mixed.supabase'
 import Title from '../components/Title'
+import FakeButtonNative from '../components/FakeButtonNative'
 import FakeButton from '../components/FakeButton'
 import GoBack from '../components/GoBack'
 import './Status.sass'
@@ -39,7 +40,15 @@ const ExpirationInfo: Component<ExpirationProps> = (props) => {
 
 const Status = () => {
   const supabaseClient = useSupabase()
-  const [status] = createResource(() => userStatus(supabaseClient))
+  const userIdPromise = getUserId(supabaseClient)
+
+  const [status] = createResource(() => userStatus(supabaseClient, userIdPromise))
+
+  const [certificateUrl] = createResource(async () => {
+    const { data } = await supabaseClient.storage.from('certificates')
+      .createSignedUrl(await userIdPromise, 900, { download: 'certificato' }) // 15 minutes
+    return data?.signedUrl
+  })
 
   return (<>
     <Title>Stato profilo</Title>
@@ -50,6 +59,13 @@ const Status = () => {
           <ExpirationInfo status={status()?.certificate}
                           date={status()?.certificateExpiration} />
         </Suspense>
+        <Show when={certificateUrl()}>
+          {(dCertificateUrl) => (
+            <FakeButtonNative href={dCertificateUrl()} newPage>
+              Scarica certificato
+            </FakeButtonNative>
+          )}
+        </Show>
         <FakeButton href='/sportexam/uploadcertificate'>Carica certificato</FakeButton>
       </article>
       <hr />

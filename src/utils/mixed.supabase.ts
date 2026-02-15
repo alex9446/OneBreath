@@ -37,8 +37,9 @@ export const contactsByZone = async (supabaseClient: SupabaseClientDB) => {
   }>)
 }
 
-export const userStatus = async (supabaseClient: SupabaseClientDB) => {
-  const userId = await getUserId(supabaseClient)
+export const userStatus = async (supabaseClient: SupabaseClientDB,
+                                 idPromise?: Promise<string>) => {
+  const userId = await idPromise ?? await getUserId(supabaseClient)
   const { data: certData, error: certError } = await supabaseClient.from('certificates')
     .select('expiration').eq('user_id', userId).maybeSingle()
   if (certError) throw certError.message

@@ -3,7 +3,7 @@ import { action, useSubmission } from '@solidjs/router'
 import { useSupabase } from '../../utils/context'
 import Title from '../../components/Title'
 import ErrorBox from '../../components/ErrorBox'
-import FakeButtonNative from '../../components/FakeButtonNative'
+import DataPolicyLink from '../../components/DataPolicyLink'
 import GoBack from '../../components/GoBack'
 
 const ForgottenPassword = () => {
@@ -32,9 +32,7 @@ const ForgottenPassword = () => {
       </Show>
     </main>
     <nav>
-      <FakeButtonNative href='https://www.onebreath.it/informativa-protezione-dati/' newPage>
-        Informativa protezione dati
-      </FakeButtonNative>
+      <DataPolicyLink />
       <GoBack />
     </nav>
   </>)
