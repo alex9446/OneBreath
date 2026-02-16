@@ -45,7 +45,7 @@ export const craftUpdateCells = (range: sheets_v4.Schema$GridRange,
   }
 )
 
-export const craftResizeColumns = (sheetId: number, startIndex: number, endIndex: number,
+const craftResizeColumns = (sheetId: number, startIndex: number, endIndex: number,
                                    pixelSize: number) => (
   {
     updateDimensionProperties: {
@@ -59,6 +59,10 @@ export const craftResizeColumns = (sheetId: number, startIndex: number, endIndex
       fields: 'pixelSize'
     }
   }
+)
+
+export const craftResizeFirstThreeColumns = (sheetId: number, pixelSize: number) => (
+  craftResizeColumns(sheetId, 0, 3, pixelSize)
 )
 
 export const craftRange = (sheetId: number, startRowIndex: number, endRowIndex: number,
@@ -76,21 +80,28 @@ const craftStringValue = (str: string) => (
 
 const craftValues = (values: sheets_v4.Schema$CellData[]) => ({ values })
 
-export const craftDaysRow = (firstCell: string, days: string[]) => (
-  craftValues([firstCell, ...days].map((day) => craftStringValue(day)))
+export const craftHeaderRow = (firstStaticCells: string[], days: string[]) => (
+  craftValues([...firstStaticCells, ...days].map((value) => craftStringValue(value)))
 )
 
 type Rows = {
   name: string
+  certificate: string
+  payment: string
   attendant: boolean[]
 }[]
 export const craftUserRows = (rows: Rows) => (
   rows.map((row) => craftValues([
     craftStringValue(row.name),
+    craftStringValue(row.certificate),
+    craftStringValue(row.payment),
     ...row.attendant.map((b) => craftBoolValue(b))
   ]))
 )
 
-export const craftAlert = (message: string) => (
-  craftValues([craftStringValue(message)])
+export const craftAlert = (sheetId: number, skipRows: number, message: string) => (
+  craftUpdateCells(
+    craftRange(sheetId, skipRows+1, skipRows+2, 0, 1),  // +1 +2 for one row
+    [ craftValues([craftStringValue(message)]) ]
+  )
 )

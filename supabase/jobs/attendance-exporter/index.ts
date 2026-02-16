@@ -2,11 +2,29 @@ import { createClient } from '@supabase/supabase-js'
 import { google } from 'googleapis'
 import { Database } from '../_shared/database.types.ts'
 import {
-  craftAddSheet, craftAlert, craftBoolValidation, craftDaysRow, craftDeleteSheet, craftRange,
-  craftResizeColumns, craftUpdateCells, craftUserRows
+  craftAddSheet, craftAlert, craftBoolValidation, craftDeleteSheet, craftHeaderRow, craftRange,
+  craftResizeFirstThreeColumns, craftUpdateCells, craftUserRows
 } from './craftBatchUpdate.ts'
 
+enum Sheet {
+  ZeroIndex = 0,
+  HeaderRow = 1,
+  StaticCells = 3,
+  ColumnSize = 180
+}
+
 console.info(`Job "attendance-exporter" started!`)
+
+const today = Temporal.Now.plainDateISO('Europe/Rome')
+
+const expirationState = (date: string) => {
+  const expiration = Temporal.PlainDate.from(date)
+  const expirationLocaleIT = expiration.toLocaleString('it-IT')
+  if (Temporal.PlainDate.compare(expiration, today) >= 0) {
+    return `valido, fino al ${expirationLocaleIT}`
+  }
+  return `scaduto, il ${expirationLocaleIT}`
+}
 
 const defineOrThrow = <T>(value: T) => {
   if (value === undefined) throw new Error('value is undefined')
@@ -33,7 +51,19 @@ const namesById = new Map(
   profiles.data.map((profile) => [profile.id, `${profile.first_name} ${profile.last_name}`])
 )
 
-const yesterday = Temporal.Now.plainDateISO('Europe/Rome').subtract({ days: 1 })
+const certificates = await supabaseAdmin.from('certificates').select('user_id,expiration')
+if (certificates.error) throw certificates.error
+const certificateByUserId = new Map(certificates.data.map((certificate) => (
+  [certificate.user_id, expirationState(certificate.expiration)]
+)))
+
+const payments = await supabaseAdmin.from('payments').select('user_id,expiration')
+if (payments.error) throw payments.error
+const paymentByUserId = new Map(payments.data.map((payment) => (
+  [payment.user_id, expirationState(payment.expiration)]
+)))
+
+const yesterday = today.subtract({ days: 1 })
 const monthLocaleString = yesterday.toLocaleString('it-IT', { month: 'long' })
 const monthFirstDate = yesterday.with({ day: 1 }).toString()
 
@@ -64,13 +94,15 @@ const sheets = markedGroups.map((group) => {
     spreadsheetId,
     sheetTitle: `${monthLocaleString} ${yesterday.year}`,
     sheetId: yesterday.year * 100 + yesterday.month,
-    necessaryColumns: days.length + 1,
-    necessaryRows: userIds.length + 1,
+    necessaryColumns: Sheet.StaticCells + days.length,
+    necessaryRows: Sheet.HeaderRow + userIds.length,
     days,
-    userRows: userIds.map((userId) => {
-      const attendant = days.map((day) => attendancesHash.includes(`${day}_${userId}`))
-      return { name: defineOrThrow(namesById.get(userId)), attendant }
-    }).toSorted((a, b) => a.name.localeCompare(b.name))
+    userRows: userIds.map((userId) => ({
+      name: defineOrThrow(namesById.get(userId)),
+      certificate: certificateByUserId.get(userId) ?? 'no',
+      payment: paymentByUserId.get(userId) ?? 'no',
+      attendant: days.map((day) => attendancesHash.includes(`${day}_${userId}`))
+    })).toSorted((a, b) => a.name.localeCompare(b.name))
   }
 })
 
@@ -107,19 +139,24 @@ for (const sheet of sheets) {
       requests: [
         craftAddSheet(sheet.sheetTitle, sheet.sheetId),
         craftBoolValidation(craftRange(
-          sheet.sheetId, 1, sheet.necessaryRows, 1, sheet.necessaryColumns
+          sheet.sheetId,
+          Sheet.HeaderRow, sheet.necessaryRows,
+          Sheet.StaticCells, sheet.necessaryColumns
         )),
         craftUpdateCells(
-          craftRange(sheet.sheetId, 0, sheet.necessaryRows + 2, 0, sheet.necessaryColumns),
+          craftRange(
+            sheet.sheetId,
+            Sheet.ZeroIndex, sheet.necessaryRows,
+            Sheet.ZeroIndex, sheet.necessaryColumns
+          ),
           [
-            craftDaysRow('Soci', sheet.days),
+            craftHeaderRow(['Soci', 'Certificato', 'Pagamento'], sheet.days),
             ...craftUserRows(sheet.userRows)
           ]
         ),
-        craftResizeColumns(sheet.sheetId, 0, 1, 200),
-        craftUpdateCells(
-          craftRange(sheet.sheetId, sheet.necessaryRows + 1, sheet.necessaryRows + 2, 0, 1),
-          [ craftAlert('ATTENZIONE: non modificare, verrà sovrascritto!') ]
+        craftResizeFirstThreeColumns(sheet.sheetId, Sheet.ColumnSize),
+        craftAlert(
+          sheet.sheetId, sheet.necessaryRows, 'ATTENZIONE: non modificare, verrà sovrascritto!'
         )
       ]
     }
