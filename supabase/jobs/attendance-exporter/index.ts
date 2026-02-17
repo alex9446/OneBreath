@@ -16,6 +16,9 @@ enum Sheet {
 console.info(`Job "attendance-exporter" started!`)
 
 const today = Temporal.Now.plainDateISO('Europe/Rome')
+const yesterday = today.subtract({ days: 1 })
+const monthLocaleString = yesterday.toLocaleString('it-IT', { month: 'long' })
+const monthFirstDate = yesterday.with({ day: 1 }).toString()
 
 const expirationState = (date: string) => {
   const expiration = Temporal.PlainDate.from(date)
@@ -39,40 +42,40 @@ const supabaseAdmin = createClient<Database>(
 
 const serviceAccountInfo = JSON.parse(atob(Deno.env.get('SERVICE_ACCOUNT_INFO')!))
 
-const groups = await supabaseAdmin.from('groups').select('id,spreadsheet_id')
+const groupsProm = supabaseAdmin.from('groups').select('id,spreadsheet_id')
+const profilesProm = supabaseAdmin.from('profiles').select('id,first_name,last_name')
+const certificatesProm = supabaseAdmin.from('certificates').select('user_id,expiration')
+const paymentsProm = supabaseAdmin.from('payments').select('user_id,expiration')
+const attendancesProm = supabaseAdmin.from('attendances')
+  .select('marked_day,user_id,group_id')
+  .gte('marked_day', monthFirstDate)
+  .lte('marked_day', yesterday.toString())
+
+const [groups, profiles, certificates, payments, attendances] = await Promise.all(
+  [groupsProm, profilesProm, certificatesProm, paymentsProm, attendancesProm]
+)
+
 if (groups.error) throw groups.error
 const spreadsheetByGroupId = new Map(
   groups.data.map((group) => [group.id, group.spreadsheet_id])
 )
 
-const profiles = await supabaseAdmin.from('profiles').select('id,first_name,last_name')
 if (profiles.error) throw profiles.error
 const namesById = new Map(
   profiles.data.map((profile) => [profile.id, `${profile.first_name} ${profile.last_name}`])
 )
 
-const certificates = await supabaseAdmin.from('certificates').select('user_id,expiration')
 if (certificates.error) throw certificates.error
 const certificateByUserId = new Map(certificates.data.map((certificate) => (
   [certificate.user_id, expirationState(certificate.expiration)]
 )))
 
-const payments = await supabaseAdmin.from('payments').select('user_id,expiration')
 if (payments.error) throw payments.error
 const paymentByUserId = new Map(payments.data.map((payment) => (
   [payment.user_id, expirationState(payment.expiration)]
 )))
 
-const yesterday = today.subtract({ days: 1 })
-const monthLocaleString = yesterday.toLocaleString('it-IT', { month: 'long' })
-const monthFirstDate = yesterday.with({ day: 1 }).toString()
-
-const attendances = await supabaseAdmin.from('attendances')
-  .select('marked_day,user_id,group_id')
-  .gte('marked_day', monthFirstDate)
-  .lte('marked_day', yesterday.toString())
 if (attendances.error) throw attendances.error
-
 const aData = attendances.data
 
 const unique = <T>(array: T[]) => Array.from(new Set(array))
