@@ -68,13 +68,10 @@ const diffDays = (date1: string, date2: string) => {
   return Math.floor(diffTime / (1000 * 60 * 60 * 24))
 }
 
-type Data = {
-  expiration: string
-} | null
-export const expirationStatus = (data: Data, almostDays: number) => {
-  if (!data) return { notfound: true, expired: false, almostExpired: false }
+export const expirationStatus = (almostDays: number, expiration?: string) => {
+  if (!expiration) return { notfound: true, expired: false, almostExpired: false }
 
-  const days = diffDays(getTodayDate(), data.expiration)
+  const days = diffDays(getTodayDate(), expiration)
   const expired = days < 0
   return {
     notfound: false,

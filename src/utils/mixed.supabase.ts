@@ -37,6 +37,22 @@ export const contactsByZone = async (supabaseClient: SupabaseClientDB) => {
   }>)
 }
 
+const userStatusRaw = async (certificateExpiration?: string, paymentExpiration?: string) => {
+  const certificate = expirationStatus(30, certificateExpiration)
+  const payment = expirationStatus(10, paymentExpiration)
+  return {
+    certificate,
+    certificateExpiration,
+    payment,
+    paymentExpiration,
+    global: {
+      notfound: certificate.notfound || payment.notfound,
+      expired: certificate.expired || payment.expired,
+      almostExpired: certificate.almostExpired || payment.almostExpired
+    }
+  }
+}
+
 export const userStatus = async (supabaseClient: SupabaseClientDB,
                                  idPromise?: Promise<string>) => {
   const userId = await idPromise ?? await getUserId(supabaseClient)
@@ -47,17 +63,30 @@ export const userStatus = async (supabaseClient: SupabaseClientDB,
     .select('expiration').eq('user_id', userId).maybeSingle()
   if (paymentError) throw paymentError.message
 
-  const certificate = expirationStatus(certData, 30)
-  const payment = expirationStatus(paymentData, 10)
-  return {
-    certificate,
-    certificateExpiration: certData?.expiration,
-    payment,
-    paymentExpiration: paymentData?.expiration,
-    global: {
-      notfound: certificate.notfound || payment.notfound,
-      expired: certificate.expired || payment.expired,
-      almostExpired: certificate.almostExpired || payment.almostExpired
-    }
-  }
+  return userStatusRaw(certData?.expiration, paymentData?.expiration)
+}
+
+export const profilesWithStatus = async (supabaseClient: SupabaseClientDB) => {
+  const profilesProm = supabaseClient.from('profiles')
+    .select('id,first_name,last_name,group_id').order('first_name')
+  const certificatesProm = supabaseClient.from('certificates').select('user_id,expiration')
+  const paymentsProm = supabaseClient.from('payments').select('user_id,expiration')
+  const [profiles, certificates, payments] = await Promise.all(
+    [profilesProm, certificatesProm, paymentsProm]
+  )
+  if (profiles.error) throw profiles.error.message
+  if (certificates.error) throw certificates.error.message
+  if (payments.error) throw payments.error.message
+
+  const certificateByUserId = new Map(certificates.data.map((certificate) => (
+    [certificate.user_id, certificate.expiration]
+  )))
+  const paymentByUserId = new Map(payments.data.map((payment) => (
+    [payment.user_id, payment.expiration]
+  )))
+
+  return profiles.data.map((profile) => ({
+    ...profile,
+    status: userStatusRaw(certificateByUserId.get(profile.id), paymentByUserId.get(profile.id))
+  }))
 }
