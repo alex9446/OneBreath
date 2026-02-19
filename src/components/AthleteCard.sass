@@ -1,0 +1,22 @@
+@use '../variables'
+
+article.athlete-card
+  padding: 10px
+  border: 2px outset white
+  border-radius: 10px
+  background-color: #0064d2
+  cursor: pointer
+  p
+    font-size: variables.$font-size-xx-small
+  .icons
+    display: flex
+    svg
+      fill: green
+      &.almostExpired
+        fill: orange
+      &.expired, &.notfound
+        fill: red
+      &.admin
+        fill: gold
+      &.hide
+        display: none

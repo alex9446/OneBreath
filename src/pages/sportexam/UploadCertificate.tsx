@@ -8,6 +8,8 @@ import ErrorBox from '../../components/ErrorBox'
 import GoBack from '../../components/GoBack'
 import './UploadCertificate.sass'
 
+const ByteMultiple = 1000
+
 const UploadCertificate = () => {
   const supabaseClient = useSupabase()
 
@@ -16,7 +18,7 @@ const UploadCertificate = () => {
     if (error) throw error.message
     return {
       allowedMimeTypes: data.allowed_mime_types?.join(', ') ?? '',
-      fileSizeLimitInMB: (data.file_size_limit ?? 0) / 1000 / 1000
+      fileSizeLimitInMB: (data.file_size_limit ?? 0) / ByteMultiple / ByteMultiple
     }
   })
 

@@ -18,7 +18,7 @@ const Home = () => (<>
       <span>Novità:</span> <A href='/tutorial'>video tutorial</A> per attivazione notifiche!
     </p>
     <Show when={getAdminInLS() >= 1}>
-      <FakeButton color='darkorange' href='/staff'>Area staff</FakeButton>
+      <FakeButton color='gold' href='/staff'>Area staff</FakeButton>
     </Show>
     <FakeButton href='/menu'>Menu</FakeButton>
   </nav>

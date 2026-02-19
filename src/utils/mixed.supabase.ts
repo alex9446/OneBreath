@@ -1,5 +1,5 @@
 import type { SupabaseClientDB } from './shortcut.types'
-import { expirationStatus, setAdminInLS, setGroupInLS } from './mixed'
+import { setAdminInLS, setGroupInLS, userStatusRaw } from './mixed'
 import type { Enums, Tables } from './database.types'
 
 export const getUserId = async (supabaseClient: SupabaseClientDB) => {
@@ -10,15 +10,17 @@ export const getUserId = async (supabaseClient: SupabaseClientDB) => {
 }
 
 export const fillLocalStorage = async (supabaseClient: SupabaseClientDB, userId: string) => {
-  const { data: profile, error: profileError } = await supabaseClient.from('profiles')
+  const profileProm = supabaseClient.from('profiles')
     .select('group_id').eq('id', userId).single()
-  if (profileError) throw profileError.message
-  setGroupInLS(profile.group_id)
-
-  const { data: admin, error: adminError } = await supabaseClient.from('admins')
+  const adminProm = supabaseClient.from('admins')
     .select('level').eq('id', userId).maybeSingle()
-  if (adminError) throw adminError.message
-  setAdminInLS(admin ? admin.level : 0)
+  const [profile, admin] = await Promise.all([profileProm, adminProm])
+
+  if (profile.error) throw profile.error.message
+  if (admin.error) throw admin.error.message
+
+  setGroupInLS(profile.data.group_id)
+  setAdminInLS(admin.data?.level ?? 0)
 }
 
 export const contactsByZone = async (supabaseClient: SupabaseClientDB) => {
@@ -37,33 +39,16 @@ export const contactsByZone = async (supabaseClient: SupabaseClientDB) => {
   }>)
 }
 
-const userStatusRaw = async (certificateExpiration?: string, paymentExpiration?: string) => {
-  const certificate = expirationStatus(30, certificateExpiration)
-  const payment = expirationStatus(10, paymentExpiration)
-  return {
-    certificate,
-    certificateExpiration,
-    payment,
-    paymentExpiration,
-    global: {
-      notfound: certificate.notfound || payment.notfound,
-      expired: certificate.expired || payment.expired,
-      almostExpired: certificate.almostExpired || payment.almostExpired
-    }
-  }
-}
-
 export const userStatus = async (supabaseClient: SupabaseClientDB,
                                  idPromise?: Promise<string>) => {
   const userId = await idPromise ?? await getUserId(supabaseClient)
-  const { data: certData, error: certError } = await supabaseClient.from('certificates')
+  const certificateProm = supabaseClient.from('certificates')
     .select('expiration').eq('user_id', userId).maybeSingle()
-  if (certError) throw certError.message
-  const { data: paymentData, error: paymentError } = await supabaseClient.from('payments')
+  const paymentProm = supabaseClient.from('payments')
     .select('expiration').eq('user_id', userId).maybeSingle()
-  if (paymentError) throw paymentError.message
+  const [certificate, payment] = await Promise.all([certificateProm, paymentProm])
 
-  return userStatusRaw(certData?.expiration, paymentData?.expiration)
+  return userStatusRaw(certificate.data?.expiration, payment.data?.expiration)
 }
 
 export const profilesWithStatus = async (supabaseClient: SupabaseClientDB) => {

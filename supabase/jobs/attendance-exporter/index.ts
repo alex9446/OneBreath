@@ -56,33 +56,29 @@ const [groups, profiles, certificates, payments, attendances] = await Promise.al
 )
 
 if (groups.error) throw groups.error
-const spreadsheetByGroupId = new Map(
-  groups.data.map((group) => [group.id, group.spreadsheet_id])
-)
-
 if (profiles.error) throw profiles.error
-const namesById = new Map(
-  profiles.data.map((profile) => [profile.id, `${profile.first_name} ${profile.last_name}`])
-)
-
 if (certificates.error) throw certificates.error
+if (payments.error) throw payments.error
+if (attendances.error) throw attendances.error
+
+const spreadsheetByGroupId = new Map(groups.data.map((group) => (
+  [group.id, group.spreadsheet_id]
+)))
+const namesById = new Map(profiles.data.map((profile) => (
+  [profile.id, `${profile.first_name} ${profile.last_name}`]
+)))
 const certificateByUserId = new Map(certificates.data.map((certificate) => (
   [certificate.user_id, expirationState(certificate.expiration)]
 )))
-
-if (payments.error) throw payments.error
 const paymentByUserId = new Map(payments.data.map((payment) => (
   [payment.user_id, expirationState(payment.expiration)]
 )))
 
-if (attendances.error) throw attendances.error
-const aData = attendances.data
-
 const unique = <T>(array: T[]) => Array.from(new Set(array))
-const markedGroups = unique(aData.map((a) => a.group_id)).sort()
+const markedGroups = unique(attendances.data.map((a) => a.group_id)).sort()
 
 const sheets = markedGroups.map((group) => {
-  const groupAttendances = aData.filter((a) => a.group_id === group)
+  const groupAttendances = attendances.data.filter((a) => a.group_id === group)
   const days = unique(groupAttendances.map((a) => a.marked_day)).sort()
   const userIds = unique(groupAttendances.map((a) => a.user_id))
   const attendancesHash = groupAttendances.map((a) => `${a.marked_day}_${a.user_id}`)
