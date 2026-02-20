@@ -69,11 +69,12 @@ const diffDays = (date1: string, date2: string) => {
 }
 
 const expirationStatus = (almostDays: number, expiration?: string) => {
-  if (!expiration) return { notfound: true, expired: false, almostExpired: false }
+  if (!expiration) return { valid: false, notfound: true, expired: false, almostExpired: false }
 
   const days = diffDays(getTodayDate(), expiration)
   const expired = days < 0
   return {
+    valid: !expired,
     notfound: false,
     expired,
     almostExpired: !expired && days < almostDays

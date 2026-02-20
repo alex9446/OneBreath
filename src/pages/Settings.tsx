@@ -5,10 +5,10 @@ import { useSupabase } from '../utils/context'
 import { getUserId } from '../utils/mixed.supabase'
 import Title from '../components/Title'
 import SelectGroup from '../components/SelectGroup'
+import Checkbox from '../components/Checkbox'
 import ErrorBox from '../components/ErrorBox'
 import FakeButton from '../components/FakeButton'
 import GoBack from '../components/GoBack'
-import './Settings.sass'
 
 const Settings = () => {
   const groupId = getGroupFromLS()
@@ -40,10 +40,8 @@ const Settings = () => {
       <form method='post' action={saveSettings}>
         <input type='hidden' name='id' value={profile()?.id} required />
         <SelectGroup defaultOption={groupId} />
-        <div class='checkbox-input'>
-          <input type='checkbox' name='leaderboard' id='leaderboard' checked={profile()?.leaderboard} />
-          <label for='leaderboard'>Mostrami nella classifica presenze</label>
-        </div>
+        <Checkbox name='leaderboard'
+                  checked={profile()?.leaderboard}>Mostrami nella classifica presenze</Checkbox>
         <input type='submit' value='Salva' disabled={submission.pending} />
       </form>
       <ErrorBox>{submission.error}</ErrorBox>
