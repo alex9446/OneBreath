@@ -1,10 +1,11 @@
-import type { Component } from 'solid-js'
+import { Show, type Component } from 'solid-js'
 import { action, useAction, useSubmission } from '@solidjs/router'
 import { getDateLocaleIT, type userStatusRaw } from '../../../utils/mixed'
 import type { Tables } from '../../../utils/database.types'
 import { useSupabase } from '../../../utils/context'
 import { getUserId } from '../../../utils/mixed.supabase'
 import ErrorBox from '../../../components/ErrorBox'
+import DownloadCertButton from '../../../components/DownloadCertButton'
 import UserAttendances from '../../../components/UserAttendances'
 import './Athlete.sass'
 
@@ -57,6 +58,9 @@ const Athlete: Component<AthleteProps> = (props) => {
       </button>
       <ErrorBox>{submission.error}</ErrorBox>
       <ExpirationInfo name='certificato' expiration={props.profile.status.certificateExpiration} />
+      <Show when={!props.profile.status.certificate.notfound}>
+        <DownloadCertButton userId={props.profile.id} />
+      </Show>
       <ExpirationInfo name='pagamento piscina' expiration={props.profile.status.paymentExpiration} />
       <UserAttendances id={props.profile.id} />
     </main>

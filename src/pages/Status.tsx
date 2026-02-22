@@ -3,7 +3,7 @@ import { getDateLocaleIT } from '../utils/mixed'
 import { useSupabase } from '../utils/context'
 import { getUserId, userStatus } from '../utils/mixed.supabase'
 import Title from '../components/Title'
-import FakeButtonNative from '../components/FakeButtonNative'
+import DownloadCertButton from '../components/DownloadCertButton'
 import FakeButton from '../components/FakeButton'
 import GoBack from '../components/GoBack'
 import './Status.sass'
@@ -44,12 +44,6 @@ const Status = () => {
 
   const [status] = createResource(() => userStatus(supabaseClient, userIdPromise))
 
-  const [certificateUrl] = createResource(async () => {
-    const { data } = await supabaseClient.storage.from('certificates')
-      .createSignedUrl(await userIdPromise, 900, { download: 'certificato' }) // 15 minutes
-    return data?.signedUrl
-  })
-
   return (<>
     <Title>Stato profilo</Title>
     <main id='status-page'>
@@ -59,12 +53,8 @@ const Status = () => {
           <ExpirationInfo status={status()?.certificate}
                           date={status()?.certificateExpiration} />
         </Suspense>
-        <Show when={certificateUrl()}>
-          {(dCertificateUrl) => (
-            <FakeButtonNative href={dCertificateUrl()} newPage>
-              Scarica certificato
-            </FakeButtonNative>
-          )}
+        <Show when={status()?.certificate.notfound === false}>
+          <DownloadCertButton userId={userIdPromise} />
         </Show>
         <FakeButton href='/sportexam/uploadcertificate'>Carica certificato</FakeButton>
       </article>
