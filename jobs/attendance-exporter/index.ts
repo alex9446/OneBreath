@@ -37,7 +37,7 @@ const defineOrThrow = <T>(value: T) => {
 
 const supabaseAdmin = createClient<Database>(
   Deno.env.get('SUPABASE_URL')!,
-  Deno.env.get('SECRET_FUNCTIONS_KEY')!
+  Deno.env.get('SECRET_JOBS_KEY')!
 )
 
 const serviceAccountInfo = JSON.parse(atob(Deno.env.get('SERVICE_ACCOUNT_INFO')!))

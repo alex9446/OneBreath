@@ -8,7 +8,7 @@ console.info(`Job "attendance-reminder" started!`)
 
 const supabaseAdmin = createClient<Database>(
   Deno.env.get('SUPABASE_URL')!,
-  Deno.env.get('SECRET_FUNCTIONS_KEY')!
+  Deno.env.get('SECRET_JOBS_KEY')!
 )
 
 setVapidDetails(
