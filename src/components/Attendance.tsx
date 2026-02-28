@@ -41,9 +41,9 @@ const Attendance = () => {
   const supabaseClient = useSupabase()
   const groupId = getGroupFromLS()
 
-  const [verify, { refetch }] = createResource(groupId, async (gid) => {
-    return await invokeAttendances(supabaseClient, 'verify', gid)
-  })
+  const [verify, { refetch }] = createResource(() => (
+    invokeAttendances(supabaseClient, 'verify', groupId)
+  ))
 
   return (
     <Show keyed when={verify()} fallback={<p>Caricamento presenza...</p>}>

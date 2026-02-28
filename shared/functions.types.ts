@@ -12,21 +12,22 @@ export type FunctionReturn<T> = Promise<{
 }>
 
 export type AttendancesExtra = {
-  alreadySet: true
+  state: 'already-set'
+  alreadySet: true  // deprecated, maintained for front-end compatibility
   groupSetted: number
   daySetted: number
   daySettedPlainDate: string
 } | {
-  alreadySet: false
-  DTnotAllowed: true  // deprecated, maintained for front-end compatibility
-  DayNotAllowed: true
+  state: 'day-not-allowed'
+  alreadySet: false  // deprecated, maintained for front-end compatibility
+  DayNotAllowed: true  // deprecated, maintained for front-end compatibility
   allowedDays: number[]
   startTime: number
   openingTime: number
 } | {
-  alreadySet: false
-  DTnotAllowed: false // deprecated, maintained for front-end compatibility
-  DayNotAllowed: false
+  state: 'settable'
+  alreadySet: false  // deprecated, maintained for front-end compatibility
+  DayNotAllowed: false  // deprecated, maintained for front-end compatibility
   dayOfWeek: number
   dayToMarkPlainDate: string
 }

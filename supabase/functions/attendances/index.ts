@@ -40,15 +40,15 @@ Deno.serve(async (req: Request) => {
     const allowed = await allowedAttendance(supabaseAdmin, group, userId)
     if (allowed.error) return jsonResponseMessage(allowed.error.message, allowed.error.code)
 
-    if (action === 'remove' && allowed.data.alreadySet) {
+    if (action === 'remove' && allowed.data.state === 'already-set') {
       const removed = await removeAttendance(supabaseAdmin, allowed.data.daySettedPlainDate, userId)
       if (removed.error) return jsonResponseMessage(removed.error.message, removed.error.code)
       return jsonResponseMessage('attendance removed', 200)
     }
 
     const allowedCode = action === 'verify' ? 200 : 403
-    if (allowed.data.alreadySet) return jsonResponseMessage('attendance already set!', allowedCode, allowed.data)
-    if (allowed.data.DayNotAllowed) return jsonResponseMessage('day not allowed!', allowedCode, allowed.data)
+    if (allowed.data.state === 'already-set') return jsonResponseMessage('attendance already set!', allowedCode, allowed.data)
+    if (allowed.data.state === 'day-not-allowed') return jsonResponseMessage('day not allowed!', allowedCode, allowed.data)
     if (action === 'remove') return jsonResponseMessage('no attendance already recorded', 403, allowed.data)
     if (action === 'verify') return jsonResponseMessage('attendance markable', 200, allowed.data)
 

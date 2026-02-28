@@ -19,7 +19,8 @@ export async function allowedAttendance(supabaseAdmin: SupabaseClientDB,
   if (attendanceError) return errorMessage(attendanceError.message, 500)
   if (attendanceRow) return {
     data: {
-      alreadySet: true,
+      state: 'already-set',
+      alreadySet: true,  // deprecated, maintained for front-end compatibility
       groupSetted: attendanceRow.group_id,
       daySetted: dayToMark.dayOfWeek,
       daySettedPlainDate: dayToMarkPlainDate
@@ -34,9 +35,9 @@ export async function allowedAttendance(supabaseAdmin: SupabaseClientDB,
   const todayIsAllowedDay = allowedDays.includes(dayToMark.dayOfWeek)
   if (!todayIsAllowedDay) return {
     data: {
-      alreadySet: false,
-      DTnotAllowed: true, // deprecated, maintained for front-end compatibility
-      DayNotAllowed: true,
+      state: 'day-not-allowed',
+      alreadySet: false,  // deprecated, maintained for front-end compatibility
+      DayNotAllowed: true,  // deprecated, maintained for front-end compatibility
       allowedDays,
       startTime,
       openingTime: 24
@@ -46,9 +47,9 @@ export async function allowedAttendance(supabaseAdmin: SupabaseClientDB,
 
   return {
     data: {
-      alreadySet: false,
-      DTnotAllowed: false, // deprecated, maintained for front-end compatibility
-      DayNotAllowed: false,
+      state: 'settable',
+      alreadySet: false,  // deprecated, maintained for front-end compatibility
+      DayNotAllowed: false,  // deprecated, maintained for front-end compatibility
       dayOfWeek: dayToMark.dayOfWeek,
       dayToMarkPlainDate
     },
