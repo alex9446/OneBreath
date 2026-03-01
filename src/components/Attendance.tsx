@@ -1,5 +1,4 @@
-import { createResource, Show, type Component } from 'solid-js'
-import type { AttendancesExtra, ResponseBody } from '../utils/functions.types'
+import { createResource, Match, Show, Switch } from 'solid-js'
 import { useSupabase } from '../utils/context'
 import { getGroupFromLS } from '../utils/mixed'
 import invokeAttendances from '../utils/invokeAttendances'
@@ -10,33 +9,6 @@ import RemoveAttendance from './RemoveAttendance'
 import SetAttendance from './SetAttendance'
 import './Attendance.sass'
 
-type ManageProps = {
-  response: ResponseBody<AttendancesExtra>
-  groupId: number
-  refetch: () => void
-}
-
-const ManageResource: Component<ManageProps> = (props) => {
-  const extra = props.response.extra
-  if (props.response.code !== 200) return <ErrorBox>{props.response.message}</ErrorBox>
-  if (!extra) return <ErrorBox>{`Non dovresti mai vedere questo errore 🤫 - ${props.response.message}`}</ErrorBox>
-  if (extra.alreadySet) return (<>
-    <p>Presenza di <DayOfWeek day={extra.daySetted} /> a <GroupName id={extra.groupSetted} /> confermata!</p>
-    <RemoveAttendance groupId={props.groupId} refetch={props.refetch} />
-  </>)
-  if (extra.DayNotAllowed) return (<>
-    <p>Segnatura presenza a <GroupName id={props.groupId} /> non attiva.</p>
-    <p class='more-info'>
-      Ritorna qui nei seguenti giorni: <DaysOfWeek days={extra.allowedDays} />.<br />
-      Dalle ore {extra.startTime} avrai {extra.openingTime}H di tempo per segnarti!
-    </p>
-  </>)
-  return (<>
-    <p>Eri presente <DayOfWeek day={extra.dayOfWeek} /> a <GroupName id={props.groupId} />?</p>
-    <SetAttendance groupId={props.groupId} refetch={props.refetch} />
-  </>)
-}
-
 const Attendance = () => {
   const supabaseClient = useSupabase()
   const groupId = getGroupFromLS()
@@ -46,8 +18,36 @@ const Attendance = () => {
   ))
 
   return (
-    <Show keyed when={verify()} fallback={<p>Caricamento presenza...</p>}>
-      {(dVerify) => <ManageResource response={dVerify} groupId={groupId} refetch={refetch} />}
+    <Show keyed when={verify()?.code === 200 && verify()?.extra} fallback={
+      <Show when={verify.loading} fallback={<ErrorBox>{verify()?.message}</ErrorBox>}>
+        <p>Caricamento presenza...</p>
+      </Show>
+    }>
+      {(extraUnion) => (
+        <Switch>
+          <Match when={extraUnion.state === 'already-set' && extraUnion}>
+            {(extra) => (<>
+              <p>Presenza di <DayOfWeek day={extra().daySetted} /> a <GroupName id={extra().groupSetted} /> confermata!</p>
+              <RemoveAttendance groupId={groupId} refetch={refetch} />
+            </>)}
+          </Match>
+          <Match when={extraUnion.state === 'day-not-allowed' && extraUnion}>
+            {(extra) => (<>
+              <p>Segnatura presenza a <GroupName id={groupId} /> non attiva.</p>
+              <p class='more-info'>
+                Ritorna qui nei seguenti giorni: <DaysOfWeek days={extra().allowedDays} />.<br />
+                Dalle ore {extra().startTime} avrai {extra().openingTime}H di tempo per segnarti!
+              </p>
+            </>)}
+          </Match>
+          <Match when={extraUnion.state === 'settable' && extraUnion}>
+            {(extra) => (<>
+              <p>Eri presente <DayOfWeek day={extra().dayOfWeek} /> a <GroupName id={groupId} />?</p>
+              <SetAttendance groupId={groupId} refetch={refetch} />
+            </>)}
+          </Match>
+        </Switch>
+      )}
     </Show>
   )
 }
