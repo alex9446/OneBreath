@@ -12,13 +12,9 @@ const LogoutButton = () => {
   })
   const useLogout = useAction(logout)
   const submission = useSubmission(logout)
-  const onClickEvent = () => {
-    submission.clear() // workaround to remove the last submission error
-    useLogout()
-  }
 
   return (<>
-    <button onClick={onClickEvent} disabled={submission.pending}
+    <button onClick={useLogout} disabled={submission.pending}
             style='background-color: #b62324'>Logout</button>
     <ErrorBox>{submission.error}</ErrorBox>
   </>)

@@ -7,21 +7,18 @@ import ErrorBox from '../components/ErrorBox'
 const SetAttendance: Component<{ groupId: number, refetch: () => void }> = (props) => {
   const supabaseClient = useSupabase()
 
-  const set = action(async (groupId: number) => {
-    const data = await invokeAttendances(supabaseClient, 'set', groupId)
+  const set = action(async () => {
+    const data = await invokeAttendances(supabaseClient, 'set', props.groupId)
     if (data.code !== 200) throw data.message
     await props.refetch()
+    return { ok: true }
   })
   const useSet = useAction(set)
   const submission = useSubmission(set)
-  const onClickEvent = () => {
-    submission.clear() // workaround to remove the last submission error
-    useSet(props.groupId)
-  }
 
   return (
     <>
-      <button onClick={onClickEvent} disabled={submission.pending}>
+      <button onClick={useSet} disabled={submission.pending}>
         {submission.pending ? 'Invio...' : 'Si'}
       </button>
       <ErrorBox>{submission.error}</ErrorBox>

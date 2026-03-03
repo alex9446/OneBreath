@@ -33,27 +33,23 @@ const Athlete: Component<AthleteProps> = (props) => {
   const supabaseClient = useSupabase()
 
   const insertAdmin = action(async () => {
-    if (!window.confirm(confirmMessage(props.profile.first_name))) return false
+    if (!window.confirm(confirmMessage(props.profile.first_name))) return { ok: false }
     const currentAdminId = await getUserId(supabaseClient)
     const { error } = await supabaseClient.from('admins').insert([
       { id: props.profile.id, added_by: currentAdminId }
     ])
     if (error) throw error.message
     await props.adminsRefetch()
-    return true
+    return { ok: true }
   })
   const useInsertAdmin = useAction(insertAdmin)
   const submission = useSubmission(insertAdmin)
-  const insertAdminClick = () => {
-    submission.clear() // workaround to remove the last submission error
-    useInsertAdmin()
-  }
 
   return (
     <main id='athlete-page'>
       <p>Presenze di {props.profile.first_name} {props.profile.last_name}</p>
       <button class='add-admin' disabled={props.admin || submission.pending}
-              onClick={insertAdminClick}>
+              onClick={useInsertAdmin}>
         {props.admin ? (submission.result ? 'Fatto!' : 'Già in staff') : 'Aggiungi a staff'}
       </button>
       <ErrorBox>{submission.error}</ErrorBox>

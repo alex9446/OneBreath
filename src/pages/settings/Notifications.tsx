@@ -17,35 +17,29 @@ const Notifications = () => {
   const activate = action(async () => {
     await subscribeUser(supabaseClient)
     await refetch()
+    return { ok: true }
   })
   const useActivate = useAction(activate)
   const activateSubmission = useSubmission(activate)
-  const activateClick = () => {
-    activateSubmission.clear() // workaround to remove the last submission error
-    useActivate()
-  }
 
   const deactivate = action(async () => {
     await unsubscribeUser()
     await refetch()
+    return { ok: true }
   })
   const useDeactivate = useAction(deactivate)
   const deactivateSubmission = useSubmission(deactivate)
-  const deactivateClick = () => {
-    deactivateSubmission.clear() // workaround to remove the last submission error
-    useDeactivate()
-  }
 
   return (<>
     <Title>Impostazioni &gt; Notifiche</Title>
     <main id='notifications-page'>
       <Show when={subscription()} fallback={
-        <button onClick={activateClick}
+        <button onClick={useActivate}
                 disabled={!subscribeSupported() || activateSubmission.pending}>
           {subscribeSupported() ? 'Attiva notifiche' : 'Non supportate'}
         </button>
       }>
-        <button onClick={deactivateClick} disabled={deactivateSubmission.pending}>
+        <button onClick={useDeactivate} disabled={deactivateSubmission.pending}>
           Disattiva notifiche
         </button>
       </Show>
