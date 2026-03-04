@@ -103,6 +103,18 @@ export type Database = {
         }
         Relationships: []
       }
+      midweek_holidays: {
+        Row: {
+          date: string
+        }
+        Insert: {
+          date: string
+        }
+        Update: {
+          date?: string
+        }
+        Relationships: []
+      }
       payments: {
         Row: {
           expiration: string
