@@ -24,7 +24,7 @@ const Attendance = () => {
       </Show>
     }>
       {(extraUnion) => (
-        <Switch>
+        <Switch fallback={<ErrorBox>Stato non previsto! Avvisare staff</ErrorBox>}>
           <Match when={extraUnion.state === 'already-set' && extraUnion}>
             {(extra) => (<>
               <p>Presenza di <DayOfWeek day={extra().daySetted} /> a <GroupName id={extra().groupSetted} /> confermata!</p>
@@ -39,6 +39,12 @@ const Attendance = () => {
                 Dalle ore {extra().startTime} avrai {extra().openingTime}H di tempo per segnarti!
               </p>
             </>)}
+          </Match>
+          <Match when={extraUnion.state === 'midweek-holiday'}>
+            <p>Segnatura presenza a <GroupName id={groupId} /> non attiva.</p>
+            <p class='more-info'>
+              Il giorno per cui segneresti la presenza risulta essere un festivo con piscina chiusa.
+            </p>
           </Match>
           <Match when={extraUnion.state === 'settable' && extraUnion}>
             {(extra) => (<>

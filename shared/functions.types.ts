@@ -11,20 +11,25 @@ export type FunctionReturn<T> = Promise<{
   error: Error
 }>
 
+type NotAllowed = {
+  alreadySet: false  // deprecated, maintained for front-end compatibility
+  DayNotAllowed: true  // deprecated, maintained for front-end compatibility
+  allowedDays: number[]
+  startTime: number
+  openingTime: number
+}
+
 export type AttendancesExtra = {
   state: 'already-set'
   alreadySet: true  // deprecated, maintained for front-end compatibility
   groupSetted: number
   daySetted: number
   daySettedPlainDate: string
-} | {
-  state: 'day-not-allowed'
-  alreadySet: false  // deprecated, maintained for front-end compatibility
-  DayNotAllowed: true  // deprecated, maintained for front-end compatibility
-  allowedDays: number[]
-  startTime: number
-  openingTime: number
-} | {
+} | (
+  { state: 'day-not-allowed' } & NotAllowed
+) | (
+  { state: 'midweek-holiday' } & NotAllowed
+) | {
   state: 'settable'
   alreadySet: false  // deprecated, maintained for front-end compatibility
   DayNotAllowed: false  // deprecated, maintained for front-end compatibility

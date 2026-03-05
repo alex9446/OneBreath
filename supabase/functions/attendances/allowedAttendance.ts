@@ -14,7 +14,7 @@ export async function allowedAttendance(supabaseAdmin: SupabaseClientDB,
   const dayToMarkPlainDate = dayToMark.toPlainDate().toString()
 
   const { data: attendanceRow, error: attendanceError } = await supabaseAdmin
-    .from('attendances').select('marked_day,user_id,group_id')
+    .from('attendances').select('group_id')
     .eq('marked_day', dayToMarkPlainDate).eq('user_id', userId).maybeSingle()
   if (attendanceError) return errorMessage(attendanceError.message, 500)
   if (attendanceRow) return {
@@ -28,14 +28,25 @@ export async function allowedAttendance(supabaseAdmin: SupabaseClientDB,
     error: null
   }
 
-  const { data: groupRow, error: groupError } = await supabaseAdmin
-    .from('groups').select('id,days_of_week').eq('id', group).single()
-  if (groupError) return errorMessage(groupError.message, 500)
+  const groupProm = supabaseAdmin
+    .from('groups').select('days_of_week').eq('id', group).single()
+  const midweekHolidayProm = supabaseAdmin
+    .from('midweek_holidays').select('date').eq('date', dayToMarkPlainDate).maybeSingle()
+
+  const [{ data: groupRow, error: groupErr }, { data: holidayRow, error: holidayErr }] = (
+    await Promise.all([groupProm, midweekHolidayProm])
+  )
+
+  if (groupErr) return errorMessage(groupErr.message, 500)
+  if (holidayErr) return errorMessage(holidayErr.message, 500)
+
   const allowedDays = groupRow.days_of_week
-  const todayIsAllowedDay = allowedDays.includes(dayToMark.dayOfWeek)
-  if (!todayIsAllowedDay) return {
+  const isDayNotAllowed = !allowedDays.includes(dayToMark.dayOfWeek)
+  const isMidweekHoliday = !!holidayRow
+
+  if (isDayNotAllowed || isMidweekHoliday) return {
     data: {
-      state: 'day-not-allowed',
+      state: isDayNotAllowed ? 'day-not-allowed' : 'midweek-holiday',
       alreadySet: false,  // deprecated, maintained for front-end compatibility
       DayNotAllowed: true,  // deprecated, maintained for front-end compatibility
       allowedDays,

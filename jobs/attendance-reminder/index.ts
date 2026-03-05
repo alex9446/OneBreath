@@ -19,19 +19,33 @@ setVapidDetails(
 
 const NIR = new nowInRome()
 
-// get active groups in current day of week
-const groups = await supabaseAdmin.from('groups')
+const groupsProm = supabaseAdmin.from('groups')
   .select('id').contains('days_of_week', [NIR.dayOfWeek])
-if (groups.error) throw groups.error
-const groups_ids = groups.data.map((group) => group.id)
-console.info(groups_ids.length + ' active groups')
-
-// get who already set attendance
-const attendances = await supabaseAdmin.from('attendances')
+const midweekHolidayProm = supabaseAdmin
+  .from('midweek_holidays').select('date').eq('date', NIR.plainDate).maybeSingle()
+const attendancesProm = await supabaseAdmin.from('attendances')
   .select('user_id').eq('marked_day', NIR.plainDate)
+
+const [groups, midweekHoliday, attendances] = (
+  await Promise.all([groupsProm, midweekHolidayProm, attendancesProm])
+)
+if (groups.error) throw groups.error
+if (midweekHoliday.error) throw midweekHoliday.error
 if (attendances.error) throw attendances.error
+
+// if it is a midweek holiday, all groups are inactive
+const isMidweekHoliday = !!midweekHoliday.data
+const groups_ids = isMidweekHoliday ? [] : groups.data.map((group) => group.id)
+console.info(groups_ids.length + ' active groups')
+if (isMidweekHoliday) console.info('It is a midweek holiday')
+
 const ASA_users_ids = attendances.data.map((attendance) => attendance.user_id)
 console.info(ASA_users_ids.length + ' users already set attendance')
+
+if (groups_ids.length < 1) {
+  console.info(`Job "attendance-reminder" finished! early exit`)
+  Deno.exit()
+}
 
 // get profiles of active groups (exclude who already set attendance)
 const profiles = await supabaseAdmin.from('profiles')
