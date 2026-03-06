@@ -49,7 +49,6 @@ Deno.serve(async (req: Request) => {
     const allowedCode = action === 'verify' ? 200 : 403
     if (allowed.data.state === 'already-set') return jsonResponseMessage('attendance already set!', allowedCode, allowed.data)
     if (allowed.data.state === 'day-not-allowed') return jsonResponseMessage('day not allowed!', allowedCode, allowed.data)
-    if (allowed.data.state === 'midweek-holiday') return jsonResponseMessage('midweek holiday!', allowedCode, allowed.data)
     if (action === 'remove') return jsonResponseMessage('no attendance already recorded', 403, allowed.data)
     if (action === 'verify') return jsonResponseMessage('attendance markable', 200, allowed.data)
 

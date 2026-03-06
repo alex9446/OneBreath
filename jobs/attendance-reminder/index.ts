@@ -19,10 +19,13 @@ setVapidDetails(
 
 const NIR = new nowInRome()
 
+// get active groups in current day of week
 const groupsProm = supabaseAdmin.from('groups')
   .select('id').contains('days_of_week', [NIR.dayOfWeek])
+// check if today is a midweek holiday
 const midweekHolidayProm = supabaseAdmin
   .from('midweek_holidays').select('date').eq('date', NIR.plainDate).maybeSingle()
+// get who already set attendance
 const attendancesProm = await supabaseAdmin.from('attendances')
   .select('user_id').eq('marked_day', NIR.plainDate)
 

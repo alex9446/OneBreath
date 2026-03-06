@@ -20,7 +20,6 @@ export async function allowedAttendance(supabaseAdmin: SupabaseClientDB,
   if (attendanceRow) return {
     data: {
       state: 'already-set',
-      alreadySet: true,  // deprecated, maintained for front-end compatibility
       groupSetted: attendanceRow.group_id,
       daySetted: dayToMark.dayOfWeek,
       daySettedPlainDate: dayToMarkPlainDate
@@ -46,9 +45,8 @@ export async function allowedAttendance(supabaseAdmin: SupabaseClientDB,
 
   if (isDayNotAllowed || isMidweekHoliday) return {
     data: {
-      state: isDayNotAllowed ? 'day-not-allowed' : 'midweek-holiday',
-      alreadySet: false,  // deprecated, maintained for front-end compatibility
-      DayNotAllowed: true,  // deprecated, maintained for front-end compatibility
+      state: 'day-not-allowed',
+      isMidweekHoliday,
       allowedDays,
       startTime,
       openingTime: 24
@@ -59,8 +57,6 @@ export async function allowedAttendance(supabaseAdmin: SupabaseClientDB,
   return {
     data: {
       state: 'settable',
-      alreadySet: false,  // deprecated, maintained for front-end compatibility
-      DayNotAllowed: false,  // deprecated, maintained for front-end compatibility
       dayOfWeek: dayToMark.dayOfWeek,
       dayToMarkPlainDate
     },

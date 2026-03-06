@@ -35,16 +35,14 @@ const Attendance = () => {
             {(extra) => (<>
               <p>Segnatura presenza a <GroupName id={groupId} /> non attiva.</p>
               <p class='more-info'>
-                Ritorna qui nei seguenti giorni: <DaysOfWeek days={extra().allowedDays} />.<br />
-                Dalle ore {extra().startTime} avrai {extra().openingTime}H di tempo per segnarti!
+                <Show when={extra().isMidweekHoliday} fallback={<>
+                  Ritorna qui nei seguenti giorni: <DaysOfWeek days={extra().allowedDays} />.<br />
+                  Dalle ore {extra().startTime} avrai {extra().openingTime}H di tempo per segnarti!
+                </>}>
+                  Il giorno per cui segneresti la presenza risulta essere un festivo con piscina chiusa.
+                </Show>
               </p>
             </>)}
-          </Match>
-          <Match when={extraUnion.state === 'midweek-holiday'}>
-            <p>Segnatura presenza a <GroupName id={groupId} /> non attiva.</p>
-            <p class='more-info'>
-              Il giorno per cui segneresti la presenza risulta essere un festivo con piscina chiusa.
-            </p>
           </Match>
           <Match when={extraUnion.state === 'settable' && extraUnion}>
             {(extra) => (<>
