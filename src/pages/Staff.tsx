@@ -8,6 +8,7 @@ const Staff = () => (<>
     <FakeButton href='athletes'>Lista atleti</FakeButton>
     <FakeButton href='attendances'>Storico presenze</FakeButton>
     <FakeButton href='groups'>Lista gruppi</FakeButton>
+    <FakeButton href='midweekholidays'>Giorni festivi infrasettimanali</FakeButton>
   </main>
   <nav>
     <GoBack />

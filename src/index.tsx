@@ -28,6 +28,7 @@ const Staff = lazy(() => import('./pages/Staff'))
 const Attendances = lazy(() => import('./pages/staff/Attendances'))
 const Athletes = lazy(() => import('./pages/staff/Athletes'))
 const Groups = lazy(() => import('./pages/staff/Groups'))
+const MidweekHolidays = lazy(() => import('./pages/staff/MidweekHolidays'))
 const NotFound = lazy(() => import('./pages/NotFound'))
 
 const root = document.getElementById('root')
@@ -74,6 +75,7 @@ render(() => {
             <Route path='/attendances/:groupDate?' component={Attendances} matchFilters={groupDateFilters} />
             <Route path='/athletes/:id?' component={Athletes} matchFilters={AthleteFilters} />
             <Route path='/groups' component={Groups} />
+            <Route path='/midweekholidays' component={MidweekHolidays} />
           </Route>
         </Route>
       </Route>
