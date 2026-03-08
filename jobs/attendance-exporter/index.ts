@@ -34,6 +34,7 @@ const defineOrThrow = <T>(value: T) => {
   return value
 }
 
+const athletesUrl = Deno.env.get('ATHLETES_URL')!
 
 const supabaseAdmin = createClient<Database>(
   Deno.env.get('SUPABASE_URL')!,
@@ -98,6 +99,7 @@ const sheets = markedGroups.map((group) => {
     days,
     userRows: userIds.map((userId) => ({
       name: defineOrThrow(namesById.get(userId)),
+      link: athletesUrl + userId,
       certificate: certificateByUserId.get(userId) ?? 'no',
       payment: paymentByUserId.get(userId) ?? 'no',
       attendant: days.map((day) => attendancesHash.includes(`${day}_${userId}`))
