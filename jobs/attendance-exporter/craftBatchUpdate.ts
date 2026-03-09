@@ -39,7 +39,7 @@ export const craftUpdateCells = (range: sheets_v4.Schema$GridRange,
   {
     updateCells: {
       range,
-      fields: 'userEnteredValue,textFormatRuns',
+      fields: 'userEnteredValue,userEnteredFormat,textFormatRuns',
       rows
     }
   }
@@ -78,6 +78,10 @@ const craftStringValue = (str: string) => (
   { userEnteredValue: { stringValue: str } }
 )
 
+const craftBold = (disable?: boolean) => (
+  { userEnteredFormat: { textFormat: { bold: !disable } } }
+)
+
 const craftLink = (uri: string) => (
   { textFormatRuns: [
     { format: { link: { uri } } }
@@ -87,7 +91,9 @@ const craftLink = (uri: string) => (
 const craftValues = (values: sheets_v4.Schema$CellData[]) => ({ values })
 
 export const craftHeaderRow = (firstStaticCells: string[], days: string[]) => (
-  craftValues([...firstStaticCells, ...days].map((value) => craftStringValue(value)))
+  craftValues([...firstStaticCells, ...days].map((value) => (
+    { ...craftStringValue(value), ...craftBold() }
+  )))
 )
 
 type Rows = {
