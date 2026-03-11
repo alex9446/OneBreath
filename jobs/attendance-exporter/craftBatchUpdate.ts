@@ -13,7 +13,11 @@ export const craftAddSheet = (title: string, sheetId: number) => (
     addSheet: {
       properties: {
         title,
-        sheetId
+        sheetId,
+        gridProperties: {
+          frozenRowCount: 1,
+          frozenColumnCount: 1
+        }
       }
     }
   }
@@ -114,7 +118,7 @@ export const craftUserRows = (rows: Rows) => (
 
 export const craftAlert = (sheetId: number, skipRows: number, message: string) => (
   craftUpdateCells(
-    craftRange(sheetId, skipRows+1, skipRows+2, 0, 1),  // +1 +2 for one row
-    [ craftValues([craftStringValue(message)]) ]
+    craftRange(sheetId, skipRows+1, skipRows+2, 1, 2),  // +1 +2 for one row
+    [ craftValues([{ ...craftStringValue(message), ...craftBold() }]) ]
   )
 )
