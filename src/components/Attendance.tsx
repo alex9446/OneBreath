@@ -5,8 +5,7 @@ import invokeAttendances from '../utils/invokeAttendances'
 import ErrorBox from './ErrorBox'
 import { DayOfWeek, DaysOfWeek } from './DayOfWeek'
 import GroupName from './GroupName'
-import RemoveAttendance from './RemoveAttendance'
-import SetAttendance from './SetAttendance'
+import AttendanceButton from './AttendanceButton'
 import './Attendance.sass'
 
 const Attendance = () => {
@@ -28,7 +27,8 @@ const Attendance = () => {
           <Match when={extraUnion.state === 'already-set' && extraUnion}>
             {(extra) => (<>
               <p>Presenza di <DayOfWeek day={extra().daySetted} /> a <GroupName id={extra().groupSetted} /> confermata!</p>
-              <RemoveAttendance groupId={groupId} refetch={refetch} />
+              <AttendanceButton action='remove' groupId={groupId} refetch={refetch}
+                                pendingLabel='Annullo...' label='Annulla' />
             </>)}
           </Match>
           <Match when={extraUnion.state === 'day-not-allowed' && extraUnion}>
@@ -47,7 +47,8 @@ const Attendance = () => {
           <Match when={extraUnion.state === 'settable' && extraUnion}>
             {(extra) => (<>
               <p>Eri presente <DayOfWeek day={extra().dayOfWeek} /> a <GroupName id={groupId} />?</p>
-              <SetAttendance groupId={groupId} refetch={refetch} />
+              <AttendanceButton action='set' groupId={groupId} refetch={refetch}
+                                pendingLabel='Invio...' label='Si' />
             </>)}
           </Match>
         </Switch>
