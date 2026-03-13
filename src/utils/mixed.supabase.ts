@@ -23,6 +23,10 @@ export const fillLocalStorage = async (supabaseClient: SupabaseClientDB, userId:
   setAdminInLS(admin.data?.level ?? 0)
 }
 
+type ContactByZone = {
+  zone: Enums<'zones'>,
+  contacts: Omit<Tables<'sportexam_contacts'>, 'id'>[]
+}
 export const contactsByZone = async (supabaseClient: SupabaseClientDB) => {
   const { data: contacts, error } = await supabaseClient.from('sportexam_contacts')
     .select('name,phone_number,notes,zone').order('id')
@@ -33,10 +37,7 @@ export const contactsByZone = async (supabaseClient: SupabaseClientDB) => {
     if (existingIndex >= 0) acc[existingIndex].contacts.push(contact)
     else acc.push({zone: contact.zone, contacts: [contact]})
     return acc
-  }, [] as Array<{
-    zone: Enums<'zones'>,
-    contacts: Omit<Tables<'sportexam_contacts'>, 'id'>[]
-  }>)
+  }, [] as ContactByZone[])
 }
 
 export const userStatus = async (supabaseClient: SupabaseClientDB,

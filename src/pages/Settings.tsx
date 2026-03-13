@@ -13,21 +13,20 @@ import GoBack from '../components/GoBack'
 const Settings = () => {
   const groupId = getGroupFromLS()
   const supabaseClient = useSupabase()
+  const userIdPromise = getUserId(supabaseClient)
 
-  const [profile] = createResource(async () => {
-    const userId = await getUserId(supabaseClient)
+  const [leaderboard] = createResource(async () => {
     const { data: profile, error } = await supabaseClient.from('profiles')
-      .select('id,leaderboard').eq('id', userId).single()
+      .select('leaderboard').eq('id', await userIdPromise).single()
     if (error) throw error.message
-    return profile
+    return profile.leaderboard
   })
 
   const saveSettings = action(async (formData: FormData) => {
-    const id = formData.get('id')!.toString()
     const group_id = parseInt(formData.get('group')!.toString())
     const leaderboard = formData.get('leaderboard') ? true : false
     const { error } = await supabaseClient.from('profiles')
-      .update({ group_id, leaderboard }).eq('id', id)
+      .update({ group_id, leaderboard }).eq('id', await userIdPromise)
     if (error) throw error.message
     setGroupInLS(group_id)
     throw redirect('/')
@@ -38,10 +37,9 @@ const Settings = () => {
     <Title>Impostazioni</Title>
     <main id='settings-page'>
       <form method='post' action={saveSettings}>
-        <input type='hidden' name='id' value={profile()?.id} required />
         <SelectGroup defaultOption={groupId} />
         <Checkbox name='leaderboard'
-                  checked={profile()?.leaderboard}>Mostrami nella classifica presenze</Checkbox>
+                  checked={leaderboard()}>Mostrami nella classifica presenze</Checkbox>
         <input type='submit' value='Salva' disabled={submission.pending} />
       </form>
       <ErrorBox>{submission.error}</ErrorBox>
