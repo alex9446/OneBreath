@@ -94,3 +94,18 @@ export const userStatusRaw = (certificateExpiration?: string, paymentExpiration?
     }
   }
 }
+
+export class FormManager {
+  readonly formData: FormData
+
+  constructor(formData: FormData) { this.formData = formData }
+
+  get(name: string) {
+    const value = this.formData.get(name)
+    if (value === null) throw `missing form field: ${name}`
+    return value
+  }
+
+  getString(name: string) { return this.get(name).toString() }
+  getBoolean(name: string) { return !!this.formData.get(name) }
+}

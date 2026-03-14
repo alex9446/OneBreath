@@ -1,6 +1,6 @@
 import { createResource } from 'solid-js'
 import { action, redirect, useSubmission } from '@solidjs/router'
-import { getGroupFromLS, setGroupInLS } from '../utils/mixed'
+import { FormManager, getGroupFromLS, setGroupInLS } from '../utils/mixed'
 import { useSupabase } from '../utils/context'
 import { getUserId } from '../utils/mixed.supabase'
 import Title from '../components/Title'
@@ -23,8 +23,9 @@ const Settings = () => {
   })
 
   const saveSettings = action(async (formData: FormData) => {
-    const group_id = parseInt(formData.get('group')!.toString())
-    const leaderboard = formData.get('leaderboard') ? true : false
+    const formManager = new FormManager(formData)
+    const group_id = parseInt(formManager.getString('group'))
+    const leaderboard = formManager.getBoolean('leaderboard')
     const { error } = await supabaseClient.from('profiles')
       .update({ group_id, leaderboard }).eq('id', await userIdPromise)
     if (error) throw error.message
