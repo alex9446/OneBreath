@@ -1,5 +1,6 @@
 import { A, action, redirect, useSubmission } from '@solidjs/router'
 import { useSupabase } from '../utils/context'
+import { FormManager } from '../utils/mixed'
 import { fillLocalStorage } from '../utils/mixed.supabase'
 import Title from '../components/Title'
 import ErrorBox from '../components/ErrorBox'
@@ -11,9 +12,10 @@ const Login = () => {
   const supabaseClient = useSupabase()
 
   const logonUser = action(async (formData: FormData) => {
+    const formManager = new FormManager(formData)
     const { data: auth, error: signInError } = await supabaseClient.auth.signInWithPassword({
-      email: formData.get('email')!.toString(),
-      password: formData.get('password')!.toString()
+      email: formManager.getString('email'),
+      password: formManager.getString('password')
     })
     if (signInError) throw signInError.message
     await fillLocalStorage(supabaseClient, auth.user.id)

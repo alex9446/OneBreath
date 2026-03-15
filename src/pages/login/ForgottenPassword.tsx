@@ -1,6 +1,7 @@
 import { createSignal, Show } from 'solid-js'
 import { action, useSubmission } from '@solidjs/router'
 import { useSupabase } from '../../utils/context'
+import { FormManager } from '../../utils/mixed'
 import Title from '../../components/Title'
 import ErrorBox from '../../components/ErrorBox'
 import DataPolicyLink from '../../components/DataPolicyLink'
@@ -11,8 +12,9 @@ const ForgottenPassword = () => {
   const [success, setSuccess] = createSignal(false)
 
   const sendReset = action(async (formData: FormData) => {
+    const formManager = new FormManager(formData)
     const { error } = await supabaseClient.auth.resetPasswordForEmail(
-      formData.get('email')!.toString(),
+      formManager.getString('email'),
       { redirectTo: `${import.meta.env.VITE_SITE_URL}/settings/changepassword?reset` }
     )
     if (error) throw error.message

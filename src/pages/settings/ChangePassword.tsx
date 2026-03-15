@@ -2,6 +2,7 @@ import { createSignal, Show } from 'solid-js'
 import { action, useLocation, useSubmission } from '@solidjs/router'
 import { useSupabase } from '../../utils/context'
 import { fillLocalStorage, getUserId } from '../../utils/mixed.supabase'
+import { FormManager } from '../../utils/mixed'
 import manageRawError from '../../utils/manageRawError'
 import Title from '../../components/Title'
 import ErrorBox from '../../components/ErrorBox'
@@ -19,8 +20,9 @@ const ChangePassword = () => {
   }
 
   const setNewPassword = action(async (formData: FormData) => {
+    const formManager = new FormManager(formData)
     const { error } = await supabaseClient.auth.updateUser({
-      password: formData.get('password')!.toString()
+      password: formManager.getString('password')
     })
     if (error) throw error.message
     setSuccess(true)

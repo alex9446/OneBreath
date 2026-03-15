@@ -1,7 +1,7 @@
 import { createSignal } from 'solid-js'
 import { action, redirect, useSubmission } from '@solidjs/router'
 import { useSupabase } from '../utils/context'
-import { capwords, setGroupInLS } from '../utils/mixed'
+import { capwords, FormManager, setGroupInLS } from '../utils/mixed'
 import Title from '../components/Title'
 import RadioGroup from '../components/RadioGroup'
 import Watchword from '../components/Watchword'
@@ -14,22 +14,22 @@ const Register = () => {
   const supabaseClient = useSupabase()
 
   const createUser = action(async (formData: FormData) => {
-    const formGet = (name: string) => formData.get(name)!.toString()
+    const formManager = new FormManager(formData)
     if (!watchwordValid()) throw 'Parola d\'ordine non valida'
-    const groupId = formGet('group')
-    const firstName = capwords(formGet('first-name').trim())
-    const lastName = capwords(formGet('last-name').trim())
+    const groupId = formManager.getString('group')
+    const firstName = capwords(formManager.getString('first-name').trim())
+    const lastName = capwords(formManager.getString('last-name').trim())
     if (groupId === '0') throw 'Gruppo non selezionato'
     if (!firstName || !lastName) throw 'Nome e/o cognome assenti'
 
     const { error } = await supabaseClient.auth.signUp({
-      email: formGet('email'),
-      password: formGet('password'),
+      email: formManager.getString('email'),
+      password: formManager.getString('password'),
       options: {data: {
         first_name: firstName,
         last_name: lastName,
         group_id: groupId,
-        watchword: formGet('watchword')
+        watchword: formManager.getString('watchword')
       }}
     })
     if (error) throw error.message

@@ -1,7 +1,7 @@
 import { createResource, Show } from 'solid-js'
 import { action, useSubmission } from '@solidjs/router'
 import { useSupabase } from '../../utils/context'
-import { getTodayDate } from '../../utils/mixed'
+import { FormManager, getTodayDate } from '../../utils/mixed'
 import { getUserId } from '../../utils/mixed.supabase'
 import Title from '../../components/Title'
 import ErrorBox from '../../components/ErrorBox'
@@ -23,9 +23,10 @@ const UploadCertificate = () => {
   })
 
   const uploadAction = action(async (formData: FormData) => {
+    const formManager = new FormManager(formData)
     const userId = await getUserId(supabaseClient)
-    const file = formData.get('file')!
-    const date = formData.get('date')!.toString()
+    const file = formManager.get('file')
+    const date = formManager.getString('date')
 
     const { data, error: uploadError } = await supabaseClient.storage.from('certificates')
       .upload(userId, file, { upsert: true })
