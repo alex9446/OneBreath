@@ -96,7 +96,7 @@ const sheets = markedGroups.map((group) => {
     sheetId: yesterday.year * 100 + yesterday.month,
     necessaryColumns: Sheet.StaticCells + days.length,
     necessaryRows: Sheet.HeaderRow + userIds.length,
-    days,
+    days: days.map((day) => Temporal.PlainDate.from(day).toLocaleString('it-IT')),
     userRows: userIds.map((userId) => ({
       name: defineOrThrow(namesById.get(userId)),
       link: athletesUrl + userId,
