@@ -1,0 +1,1 @@
+../../shared/shortcut.types.ts

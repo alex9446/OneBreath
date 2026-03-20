@@ -1,4 +1,4 @@
-FROM denoland/deno:alpine-2.6.10
+FROM denoland/deno:alpine-2.7.7
 
 RUN apk add --no-cache jq
 
@@ -15,7 +15,7 @@ USER deno
 
 RUN deno install --import-map ./import_map.json
 
-COPY ./shared/database.types.ts ../_shared/
+COPY ./shared ../_shared
 COPY ./jobs/attendance-reminder/*.ts ./
 
 CMD ["run", "--import-map", "./import_map.json", "--allow-env", "--allow-net", "--unstable-temporal", "./index.ts"]
