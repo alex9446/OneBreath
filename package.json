@@ -10,7 +10,7 @@
   },
   "dependencies": {
     "@solidjs/router": "^0.15.4",
-    "@supabase/supabase-js": "^2.99.0",
+    "@supabase/supabase-js": "^2.99.3",
     "@types/js-cookie": "^3.0.6",
     "@types/web-push": "^3.6.4",
     "googleapis": "^171.4.0",
@@ -20,9 +20,9 @@
     "web-push": "^3.6.7"
   },
   "devDependencies": {
-    "sass": "^1.97.3",
+    "sass": "^1.98.0",
     "typescript": "^5.9.3",
     "vite": "^7.3.1",
-    "vite-plugin-solid": "^2.11.10"
+    "vite-plugin-solid": "^2.11.11"
   }
 }
