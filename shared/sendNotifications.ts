@@ -3,7 +3,7 @@ import type { SupabaseClientDB } from './shortcut.types.ts'
 import nowInRome from './nowInRome.ts'
 
 const sendNotifications = async (supabaseAdmin: SupabaseClientDB,
-                                 userIds: string[], payload: string) => {
+                                 userIds: string[], payload: string, ttl?: number) => {
   setVapidDetails(
     'https://github.com/alex9446/OneBreath',
     Deno.env.get('VAPID_PUBLIC_KEY')!,
@@ -35,7 +35,7 @@ const sendNotifications = async (supabaseAdmin: SupabaseClientDB,
     sendNotification(
       JSON.parse(subscription_json),
       payload,
-      { TTL: 60*60*12 } // 12 hours
+      { TTL: ttl ?? 60*60*12 } // 12 hours
     ).then((result: SendResult) => { throw result }).catch(
       (result: SendResult) => updateLastStatusCode(subscription.id, result.statusCode)
     ).catch((error: unknown) => {
