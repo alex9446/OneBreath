@@ -12,7 +12,7 @@ const FilterProfiles: Component<FilterProfilesProps> = (props) => {
   const [groups] = createResource(groupsById)
   const groupName = (id: number) => {
     const groupsRecord = groups()
-    return groupsRecord ? groupsRecord[id].name : 'Caricamento...'
+    return groupsRecord ? (groupsRecord[id]?.name ?? 'Gruppo senza nome') : 'Caricamento...'
   }
 
   const groupCounts = () => Array.from(props.profiles.reduce((counts, profile) => {

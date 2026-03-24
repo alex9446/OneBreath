@@ -3,7 +3,7 @@ import { fetchGroups } from '../utils/fetchGroups'
 import './RadioGroup.sass'
 
 const FallbackGroups = () => {
-  const predictedLength = 7
+  const predictedLength = 8
   const range = Array.from({ length: predictedLength }, (_, i) => i + 1)
   return range.map((id) => (
     <div>
