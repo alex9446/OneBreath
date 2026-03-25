@@ -1,6 +1,7 @@
 import type { SupabaseClientDB } from './shortcut.types'
 import { setAdminInLS, setGroupInLS, userStatusRaw } from './mixed'
 import type { Enums, Tables } from './database.types'
+import { groupsById } from './fetchGroups'
 
 export const getUserId = async (supabaseClient: SupabaseClientDB) => {
   const { data: { session }, error } = await supabaseClient.auth.getSession()
@@ -70,9 +71,11 @@ export const profilesWithStatus = async (supabaseClient: SupabaseClientDB) => {
   const paymentByUserId = new Map(payments.data.map((payment) => (
     [payment.user_id, payment.expiration]
   )))
+  const groups = await groupsById()
 
   return profiles.data.map((profile) => ({
     ...profile,
+    groupName: groups[profile.group_id]?.name ?? 'Gruppo senza nome',
     status: userStatusRaw(certificateByUserId.get(profile.id), paymentByUserId.get(profile.id))
   }))
 }

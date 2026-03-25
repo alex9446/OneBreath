@@ -25,12 +25,6 @@ export const fetchGroups = async () => {
   return groups
 }
 
-export const fetchGroup = async (id: number) => {
-  const group = (await fetchGroups()).find((group) => group.id == id)
-  if (!group) throw 'Mismatch with group select'
-  return group
-}
-
 export const groupsById = async () => {
   return (await fetchGroups()).reduce((acc, group) => {
     acc[group.id] = group

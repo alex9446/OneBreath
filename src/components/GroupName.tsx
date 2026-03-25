@@ -1,10 +1,11 @@
-import { createResource, Suspense, type Component } from 'solid-js'
-import { fetchGroup } from '../utils/fetchGroups'
+import { createResource, type Component } from 'solid-js'
+import { fetchGroups } from '../utils/fetchGroups'
 
 const GroupName: Component<{ id: number }> = (props) => {
-  const [group] = createResource(props.id, fetchGroup)
+  const [groups] = createResource(fetchGroups)
+  const groupName = () => groups()?.find((group) => group.id === props.id)?.name
 
-  return <Suspense><span class='group-name'>{group()?.name}</span></Suspense>
+  return <span>{groupName() ?? 'Gruppo senza nome'}</span>
 }
 
 export default GroupName

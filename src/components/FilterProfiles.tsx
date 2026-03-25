@@ -1,34 +1,32 @@
-import { createResource, For, type Component, type Setter } from 'solid-js'
+import { For, type Component, type Setter } from 'solid-js'
 import type { Tables } from '../utils/database.types'
-import { groupsById } from '../utils/fetchGroups'
 
+type Profile = Pick<Tables<'profiles'>, 'group_id'> & { groupName: string }
 type FilterProfilesProps = {
   defaultOption: number
-  profiles: Pick<Tables<'profiles'>, 'group_id'>[]
+  profiles: Profile[]
   set: Setter<number>
 }
 
 const FilterProfiles: Component<FilterProfilesProps> = (props) => {
-  const [groups] = createResource(groupsById)
-  const groupName = (id: number) => {
-    const groupsRecord = groups()
-    return groupsRecord ? (groupsRecord[id]?.name ?? 'Gruppo senza nome') : 'Caricamento...'
+  type Count = {
+    value: number
+    groupName: string
   }
-
   const groupCounts = () => Array.from(props.profiles.reduce((counts, profile) => {
     const id = profile.group_id
-    counts.set(id, (counts.get(id) ?? 0) + 1)
+    const value = (counts.get(id)?.value ?? 0) + 1
+    counts.set(id, { value, groupName: profile.groupName })
     return counts
-  }, new Map<number, number>()).entries())
+  }, new Map<number, Count>()).entries())
 
   return (
-    <select required onInput={(e) => props.set(parseInt(e.target.value))}>
+    <select required value={props.defaultOption}
+            onInput={(e) => props.set(parseInt(e.target.value))}>
       <option value={0}>Mostra tutti - {props.profiles.length}</option>
       <For each={groupCounts()}>
-        {([group_id, count]) => (
-          <option value={group_id} selected={group_id === props.defaultOption}>
-            {groupName(group_id)} - {count}
-          </option>
+        {([group_id, info]) => (
+          <option value={group_id}>{info.groupName} - {info.value}</option>
         )}
       </For>
     </select>
