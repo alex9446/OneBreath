@@ -1,17 +1,31 @@
-import { Show } from 'solid-js'
+import { onMount } from 'solid-js'
+import Cookies from 'js-cookie'
 import './DomainChangeAlert.sass'
 
-const DomainChangeAlert = () => (
-  <Show when={window.location.origin !== 'https://soci.onebreath.it'}>
-    <header class='domainchange'>
+const DomainChangeAlert = () => {
+  let dialogElement!: HTMLDialogElement
+
+  onMount(() => {
+    const noHideCookie = !Cookies.get('hideDCA')
+    const originNotMatch = window.location.origin !== 'https://soci.onebreath.it'
+    if (noHideCookie && originNotMatch) dialogElement.showModal()
+  })
+
+  const handleClose = () => Cookies.set('hideDCA', 'yes', { expires: 1 })
+
+  return (
+    <dialog ref={dialogElement} class='domainchange' closedby='any' onClose={handleClose}>
       <p>
         Ci siamo trasferiti su&nbsp;
         <a href='https://soci.onebreath.it' target='_blank'>https://soci.onebreath.it</a>
         <br />
         <b>Dovrai riattivare le notifiche!</b>
       </p>
-    </header>
-  </Show>
-)
+      <form method='dialog'>
+        <button >Nascondi temporaneamente avviso</button>
+      </form>
+    </dialog>
+  )
+}
 
 export default DomainChangeAlert

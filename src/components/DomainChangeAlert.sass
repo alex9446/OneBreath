@@ -1,7 +1,16 @@
 @use '../variables'
 
-header.domainchange
+dialog.domainchange
+  justify-self: center
+  align-self: center
   padding: 20px
   background-color: red
   color: white
   font-size: variables.$font-size-small
+  border: none
+  &::backdrop
+    backdrop-filter: blur(3px)
+    background-color: rgba(0, 0, 0, 0.5)
+  button
+    margin-top: 20px
+    background-color: gray
