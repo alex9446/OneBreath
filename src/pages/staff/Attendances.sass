@@ -1,6 +1,17 @@
 @use '../../variables'
 
 #attendances-page
+  div.date-selector
+    display: flex
+    align-items: center
+    gap: 10px
+    svg
+      flex-shrink: 0
+      fill: white
+      cursor: pointer
+    input
+      min-width: 0
+      flex-grow: 1
   ul
     font-size: variables.$font-size-small
     list-style-position: inside

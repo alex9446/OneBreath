@@ -1,18 +1,23 @@
 import { Show, type Component } from 'solid-js'
 
 type IconProps = {
-  size?: number
-  title?: string
+  height?: number
+  width?: number
+  viewBox?: `${number} ${number}`
   classList?: { [k: string]: boolean }
+  onClick?: () => void
+  title?: string
   path: string
   color?: string
 }
 
 const Icon: Component<IconProps> = (props) => {
-  const size = props.size ? `${props.size}px` : '36px'
+  const getSizeInPx = (size?: number) => `${size ?? 36}px`
 
   return (
-    <svg height={size} width={size} viewBox='0 0 24 24' classList={props.classList}>
+    <svg height={getSizeInPx(props.height)} width={getSizeInPx(props.width)}
+         viewBox={`0 0 ${props.viewBox ?? '24 24'}`} classList={props.classList}
+         onClick={props.onClick}>
       <Show when={props.title}>
         <title>{props.title}</title>
       </Show>
