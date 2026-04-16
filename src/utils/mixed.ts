@@ -41,9 +41,9 @@ export const base64ToUint8Array = (base64String: string) => {
   return outputArray
 }
 
-export const getFirstChars = (sentence: string | null) => {
+export const getGroupAcronym = (sentence: string | null) => {
   if (!sentence) return ''
-  return sentence.trim().split(/\s+/).map((word) => word[0]).join('')
+  return sentence.trim().split(/[\s\(\)]+/).map((word) => word[0]).join('')
 }
 
 const capitalize = (word: string) => (

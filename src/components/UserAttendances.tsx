@@ -1,7 +1,7 @@
 import { createResource, For, Suspense, type Component } from 'solid-js'
 import { useSupabase } from '../utils/context'
 import { getUserId } from '../utils/mixed.supabase'
-import { getFirstChars } from '../utils/mixed'
+import { getGroupAcronym } from '../utils/mixed'
 import GroupLegend from '../components/GroupLegend'
 import './UserAttendances.sass'
 
@@ -23,7 +23,7 @@ const UserAttendances: Component<{ id?: string }> = (props) => {
         <p>Data</p><p>Gruppo</p>
         <For each={attendances()}>
           {(attendance) => (<>
-            <p>{attendance.marked_day}</p><p>{getFirstChars(attendance.group_name)}</p>
+            <p>{attendance.marked_day}</p><p>{getGroupAcronym(attendance.group_name)}</p>
           </>)}
         </For>
       </div>
