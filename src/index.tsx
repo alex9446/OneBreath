@@ -27,6 +27,7 @@ const PoolPayment = lazy(() => import('./pages/payments/PoolPayment'))
 const Staff = lazy(() => import('./pages/Staff'))
 const Attendances = lazy(() => import('./pages/staff/Attendances'))
 const Athletes = lazy(() => import('./pages/staff/Athletes'))
+const Certificates = lazy(() => import('./pages/staff/Certificates'))
 const Groups = lazy(() => import('./pages/staff/Groups'))
 const MidweekHolidays = lazy(() => import('./pages/staff/MidweekHolidays'))
 const NotFound = lazy(() => import('./pages/NotFound'))
@@ -74,6 +75,7 @@ render(() => {
             <Route path='/' component={Staff} />
             <Route path='/attendances/:groupDate?' component={Attendances} matchFilters={groupDateFilters} />
             <Route path='/athletes/:id?' component={Athletes} matchFilters={AthleteFilters} />
+            <Route path='/certificates' component={Certificates} />
             <Route path='/groups' component={Groups} />
             <Route path='/midweekholidays' component={MidweekHolidays} />
           </Route>

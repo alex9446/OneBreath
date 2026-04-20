@@ -79,3 +79,10 @@ export const profilesWithStatus = async (supabaseClient: SupabaseClientDB) => {
     status: userStatusRaw(certificateByUserId.get(profile.id), paymentByUserId.get(profile.id))
   }))
 }
+
+export const getCertificateUrl = async (supabaseClient: SupabaseClientDB,
+                                        path: string, downloadName?: string) => {
+  const { data } = await supabaseClient.storage.from('certificates')
+    .createSignedUrl(path, 900, { download: downloadName ?? true }) // 900 seconds == 15 minutes
+  return data?.signedUrl
+}
