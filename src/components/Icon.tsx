@@ -4,7 +4,7 @@ type IconProps = {
   height?: number
   width?: number
   viewBox?: `${number} ${number}`
-  classList?: { [k: string]: boolean }
+  classList?: { [k: string]: boolean | undefined }
   onClick?: () => void
   title?: string
   path: string

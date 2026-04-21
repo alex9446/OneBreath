@@ -1,6 +1,13 @@
-#certificates-page
+@use '../../variables'
+
+@keyframes blinker
+  50%
+    opacity: 0
+
+#certificates-page .grid
   display: grid
-  grid-template-columns: repeat(auto-fill, minmax(min(100%, 350px), 1fr))
+  gap: 10px
+  grid-template-columns: repeat(auto-fill, minmax(min(100%, 330px), 1fr))
   article
     display: flex
     align-items: center
@@ -9,3 +16,14 @@
     border: 2px outset white
     border-radius: 10px
     background-color: #0064d2
+    cursor: pointer
+    section
+      &:nth-child(2)
+        flex-shrink: 0
+        padding-right: 12px
+      p
+        font-size: variables.$font-size-small
+      svg
+        fill: white
+        &.pending
+          animation: blinker 1s linear infinite
