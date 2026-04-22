@@ -1,4 +1,4 @@
-FROM denoland/deno:alpine-2.7.7
+FROM denoland/deno:alpine-2.7.12
 
 RUN apk add --no-cache jq
 

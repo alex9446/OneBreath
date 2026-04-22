@@ -12,7 +12,7 @@ import GoBack from '../../components/GoBack'
 import './Certificates.sass'
 
 type Certificate = Pick<Tables<'certificates'>, 'user_id' | 'expiration'> & {
-  athleteName: string | undefined
+  athleteName: string
 }
 
 const Certificates = () => {
@@ -31,8 +31,8 @@ const Certificates = () => {
     if (error) throw error.message
     return certificates.map((certificate): Certificate => ({
       ...certificate,
-      athleteName: namesById.get(certificate.user_id)
-    }))
+      athleteName: namesById.get(certificate.user_id) ?? certificate.user_id
+    })).toSorted((a, b) => a.athleteName.localeCompare(b.athleteName))
   })
 
   const handleDownload = action(async (certificate: Certificate, itemClicked: number) => {

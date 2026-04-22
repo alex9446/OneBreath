@@ -1,5 +1,5 @@
 import type { SupabaseClientDB } from './shortcut.types'
-import { setAdminInLS, setGroupInLS, userStatusRaw } from './mixed'
+import { downloadBlob, setAdminInLS, setGroupInLS, userStatusRaw } from './mixed'
 import type { Enums, Tables } from './database.types'
 import { groupsById } from './fetchGroups'
 
@@ -87,20 +87,8 @@ export const getCertificateUrl = async (supabaseClient: SupabaseClientDB,
   return data?.signedUrl
 }
 
-const downloadBlob = (data: Blob | MediaSource, downloadName: string) => {
-  const url = window.URL.createObjectURL(data)
-  const link = document.createElement('a')
-  link.href = url
-  link.download = downloadName
-  document.body.appendChild(link)
-  link.click()
-  window.URL.revokeObjectURL(url)
-  link.remove()
-  return true
-}
-
 export const downloadCertificate = async (supabaseClient: SupabaseClientDB,
-                                   path: string, downloadName?: string) => {
+                                          path: string, downloadName?: string) => {
   const { data, error } = await supabaseClient.storage.from('certificates').download(path)
   if (error) throw error.message
   return downloadBlob(data, downloadName ?? path.split('/').pop() ?? path)

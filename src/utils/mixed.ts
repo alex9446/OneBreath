@@ -109,3 +109,15 @@ export class FormManager {
   getString(name: string) { return this.get(name).toString() }
   getBoolean(name: string) { return !!this.formData.get(name) }
 }
+
+export const downloadBlob = (data: Blob | MediaSource, downloadName: string) => {
+  const url = window.URL.createObjectURL(data)
+  const link = document.createElement('a')
+  link.href = url
+  link.download = downloadName
+  document.body.appendChild(link)
+  link.click()
+  window.URL.revokeObjectURL(url)
+  link.remove()
+  return true
+}
