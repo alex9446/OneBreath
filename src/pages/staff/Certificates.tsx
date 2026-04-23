@@ -3,7 +3,7 @@ import { action, useAction, useSubmission } from '@solidjs/router'
 import type { Tables } from '../../utils/database.types'
 import { useSupabase } from '../../utils/context'
 import { downloadCertificate } from '../../utils/mixed.supabase'
-import { getDateLocaleIT } from '../../utils/mixed'
+import { expirationStatus, getDateLocaleIT } from '../../utils/mixed'
 import { mdiTrayArrowDown } from '../../utils/iconPaths'
 import Title from '../../components/Title'
 import ErrorBox from '../../components/ErrorBox'
@@ -59,7 +59,9 @@ const Certificates = () => {
                 <article onClick={() => useHandler(certificate, index())}>
                   <section>
                     <h5>{certificate.athleteName}</h5>
-                    <p>{getDateLocaleIT(certificate.expiration)}</p>
+                    <p classList={expirationStatus(30, certificate.expiration)}>
+                      {getDateLocaleIT(certificate.expiration)}
+                    </p>
                   </section>
                   <section>
                     <Icon path={mdiTrayArrowDown} title='download'

@@ -1,4 +1,3 @@
-// Setup type definitions for built-in Supabase Runtime APIs
 import { createClient } from '@supabase/supabase-js'
 import type { Database } from '../_shared/database.types.ts'
 import { corsHeaders } from '../_shared/cors.ts'

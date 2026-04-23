@@ -17,3 +17,12 @@ export async function validateUser(authorization_header: string | null,
   if (!validate(userId)) return errorMessage('userId not valid!')
   return { data: { userId }, error: null }
 }
+
+export async function userIsAdmin(userId: string, supabaseAdmin: SupabaseClientDB): FunctionReturn<boolean> {
+  const { count, error } = await supabaseAdmin.from('admins')
+    .select('*', { count: 'exact', head: true })
+    .eq('id', userId)
+  if (error) return errorMessage(error.message)
+  const isAdmin = count !== null && count > 0
+  return { data: isAdmin, error: null }
+}
