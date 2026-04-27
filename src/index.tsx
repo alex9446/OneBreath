@@ -38,7 +38,8 @@ const groupDateFilters: MatchFilters = {
   groupDate: /^\d+g\d{4}\-\d\d\-\d\d$/
 }
 const AthleteFilters: MatchFilters = {
-  id: (uuid: string) => validate(uuid)
+  id: (uuid: string) => validate(uuid),
+  detail: ['subscriptions']
 }
 
 render(() => {
@@ -74,7 +75,7 @@ render(() => {
           <Route path='/staff'>
             <Route path='/' component={Staff} />
             <Route path='/attendances/:groupDate?' component={Attendances} matchFilters={groupDateFilters} />
-            <Route path='/athletes/:id?' component={Athletes} matchFilters={AthleteFilters} />
+            <Route path='/athletes/:id?/:detail?' component={Athletes} matchFilters={AthleteFilters} />
             <Route path='/certificates' component={Certificates} />
             <Route path='/groups' component={Groups} />
             <Route path='/midweekholidays' component={MidweekHolidays} />

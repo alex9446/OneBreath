@@ -55,7 +55,7 @@ const Athletes = () => {
     }>
       {(userId) => (
         <Show when={profileById(userId())}>
-          {(profile) => <Athlete profile={profile()} admin={isAdmin(userId())} adminsRefetch={refetch} />}
+          {(profile) => <Athlete profile={profile()} admin={isAdmin(userId())} adminsRefetch={refetch} detail={params.detail} />}
         </Show>
       )}
     </Show>

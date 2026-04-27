@@ -7,6 +7,8 @@ import { getUserId } from '../../../utils/mixed.supabase'
 import ErrorBox from '../../../components/ErrorBox'
 import DownloadCertButton from '../../../components/DownloadCertButton'
 import UserAttendances from '../../../components/UserAttendances'
+import FakeButton from '../../../components/FakeButton'
+import Subscriptions from './athlete/Subscriptions'
 import './Athlete.sass'
 
 const ExpirationInfo: Component<{ name: string, expiration?: string }> = (props) => {
@@ -27,6 +29,7 @@ type AthleteProps = {
   }
   admin: boolean
   adminsRefetch: () => void
+  detail?: string
 }
 
 const Athlete: Component<AthleteProps> = (props) => {
@@ -47,18 +50,23 @@ const Athlete: Component<AthleteProps> = (props) => {
 
   return (
     <main id='athlete-page'>
-      <p>Presenze di {props.profile.first_name} {props.profile.last_name}</p>
-      <button class='add-admin' disabled={props.admin || submission.pending}
-              onClick={useInsertAdmin}>
-        {props.admin ? (submission.result ? 'Fatto!' : 'Già in staff') : 'Aggiungi a staff'}
-      </button>
-      <ErrorBox>{submission.error}</ErrorBox>
-      <ExpirationInfo name='certificato' expiration={props.profile.status.certificateExpiration} />
-      <Show when={!props.profile.status.certificate.notfound}>
-        <DownloadCertButton userId={props.profile.id} />
+      <Show when={props.detail === 'subscriptions'} fallback={<>
+        <p>Presenze di {props.profile.first_name} {props.profile.last_name}</p>
+        <button class='add-admin' disabled={props.admin || submission.pending}
+                onClick={useInsertAdmin}>
+          {props.admin ? (submission.result ? 'Fatto!' : 'Già in staff') : 'Aggiungi a staff'}
+        </button>
+        <ErrorBox>{submission.error}</ErrorBox>
+        <ExpirationInfo name='certificato' expiration={props.profile.status.certificateExpiration} />
+        <Show when={!props.profile.status.certificate.notfound}>
+          <DownloadCertButton userId={props.profile.id} />
+        </Show>
+        <ExpirationInfo name='pagamento piscina' expiration={props.profile.status.paymentExpiration} />
+        <UserAttendances id={props.profile.id} />
+        <FakeButton href='subscriptions'>Sottoscizioni alle notifiche</FakeButton>
+      </>}>
+        <Subscriptions userId={props.profile.id} />
       </Show>
-      <ExpirationInfo name='pagamento piscina' expiration={props.profile.status.paymentExpiration} />
-      <UserAttendances id={props.profile.id} />
     </main>
   )
 }
