@@ -49,8 +49,8 @@ const Athlete: Component<AthleteProps> = (props) => {
   const submission = useSubmission(insertAdmin)
 
   return (
-    <main id='athlete-page'>
-      <Show when={props.detail === 'subscriptions'} fallback={<>
+    <Show when={props.detail === 'subscriptions'} fallback={<>
+      <main id='athlete-page'>
         <p>Presenze di {props.profile.first_name} {props.profile.last_name}</p>
         <button class='add-admin' disabled={props.admin || submission.pending}
                 onClick={useInsertAdmin}>
@@ -64,10 +64,10 @@ const Athlete: Component<AthleteProps> = (props) => {
         <ExpirationInfo name='pagamento piscina' expiration={props.profile.status.paymentExpiration} />
         <UserAttendances id={props.profile.id} />
         <FakeButton href='subscriptions'>Sottoscizioni alle notifiche</FakeButton>
-      </>}>
-        <Subscriptions userId={props.profile.id} />
-      </Show>
-    </main>
+      </main>
+    </>}>
+      <Subscriptions userId={props.profile.id} />
+    </Show>
   )
 }
 

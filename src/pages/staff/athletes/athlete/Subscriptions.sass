@@ -1,0 +1,17 @@
+@use '../../../../components/placeholderSass/TwoColumnGrid'
+
+#subscriptions-page
+  align-items: center
+  > p
+    text-align: center
+  > div.grid
+    @extend %two-column-grid
+    row-gap: 10px
+    p.good
+      color: green
+      &::before
+        content: '✅ '
+    p.bad
+      color: red
+      &::before
+        content: '❌ '

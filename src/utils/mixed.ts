@@ -63,6 +63,10 @@ export const getDateLocaleIT = (date: string) => (
   new Date(date).toLocaleDateString('it-IT')
 )
 
+export const getDateTimeLocaleIT = (date: string) => (
+  new Date(date).toLocaleString('it-IT')
+)
+
 const diffDays = (date1: string, date2: string) => {
   const diffTime = new Date(date2).getTime() - new Date(date1).getTime()
   return Math.floor(diffTime / (1000 * 60 * 60 * 24))
