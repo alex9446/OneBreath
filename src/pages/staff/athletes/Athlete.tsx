@@ -63,7 +63,7 @@ const Athlete: Component<AthleteProps> = (props) => {
         </Show>
         <ExpirationInfo name='pagamento piscina' expiration={props.profile.status.paymentExpiration} />
         <UserAttendances id={props.profile.id} />
-        <FakeButton href='subscriptions'>Sottoscizioni alle notifiche</FakeButton>
+        <FakeButton href='subscriptions'>Sottoscrizioni alle notifiche</FakeButton>
       </main>
     </>}>
       <Subscriptions userId={props.profile.id} />

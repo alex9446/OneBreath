@@ -1,7 +1,10 @@
-import { createResource, For, type Component } from 'solid-js'
+import { createResource, For, Show, type Component } from 'solid-js'
+import { action, useAction, useSubmission } from '@solidjs/router'
 import { useSupabase } from '../../../../utils/context'
+import invokeBroadcast from '../../../../utils/invokeBroadcast'
 import { getDateTimeLocaleIT } from '../../../../utils/mixed'
 import Title from '../../../../components/Title'
+import ErrorBox from '../../../../components/ErrorBox'
 import './Subscriptions.sass'
 
 const Subscriptions: Component<{ userId: string }> = (props) => {
@@ -20,19 +23,34 @@ const Subscriptions: Component<{ userId: string }> = (props) => {
     }))
   })
 
+  const handleTest = action(async () => {
+    const data = await invokeBroadcast(supabaseClient, [props.userId], 'Notifica di test!!')
+    if (data.code !== 200) throw data.message
+    return { ok: true }
+  })
+  const useHandler = useAction(handleTest)
+  const submission = useSubmission(handleTest)
+
   return (<>
-    <Title>Sottoscizioni alle notifiche</Title>
+    <Title>Sottoscrizioni alle notifiche</Title>
     <main id='subscriptions-page'>
-      <p>Sottoscizioni alle notifiche</p>
-      <div class='grid'>
-        <p>Ultimo invio</p><p>Stato</p>
-        <For each={subscriptions()}>
-          {(subscription) => (<>
-            <p>{getDateTimeLocaleIT(subscription.last_send_at ?? '')}</p>
-            <p classList={subscription.last_status_bool}>{subscription.last_status_code}</p>
-          </>)}
-        </For>
-      </div>
+      <Show when={subscriptions()?.length} fallback={
+        <p>Nessuna sottoscrizione</p>
+      }>
+        <div class='grid'>
+          <p>Ultimo invio</p><p>Stato</p>
+          <For each={subscriptions()}>
+            {(subscription) => (<>
+              <p>{getDateTimeLocaleIT(subscription.last_send_at ?? '')}</p>
+              <p classList={subscription.last_status_bool}>{subscription.last_status_code}</p>
+            </>)}
+          </For>
+        </div>
+        <button onClick={useHandler} disabled={submission.pending || submission.result?.ok}>
+          { submission.result?.ok ? 'Inviata!' : 'Invia notifica di test' }
+        </button>
+      </Show>
+      <ErrorBox>{submission.error}</ErrorBox>
     </main>
   </>)
 }
