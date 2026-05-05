@@ -1,11 +1,9 @@
 @use '../../../../components/placeholderSass/TwoColumnGrid'
 
 #subscriptions-page
-  align-items: center
-  > p
-    text-align: center
   > div.grid
     @extend %two-column-grid
+    align-self: center
     row-gap: 10px
     p.good
       color: green
