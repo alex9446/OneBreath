@@ -11,13 +11,10 @@ const SelectGroup: Component<SelectGroupProps> = (props) => {
   const [groups] = createResource(fetchGroups)
 
   return (
-    <select ref={props.ref} name='group' required onInput={props.onInput}>
+    <select ref={props.ref} name='group' required onInput={props.onInput}
+            value={groups.loading ? undefined : props.defaultOption}>
       <For each={groups()} fallback={<option value={404}>Caricamento gruppi...</option>}>
-        {(group) => (
-          <option value={group.id} selected={group.id === props.defaultOption}>
-            {group.name}
-          </option>
-        )}
+        {(group) => <option value={group.id}>{group.name}</option>}
       </For>
     </select>
   )
