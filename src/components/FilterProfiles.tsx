@@ -22,7 +22,7 @@ const FilterProfiles: Component<FilterProfilesProps> = (props) => {
 
   return (
     <select required value={props.defaultOption}
-            onInput={(e) => props.set(parseInt(e.target.value))}>
+            onInput={(e) => props.set(parseInt(e.currentTarget.value))}>
       <option value={0}>Mostra tutti - {props.profiles.length}</option>
       <For each={groupCounts()}>
         {([group_id, info]) => (

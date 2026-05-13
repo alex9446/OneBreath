@@ -10,7 +10,7 @@ type CheckboxProps = {
 const Checkbox: Component<CheckboxProps> = (props) => (
   <label class='checkbox'>
     <input type='checkbox' name={props.name} checked={props.checked}
-           onInput={(e) => props.set && props.set(e.target.checked)} />
+           onInput={(e) => props.set && props.set(e.currentTarget.checked)} />
     {props.children}
   </label>
 )

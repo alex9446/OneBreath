@@ -34,7 +34,7 @@ const PoolPayment = () => {
     <main id='poolpayment-page'>
       <Show when={submission.result?.ok} fallback={<>
         <p style='text-align: center'>Conferma pagamento piscina</p>
-        <select onInput={(e) => setNextDeadline(deadlines[e.target.value])}>
+        <select onInput={(e) => setNextDeadline(deadlines[e.currentTarget.value])}>
           <option value='1m'>Mensile</option>
           <option value='4m'>Quadrimestrale</option>
           <option value='12m'>Annuale</option>
