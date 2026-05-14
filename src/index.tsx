@@ -94,3 +94,10 @@ if (import.meta.env.PROD) {
     })
   } else { console.error('serviceWorker not in navigator') }
 }
+
+window.addEventListener("unhandledrejection", (event) => {
+  if (sessionStorage.getItem('reload-once')) return
+  sessionStorage.setItem('reload-once', 'true') // Avoid infinite loops
+  const reason = String(event.reason)
+  if (reason.includes('error loading dynamically imported module')) window.location.reload()
+})
