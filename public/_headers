@@ -1,19 +1,15 @@
-# all pages, default, 10 minutes, 1 hour
+# default, always check if it is still valid
 /*
-  cache-control: public,max-age=600,stale-while-revalidate=3600
-
-# index, always check if it is still valid
-/index.html
   cache-control: public,max-age=0,must-revalidate
 
 # assets, contain fingerprints, 1 year, immutable
 /assets/*
   cache-control: public,max-age=31536000,immutable
 
-# fonts - reset - icon, rarely change, 1 hour, 1 week
+# fonts - images - reset, rarely change, 1 hour, 1 week
 /fonts/*
   cache-control: public,max-age=3600,stale-while-revalidate=604800
-/reset.css
+/images/*
   cache-control: public,max-age=3600,stale-while-revalidate=604800
-/icon.svg
+/reset.css
   cache-control: public,max-age=3600,stale-while-revalidate=604800

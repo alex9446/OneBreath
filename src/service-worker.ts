@@ -3,8 +3,8 @@ declare const self: ServiceWorkerGlobalScope
 
 import type { NotificationExtra } from './utils/functions.types'
 
-const DEFAULT_ICON = '/icon.svg'
-const DEFAULT_BADGE = '/badge.png'
+const DEFAULT_ICON = '/images/icon.svg'
+const DEFAULT_BADGE = '/images/badge.png'
 const DEFAULT_URL = '/'
 
 const parsePushData = (data: PushMessageData): NotificationExtra => {
