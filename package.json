@@ -15,14 +15,14 @@
     "@types/web-push": "^3.6.4",
     "googleapis": "^171.4.0",
     "js-cookie": "^3.0.5",
-    "solid-js": "^1.9.12",
+    "solid-js": "^1.9.13",
     "uuid": "^14.0.0",
     "web-push": "^3.6.7"
   },
   "devDependencies": {
     "sass": "^1.99.0",
     "typescript": "^6.0.3",
-    "vite": "^8.0.12",
+    "vite": "^8.0.13",
     "vite-plugin-solid": "^2.11.12"
   }
 }
