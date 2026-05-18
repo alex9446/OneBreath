@@ -34,16 +34,6 @@ export type LeaderboardExtra = {
   apg: number
 }[]
 
-export type NotificationExtra = {
-  title: string
-  body?: string
-  icon?: string
-  badge?: string
-  url?: string
-  tag?: string
-  requireInteraction?: boolean
-}
-
 export type ResponseBody<T> = {
   message: string
   code: number

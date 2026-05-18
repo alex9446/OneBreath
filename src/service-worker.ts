@@ -1,13 +1,13 @@
 /// <reference lib="webworker" />
 declare const self: ServiceWorkerGlobalScope
 
-import type { NotificationExtra } from './utils/functions.types'
+import type { NotificationPayload } from './utils/generic.types'
 
 const DEFAULT_ICON = '/images/icon.svg'
 const DEFAULT_BADGE = '/images/badge.png'
 const DEFAULT_URL = '/'
 
-const parsePushData = (data: PushMessageData): NotificationExtra => {
+const parsePushData = (data: PushMessageData): NotificationPayload => {
   try { return data.json() } catch { return { title: data.text() } }
 }
 

@@ -34,7 +34,7 @@ Deno.serve(async (req: Request) => {
     if (!isAdmin) return jsonResponseMessage('only admins can broadcast messages!', 403)
 
     console.info(`${userId} broadcast "${message}" to ${user_ids.join(', ')}`)
-    await sendNotifications(supabaseAdmin, user_ids, JSON.stringify({ title: message }))
+    await sendNotifications(supabaseAdmin, user_ids, { title: message }, 60*60) // 1 hour
 
     return jsonResponseMessage('message broadcast', 200)
   } catch (rawError) {
