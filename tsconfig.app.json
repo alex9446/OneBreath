@@ -16,6 +16,11 @@
     "jsx": "preserve",
     "jsxImportSource": "solid-js",
 
+    /* Path aliases */
+    "paths": {
+      "@shared/*": ["./shared/*"]
+    },
+
     /* Linting */
     "noUnusedLocals": true,
     "noUnusedParameters": true,

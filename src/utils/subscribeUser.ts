@@ -1,5 +1,5 @@
 import { base64ToUint8Array } from './mixed'
-import type { SupabaseClientDB } from './shortcut.types'
+import type { SupabaseClientDB } from '@shared/shortcut.types'
 import { getUserId } from './mixed.supabase'
 
 export const getSubscription = async () => {

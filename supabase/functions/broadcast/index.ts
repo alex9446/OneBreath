@@ -1,10 +1,10 @@
 import { validate as validateUUID } from 'uuid'
 import { createClient } from '@supabase/supabase-js'
-import type { Database } from '../_shared/database.types.ts'
+import type { Database } from '@shared/database.types.ts'
 import { corsHeaders } from '../_shared/cors.ts'
 import { jsonResponseMessage } from '../_shared/jsonResponse.ts'
 import { userIsAdmin, validateUser } from '../_shared/validateUser.ts'
-import sendNotifications from '../_shared/sendNotifications.ts'
+import sendNotifications from '@shared/sendNotifications.ts'
 import { manageRawError } from '../_shared/manageRawError.ts'
 
 console.info(`Edge function "broadcast" up and running!`)

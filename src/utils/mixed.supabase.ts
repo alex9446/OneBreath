@@ -1,6 +1,6 @@
-import type { SupabaseClientDB } from './shortcut.types'
+import type { SupabaseClientDB } from '@shared/shortcut.types'
 import { downloadBlob, setAdminInLS, setGroupInLS, userStatusRaw } from './mixed'
-import type { Enums, Tables } from './database.types'
+import type { Enums, Tables } from '@shared/database.types'
 import { groupsById } from './fetchGroups'
 
 export const getUserId = async (supabaseClient: SupabaseClientDB) => {

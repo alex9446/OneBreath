@@ -1,7 +1,7 @@
 /// <reference lib="webworker" />
 declare const self: ServiceWorkerGlobalScope
 
-import type { NotificationPayload } from './utils/generic.types'
+import type { NotificationPayload } from '@shared/generic.types'
 
 const DEFAULT_ICON = '/images/icon.svg'
 const DEFAULT_BADGE = '/images/badge.png'

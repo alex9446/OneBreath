@@ -1,6 +1,6 @@
 import { createClient } from '@supabase/supabase-js'
 import { google } from 'googleapis'
-import { Database } from '../_shared/database.types.ts'
+import { Database } from '@shared/database.types.ts'
 import {
   craftAddSheet, craftAlert, craftBoolValidation, craftDeleteSheet, craftHeaderRow, craftRange,
   craftResizeFirstThreeColumns, craftUpdateCells, craftUserRows

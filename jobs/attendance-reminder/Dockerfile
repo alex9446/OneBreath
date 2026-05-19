@@ -15,7 +15,7 @@ USER deno
 
 RUN deno install --import-map ./import_map.json
 
-COPY ./shared ../_shared
+COPY ./shared ./shared
 COPY ./jobs/attendance-reminder/*.ts ./
 
 CMD ["run", "--import-map", "./import_map.json", "--allow-env", "--allow-net", "--unstable-temporal", "./index.ts"]

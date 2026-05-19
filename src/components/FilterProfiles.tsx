@@ -1,5 +1,5 @@
 import { For, type Component, type Setter } from 'solid-js'
-import type { Tables } from '../utils/database.types'
+import type { Tables } from '@shared/database.types'
 
 type Profile = Pick<Tables<'profiles'>, 'group_id'> & { groupName: string }
 type FilterProfilesProps = {

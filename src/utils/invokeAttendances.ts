@@ -1,6 +1,6 @@
 import { FunctionsHttpError } from '@supabase/supabase-js'
-import type { SupabaseClientDB } from './shortcut.types'
-import type { AttendancesExtra, ResponseBody } from './functions.types'
+import type { SupabaseClientDB } from '@shared/shortcut.types'
+import type { AttendancesExtra, ResponseBody } from '@shared/functions.types'
 
 const invokeAttendances = async ( supabaseClient: SupabaseClientDB,
                                   action: 'remove' | 'verify' | 'set',

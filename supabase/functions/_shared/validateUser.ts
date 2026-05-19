@@ -1,6 +1,6 @@
 import { validate } from 'uuid'
-import { SupabaseClientDB } from './shortcut.types.ts'
-import { FunctionReturn } from './mixed.types.ts'
+import { SupabaseClientDB } from '@shared/shortcut.types.ts'
+import { FunctionReturn } from '@shared/functions.types.ts'
 
 
 const errorMessage = (message: string) => ({ data: null, error: { message, code: 401 } })

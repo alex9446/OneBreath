@@ -1,5 +1,5 @@
-import { SupabaseClientDB } from '../_shared/shortcut.types.ts'
-import { FunctionReturn } from '../_shared/mixed.types.ts'
+import { SupabaseClientDB } from '@shared/shortcut.types.ts'
+import { FunctionReturn } from '@shared/functions.types.ts'
 
 
 export async function setAttendance(supabaseAdmin: SupabaseClientDB,

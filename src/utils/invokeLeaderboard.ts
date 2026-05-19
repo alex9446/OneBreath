@@ -1,5 +1,5 @@
 import { FunctionsHttpError } from '@supabase/supabase-js'
-import type { LeaderboardExtra, ResponseBody } from './functions.types'
+import type { LeaderboardExtra, ResponseBody } from '@shared/functions.types'
 import { useSupabase } from './context'
 
 const invokeLeaderboard = async ( groupId: number ): Promise<ResponseBody<LeaderboardExtra>> => {

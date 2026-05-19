@@ -1,6 +1,6 @@
 import type { Component } from 'solid-js'
 import { useNavigate } from '@solidjs/router'
-import type { Tables } from '../utils/database.types'
+import type { Tables } from '@shared/database.types'
 import type { userStatusRaw } from '../utils/mixed'
 import { mdiCashSync, mdiClipboardPulseOutline, mdiShieldCrownOutline } from '../utils/iconPaths'
 import Icon from './Icon'
