@@ -5,5 +5,18 @@ create table public.groups (
   spreadsheet_id text null,
   constraint groups_pkey primary key (id),
   constraint groups_name_key unique (name),
-  constraint groups_spreadsheet_id_key unique (spreadsheet_id)
+  constraint groups_spreadsheet_id_key unique (spreadsheet_id),
+  constraint groups_days_of_week_check check (
+    (
+      days_of_week <@ array[
+        (1)::smallint,
+        (2)::smallint,
+        (3)::smallint,
+        (4)::smallint,
+        (5)::smallint,
+        (6)::smallint,
+        (7)::smallint
+      ]
+    )
+  )
 ) TABLESPACE pg_default;

@@ -6,5 +6,6 @@ create table public.subscriptions (
   last_status_code smallint null,
   last_send_at timestamp with time zone null,
   constraint subscriptions_pkey primary key (id),
+  constraint subscriptions_subscription_json_key unique (subscription_json),
   constraint subscriptions_user_id_fkey foreign KEY (user_id) references auth.users (id) on delete CASCADE
 ) TABLESPACE pg_default;
