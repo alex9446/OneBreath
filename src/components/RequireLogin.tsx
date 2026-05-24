@@ -1,6 +1,7 @@
 import { createSignal, Show, type ParentComponent } from 'solid-js'
 import { useNavigate } from '@solidjs/router'
 import { useSupabase } from '../utils/context'
+import LoggedOnMount from './LoggedOnMount'
 
 const RequireLogin: ParentComponent = (props) => {
   const [loggedIn, setLoggedIn] = createSignal(false)
@@ -14,6 +15,7 @@ const RequireLogin: ParentComponent = (props) => {
   return (
     <Show when={loggedIn()} fallback={<main><p>Verifica login...</p></main>}>
       {props.children}
+      <LoggedOnMount />
     </Show>
   )
 }

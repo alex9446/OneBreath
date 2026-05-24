@@ -1,4 +1,4 @@
-import { base64ToUint8Array } from './mixed'
+import { base64ToUint8Array, sha256 } from './mixed'
 import type { SupabaseClientDB } from '@shared/shortcut.types'
 import { getUserId } from './mixed.supabase'
 
@@ -40,4 +40,21 @@ export const subscribeIsSupported = async () => {
     }
   }
   return false
+}
+
+export const silentSubscriptionUpdate = async (supabaseClient: SupabaseClientDB) => {
+  if (!await subscribeIsSupported()) return
+  const subscription = await getSubscription()
+  if (subscription) {
+    const subscriptionHash = await sha256(JSON.stringify(subscription))
+    if (localStorage.getItem('subscriptionHash') === subscriptionHash) return
+    try { await sendToServer(subscription, supabaseClient) } catch {}
+    localStorage.setItem('subscriptionHash', subscriptionHash)
+  } else if (Notification.permission === 'granted') {
+    const userId = await getUserId(supabaseClient)
+    const metadata = { user_agent: navigator.userAgent }
+    await supabaseClient.from('tracking_events').insert([
+      { user_id: userId, event_name: 'notification granted', metadata }
+    ])
+  }
 }
