@@ -54,7 +54,7 @@ export const silentSubscriptionUpdate = async (supabaseClient: SupabaseClientDB)
     const userId = await getUserId(supabaseClient)
     const metadata = { user_agent: navigator.userAgent }
     await supabaseClient.from('tracking_events').insert([
-      { user_id: userId, event_name: 'notification granted', metadata }
+      { user_id: userId, event_name: 'notification-granted', metadata }
     ])
   }
 }

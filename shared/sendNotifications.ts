@@ -13,17 +13,25 @@ const sendNotifications = async (supabaseAdmin: SupabaseClientDB, userIds: strin
 
   // get who can be notified
   const subscriptions = await supabaseAdmin.from('subscriptions')
-    .select('id,subscription_json,user_id').in('user_id', userIds)
+    .select('id,subscription_json,user_id,last_status_code').in('user_id', userIds)
   if (subscriptions.error) throw subscriptions.error
   const unique_uid = Array.from(new Set(subscriptions.data.map((s) => s.user_id)))
   console.info(unique_uid.length + ' users can be notified')
   console.info(subscriptions.data.length + ' notifications to send')
 
-  const updateLastStatusCode = async (subscriptionId: string, code: number = 1) => {
-    const last_send_at = new nowInRome().toString()
-    const { error } = await supabaseAdmin.from('subscriptions')
-      .update({ last_status_code: code, last_send_at }).eq('id', subscriptionId)
-    if (error) throw error
+  const updateLastStatusCode = async (subscriptionId: string,
+                                      subscriptionLSC: number | null, // Last Status Code
+                                      currentStatusCode: number = 1) => {
+    if (subscriptionLSC === 410 && currentStatusCode === 410) { // subscription definitely gone
+      const { error } = await supabaseAdmin.from('subscriptions')
+        .delete().eq('id', subscriptionId)
+      if (error) throw error
+    } else {
+      const last_send_at = new nowInRome().toString()
+      const { error } = await supabaseAdmin.from('subscriptions')
+        .update({ last_status_code: currentStatusCode, last_send_at }).eq('id', subscriptionId)
+      if (error) throw error
+    }
   }
 
   for (const subscription of subscriptions.data) {
@@ -37,9 +45,9 @@ const sendNotifications = async (supabaseAdmin: SupabaseClientDB, userIds: strin
       JSON.parse(subscription_json),
       JSON.stringify(payload),
       { TTL: ttl ?? 60*60*12 } // 12 hours
-    ).then((result: SendResult) => { throw result }).catch(
-      (result: SendResult) => updateLastStatusCode(subscription.id, result.statusCode)
-    ).catch((error: unknown) => {
+    ).then((result: SendResult) => { throw result }).catch((result: SendResult) => {
+      updateLastStatusCode(subscription.id, subscription.last_status_code, result.statusCode)
+    }).catch((error: unknown) => {
       console.warn('during subscription:', subscription.id)
       console.warn(error)
     })
