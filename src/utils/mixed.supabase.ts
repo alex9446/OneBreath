@@ -1,6 +1,6 @@
 import type { SupabaseClientDB } from '@shared/shortcut.types'
 import { downloadBlob, setAdminInLS, setGroupInLS, userStatusRaw } from './mixed'
-import type { Enums, Tables } from '@shared/database.types'
+import type { Enums, Json, Tables } from '@shared/database.types'
 import { groupsById } from './fetchGroups'
 
 export const getUserId = async (supabaseClient: SupabaseClientDB) => {
@@ -92,4 +92,14 @@ export const downloadCertificate = async (supabaseClient: SupabaseClientDB,
   const { data, error } = await supabaseClient.storage.from('certificates').download(path)
   if (error) throw error.message
   return downloadBlob(data, downloadName ?? path.split('/').pop() ?? path)
+}
+
+export const silentTrackEvent = async (supabaseClient: SupabaseClientDB,
+                                       eventName: string, metadata?: Json) => {
+  try {
+    const userId = await getUserId(supabaseClient)
+    await supabaseClient.from('tracking_events').insert([
+      { user_id: userId, event_name: eventName, metadata }
+    ])
+  } catch {}
 }

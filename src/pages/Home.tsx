@@ -3,6 +3,7 @@ import { getAdminInLS } from '../utils/mixed'
 import Title from '../components/Title'
 import AthleteStatus from '../components/AthleteStatus'
 import Attendance from '../components/Attendance'
+import NotificationBanner from '../components/NotificationBanner'
 import FakeButton from '../components/FakeButton'
 
 const Home = () => (<>
@@ -10,6 +11,7 @@ const Home = () => (<>
   <main id='home-page'>
     <AthleteStatus />
     <Attendance />
+    <NotificationBanner />
   </main>
   <nav>
     <Show when={getAdminInLS() >= 1}>

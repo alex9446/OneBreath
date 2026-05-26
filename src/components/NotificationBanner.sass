@@ -1,0 +1,33 @@
+@use '../variables'
+
+div.notification-banner
+  display: flex
+  flex-direction: column
+  gap: 10px
+  border-radius: 10px
+  padding: 15px
+  font-size: variables.$font-size-x-small
+  background-color: #1aaad6
+  p span
+    font-weight: 500
+  .actions
+    display: flex
+    flex-direction: column
+    gap: 10px
+    button
+      text-transform: none
+      color: #00a1d2
+      background-color: white
+      &:hover, &:disabled
+        background-color: #ffffffe6
+    div
+      display: flex
+      flex-wrap: wrap
+      gap: 10px
+      button
+        flex: 1 1 160px
+        color: white
+        background-color: transparent
+        outline: 1px solid white
+        &:hover
+          background-color: #ffffff1a
