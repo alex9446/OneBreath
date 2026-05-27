@@ -1,4 +1,5 @@
-import { setVapidDetails, sendNotification, type SendResult } from 'web-push'
+import { setVapidDetails, sendNotification } from 'web-push'
+import type { PushSubscription, SendResult } from 'web-push'
 import type { SupabaseClientDB } from './shortcut.types.ts'
 import { NotificationPayload } from './generic.types.ts'
 import nowInRome from './nowInRome.ts'
@@ -14,6 +15,7 @@ const sendNotifications = async (supabaseAdmin: SupabaseClientDB, userIds: strin
   // get who can be notified
   const subscriptions = await supabaseAdmin.from('subscriptions')
     .select('id,subscription_json,user_id,last_status_code').in('user_id', userIds)
+    .overrideTypes<Array<{ subscription_json: PushSubscription }>>()
   if (subscriptions.error) throw subscriptions.error
   const unique_uid = Array.from(new Set(subscriptions.data.map((s) => s.user_id)))
   console.info(unique_uid.length + ' users can be notified')
@@ -21,7 +23,7 @@ const sendNotifications = async (supabaseAdmin: SupabaseClientDB, userIds: strin
 
   const updateLastStatusCode = async (subscriptionId: string,
                                       subscriptionLSC: number | null, // Last Status Code
-                                      currentStatusCode: number = 1) => {
+                                      currentStatusCode: number) => {
     if (subscriptionLSC === 410 && currentStatusCode === 410) { // subscription definitely gone
       const { error } = await supabaseAdmin.from('subscriptions')
         .delete().eq('id', subscriptionId)
@@ -35,18 +37,14 @@ const sendNotifications = async (supabaseAdmin: SupabaseClientDB, userIds: strin
   }
 
   for (const subscription of subscriptions.data) {
-    const subscription_json = subscription.subscription_json?.toString()
-    if (!subscription_json) {
-      console.warn('empty subscription:', subscription.id)
-      continue
-    }
-
     sendNotification(
-      JSON.parse(subscription_json),
+      subscription.subscription_json,
       JSON.stringify(payload),
       { TTL: ttl ?? 60*60*12 } // 12 hours
     ).then((result: SendResult) => { throw result }).catch((result: SendResult) => {
-      updateLastStatusCode(subscription.id, subscription.last_status_code, result.statusCode)
+      if (result.statusCode === undefined) throw result
+      // updateLastStatusCode(subscription.id, subscription.last_status_code, result.statusCode)
+      updateLastStatusCode(subscription.id, null, result.statusCode) // TEMPORARY to not trigger deletion in case of error 410
     }).catch((error: unknown) => {
       console.warn('during subscription:', subscription.id)
       console.warn(error)

@@ -1,5 +1,6 @@
 import { base64ToUint8Array, sha256 } from './mixed'
 import type { SupabaseClientDB } from '@shared/shortcut.types'
+import type { Json } from '@shared/database.types'
 import { getUserId, silentTrackEvent } from './mixed.supabase'
 
 const subscriptionJson = (subscription: PushSubscription) => {
@@ -28,7 +29,7 @@ const sendToServer = async (supabaseClient: SupabaseClientDB,
                             subscription: PushSubscription) => {
   const userId = await getUserId(supabaseClient)
   const { error } = await supabaseClient.from('subscriptions').insert([
-    { user_id: userId, subscription_json: subscriptionJson(subscription) }
+    { user_id: userId, subscription_json: subscription.toJSON() as Json }
   ])
   if (error) throw error.message
 }
@@ -58,7 +59,11 @@ export const silentSubscriptionUpdate = async (supabaseClient: SupabaseClientDB)
     if (subscription) {
       const subscriptionHash = await subscriptionSha(subscription)
       if (localStorage.getItem('subscriptionHash') === subscriptionHash) return
-      await sendToServer(supabaseClient, subscription)
+      try {
+        await sendToServer(supabaseClient, subscription)
+      } catch (error) {
+        if (typeof error !== 'string' || !error.includes('duplicate key')) throw error
+      }
       localStorage.setItem('subscriptionHash', subscriptionHash)
     } else if (Notification.permission === 'granted') {
       const metadata = { user_agent: navigator.userAgent }
