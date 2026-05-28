@@ -1,18 +1,22 @@
 import { createResource, For, Show, type Component } from 'solid-js'
 import { action, useAction, useSubmission } from '@solidjs/router'
+import { getDateTimeLocaleIT } from '../../../../utils/mixed'
 import { useSupabase } from '../../../../utils/context'
 import invokeBroadcast from '../../../../utils/invokeBroadcast'
-import { getDateTimeLocaleIT } from '../../../../utils/mixed'
 import Title from '../../../../components/Title'
 import ErrorBox from '../../../../components/ErrorBox'
 import './Subscriptions.sass'
+
+const getDateOrMessage = (date: string | null) => (
+  date ? getDateTimeLocaleIT(date) : 'Nuova sottoscrizione'
+)
 
 const Subscriptions: Component<{ userId: string }> = (props) => {
   const supabaseClient = useSupabase()
 
   const [subscriptions] = createResource(async () => {
     const { data: subscriptions, error } = await supabaseClient.from('subscriptions')
-      .select('last_status_code,last_send_at').eq('user_id', props.userId)
+      .select('last_status_code,last_send_at').eq('user_id', props.userId).order('created_at')
     if (error) throw error.message
     return subscriptions.map((sub) => ({
       ...sub,
@@ -41,8 +45,10 @@ const Subscriptions: Component<{ userId: string }> = (props) => {
           <p>Ultimo invio</p><p>Stato</p>
           <For each={subscriptions()}>
             {(subscription) => (<>
-              <p>{getDateTimeLocaleIT(subscription.last_send_at ?? '')}</p>
-              <p classList={subscription.last_status_bool}>{subscription.last_status_code}</p>
+              <p>{getDateOrMessage(subscription.last_send_at)}</p>
+              <p classList={subscription.last_status_bool}>
+                {subscription.last_status_code ?? '✨ NEW'}
+              </p>
             </>)}
           </For>
         </div>
