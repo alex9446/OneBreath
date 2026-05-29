@@ -1,4 +1,4 @@
-import { createResource, createSignal, Show } from 'solid-js'
+import { createResource, createSignal, onMount, Show } from 'solid-js'
 import { action, useAction, useSubmission } from '@solidjs/router'
 import { useSupabase } from '../../utils/context'
 import { getSubscription, subscribeIsSupported, subscribeUser, unsubscribeUser } from '../../utils/subscribeUser'
@@ -12,7 +12,9 @@ const Notifications = () => {
   const [subscribeSupported, setSubscribeSupported] = createSignal(false)
   const [subscription, { refetch }] = createResource(getSubscription)
 
-  subscribeIsSupported().then((supported) => setSubscribeSupported(supported), null)
+  onMount(() => subscribeIsSupported().then((supported) => {
+    setSubscribeSupported(supported)
+  }, null))
 
   const activate = action(async () => {
     await subscribeUser(supabaseClient)
