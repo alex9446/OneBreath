@@ -1,5 +1,5 @@
 {
   "imports": {
-    "googleapis": "npm:googleapis@171.4.0"
+    "googleapis": "npm:googleapis@173.0.0"
   }
 }
