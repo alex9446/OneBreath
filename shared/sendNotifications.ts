@@ -41,9 +41,8 @@ const sendNotifications = async (supabaseAdmin: SupabaseClientDB, userIds: strin
       subscription.subscription_json,
       JSON.stringify(payload),
       { TTL: ttl ?? 60*60*12 } // 12 hours
-    ).then((result: SendResult) => { throw result }).catch((result: SendResult) => {
-      // updateLastStatusCode(subscription.id, subscription.last_status_code, result.statusCode || 1)
-      updateLastStatusCode(subscription.id, null, result.statusCode || 1) // TEMPORARY to not trigger deletion in case of error 410
+    ).then((result: SendResult) => { throw result }).catch(async (result: SendResult) => {
+      await updateLastStatusCode(subscription.id, subscription.last_status_code, result.statusCode || 1)
       if (!result.statusCode) throw result
     }).catch((error: unknown) => {
       console.warn('during subscription:', subscription.id)
