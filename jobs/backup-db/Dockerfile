@@ -1,4 +1,6 @@
-FROM alpine:3.23
+ARG ALPINE_VERSION
+
+FROM alpine:${ALPINE_VERSION}
 
 RUN apk add --no-cache postgresql18-client rclone
 
