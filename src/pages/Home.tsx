@@ -2,7 +2,7 @@ import { Show } from 'solid-js'
 import { getAdminInLS } from '../utils/mixed'
 import Title from '../components/Title'
 import AthleteStatus from '../components/AthleteStatus'
-import Attendance from '../components/Attendance'
+// import Attendance from '../components/Attendance'
 import NotificationBanner from '../components/NotificationBanner'
 import FakeButton from '../components/FakeButton'
 
@@ -10,7 +10,8 @@ const Home = () => (<>
   <Title>Homepage</Title>
   <main id='home-page'>
     <AthleteStatus />
-    <Attendance />
+    <p>Allenamenti in piscina terminati, ci si vede in mare! 🌊</p>
+    {/* <Attendance /> */}
     <NotificationBanner />
   </main>
   <nav>

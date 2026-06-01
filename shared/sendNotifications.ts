@@ -1,11 +1,11 @@
-import { setVapidDetails, sendNotification } from 'web-push'
-import type { PushSubscription, SendResult } from 'web-push'
+import { setVapidDetails, sendNotification, type PushSubscription } from 'web-push'
 import type { SupabaseClientDB } from './shortcut.types.ts'
 import { NotificationPayload } from './generic.types.ts'
 import nowInRome from './nowInRome.ts'
 
 const sendNotifications = async (supabaseAdmin: SupabaseClientDB, userIds: string[],
-                                 payload: NotificationPayload, ttl?: number) => {
+                                                               // 60*60*12 = 12 hours
+                                 payload: NotificationPayload, ttl: number = 60*60*12) => {
   setVapidDetails(
     'https://github.com/alex9446/OneBreath',
     Deno.env.get('VAPID_PUBLIC_KEY')!,
@@ -17,8 +17,8 @@ const sendNotifications = async (supabaseAdmin: SupabaseClientDB, userIds: strin
     .select('id,subscription_json,user_id,last_status_code').in('user_id', userIds)
     .overrideTypes<Array<{ subscription_json: PushSubscription }>>()
   if (subscriptions.error) throw subscriptions.error
-  const unique_uid = Array.from(new Set(subscriptions.data.map((s) => s.user_id)))
-  console.info(unique_uid.length + ' users can be notified')
+  const uniqueUIDs = Array.from(new Set(subscriptions.data.map((s) => s.user_id)))
+  console.info(uniqueUIDs.length + ' users can be notified')
   console.info(subscriptions.data.length + ' notifications to send')
 
   const updateLastStatusCode = async (subscriptionId: string,
@@ -36,19 +36,30 @@ const sendNotifications = async (supabaseAdmin: SupabaseClientDB, userIds: strin
     }
   }
 
-  for (const subscription of subscriptions.data) {
-    sendNotification(
-      subscription.subscription_json,
-      JSON.stringify(payload),
-      { TTL: ttl ?? 60*60*12 } // 12 hours
-    ).then((result: SendResult) => { throw result }).catch(async (result: SendResult) => {
-      await updateLastStatusCode(subscription.id, subscription.last_status_code, result.statusCode || 1)
-      if (!result.statusCode) throw result
-    }).catch((error: unknown) => {
-      console.warn('during subscription:', subscription.id)
-      console.warn(error)
-    })
-  }
+  const notificationProm = subscriptions.data.map(async (subscription) => {
+    let statusCode = 1
+    try {
+      const result = await sendNotification(subscription.subscription_json,
+                                            JSON.stringify(payload), { TTL: ttl })
+      throw result
+    } catch (result: unknown) {
+      try {
+        if (typeof result === 'object' && result !== null && 'statusCode' in result &&
+            typeof result.statusCode === 'number') {
+          statusCode = result.statusCode
+        }
+        await updateLastStatusCode(subscription.id, subscription.last_status_code, statusCode)
+        if (statusCode === 1) throw result
+      } catch (error: unknown) {
+        console.warn('during subscription:', subscription.id)
+        console.warn(error)
+      }
+    }
+    if (statusCode === 201) return subscription.user_id
+  })
+
+  const usersSuccessfullyNotified = await Promise.all(notificationProm)
+  return new Set(usersSuccessfullyNotified.filter((userId) => userId !== undefined))
 }
 
 export default sendNotifications

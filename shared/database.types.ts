@@ -132,6 +132,7 @@ export type Database = {
       }
       profiles: {
         Row: {
+          certificate_last_reminder: string | null
           first_name: string
           group_id: number
           id: string
@@ -140,6 +141,7 @@ export type Database = {
           watchword: string
         }
         Insert: {
+          certificate_last_reminder?: string | null
           first_name: string
           group_id: number
           id: string
@@ -148,6 +150,7 @@ export type Database = {
           watchword: string
         }
         Update: {
+          certificate_last_reminder?: string | null
           first_name?: string
           group_id?: number
           id?: string

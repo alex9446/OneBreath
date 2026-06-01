@@ -52,6 +52,6 @@ const NSA_profiles_ids = profiles.data.map((profile) => profile.id)
 console.info(NSA_profiles_ids.length + ' users have not set attendance')
 
 await sendNotifications(supabaseAdmin, NSA_profiles_ids,
-                        { title: 'Eri presente in piscina? Segna la presenza!' })
+                        { title: 'Eri presente in piscina?', body: 'Segna la presenza!' })
 
 console.info(`Job "attendance-reminder" finished!`)
