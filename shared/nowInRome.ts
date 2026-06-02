@@ -5,12 +5,20 @@ class nowInRome {
     return this.zonedDT.toString({timeZoneName:"never"})
   }
 
+  plainString(zdt: Temporal.ZonedDateTime) {
+    return zdt.toPlainDate().toString()
+  }
+
+  subtract(durationLike: Temporal.DurationLike) {
+    return this.plainString(this.zonedDT.subtract(durationLike))
+  }
+
   get dayOfWeek() {
     return this.zonedDT.dayOfWeek
   }
 
   get plainDate() {
-    return this.zonedDT.toPlainDate().toString()
+    return this.plainString(this.zonedDT)
   }
 }
 

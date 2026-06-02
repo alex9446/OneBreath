@@ -13,38 +13,46 @@ const supabaseAdmin = createClient<Database>(
 
 const NIR = new nowInRome()
 
-// The reason I didn't use Promise.all in this case is that type narrowing isn't supported
-// https://github.com/supabase/supabase-js/pull/2264
-const profiles = await supabaseAdmin.from('profiles')
-  .select('id,certificate_last_reminder').not('certificate_last_reminder', 'is', null)
 const certificates = await supabaseAdmin.from('certificates')
-  .select('user_id,expiration').lt('expiration', NIR.plainDate)
-
-if (profiles.error) throw profiles.error
+  .select('user_id,expiration')
 if (certificates.error) throw certificates.error
 
-console.info(certificates.data.length + ' expired certificates')
+const certificatesGrouped = Object.groupBy(certificates.data, ({ expiration }) => (
+  Temporal.PlainDate.compare(NIR.plainDate, expiration) > 0 ? 'expired' : 'valid'
+))
 
-const lastReminderByUserId = new Map(profiles.data.map((profile) => (
-  [profile.id, profile.certificate_last_reminder]
-)))
+console.info(certificatesGrouped.expired?.length + ' expired certificates')
 
-const userToNotify = certificates.data.filter((certificate) => {
-  const lastReminder = lastReminderByUserId.get(certificate.user_id)
-  if (!lastReminder) return true
-  // or if the reminder is older than the expiration
-  return Temporal.PlainDate.compare(certificate.expiration, lastReminder) > 0
-}).map((certificate) => certificate.user_id)
+const usersByCertificateStatus = Object.fromEntries(
+  Object.entries(certificatesGrouped).map(([status, certificates]) => (
+    [status, certificates.map((c)=> c.user_id)]
+  ))
+) as Record<'expired' | 'valid', string[]>
 
-console.info(userToNotify.length + ' users need to be notified')
+const oneMonthAgo = NIR.subtract({ months: 1 })
 
-if (userToNotify.length < 1) {
+const notifiableProfiles = await supabaseAdmin.from('profiles')
+  .select('id')
+  // exclude those who have been notified in the last month
+  .or(`certificate_last_reminder.is.null,certificate_last_reminder.lt.${oneMonthAgo}`)
+  // exclude those who hold a valid certificate
+  .not('id', 'in', `(${usersByCertificateStatus.valid.join(',')})`)
+if (notifiableProfiles.error) throw notifiableProfiles.error
+
+console.info(notifiableProfiles.data.length + ' users need to be notified')
+
+if (notifiableProfiles.data.length < 1) {
   console.info(`Job "certificate-reminder" finished! early exit`)
   Deno.exit()
 }
 
-const successfullyNotified = await sendNotifications(
-  supabaseAdmin, userToNotify,
+const notifiableProfilesGrouped = Object.groupBy(
+  notifiableProfiles.data.map(({ id }) => id),
+  (id) => usersByCertificateStatus.expired.includes(id) ? 'expired' : 'absent'
+)
+
+const expiredSuccessfullyNotified = await sendNotifications(
+  supabaseAdmin, notifiableProfilesGrouped.expired ?? [],
   {
     title: 'Il tuo certificato è scaduto!',
     body: 'Carica il nuovo 💪',
@@ -53,8 +61,19 @@ const successfullyNotified = await sendNotifications(
   60*60*24*7  // TTL 7 days
 )
 
-await supabaseAdmin.from('profiles')
+const absentSuccessfullyNotified = await sendNotifications(
+  supabaseAdmin, notifiableProfilesGrouped.absent ?? [],
+  {
+    title: 'Dove hai messo il certificato? 👀',
+    body: 'Caricalo ora! 💪',
+    url: '/sportexam/uploadcertificate'
+  },
+  60*60*24*7  // TTL 7 days
+)
+
+const { error: updateError } = await supabaseAdmin.from('profiles')
   .update({ certificate_last_reminder: NIR.plainDate })
-  .in('id', [...successfullyNotified])
+  .in('id', [...expiredSuccessfullyNotified, ...absentSuccessfullyNotified])
+if(updateError) throw updateError
 
 console.info(`Job "certificate-reminder" finished!`)
