@@ -38,4 +38,4 @@ jobs:
           tags: ghcr.io/${{ github.repository_owner }}/${{ matrix.image-name }}:latest
           build-args: |
             ALPINE_VERSION=3.23
-            DENO_ALPINE_VERSION=2.8.1
+            DENO_ALPINE_VERSION=2.8.2
