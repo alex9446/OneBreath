@@ -1,7 +1,6 @@
 import { setVapidDetails, sendNotification, type PushSubscription } from 'web-push'
 import type { SupabaseClientDB } from './shortcut.types.ts'
 import { NotificationPayload } from './generic.types.ts'
-import nowInRome from './nowInRome.ts'
 
 const sendNotifications = async (supabaseAdmin: SupabaseClientDB, userIds: string[],
                                                                // 60*60*12 = 12 hours
@@ -29,7 +28,7 @@ const sendNotifications = async (supabaseAdmin: SupabaseClientDB, userIds: strin
         .delete().eq('id', subscriptionId)
       if (error) throw error
     } else {
-      const last_send_at = new nowInRome().toString()
+      const last_send_at = Temporal.Now.zonedDateTimeISO('Europe/Rome').toString({ timeZoneName: 'never' })
       const { error } = await supabaseAdmin.from('subscriptions')
         .update({ last_status_code: currentStatusCode, last_send_at }).eq('id', subscriptionId)
       if (error) throw error

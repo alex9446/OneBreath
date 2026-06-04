@@ -1,6 +1,5 @@
 import { createClient } from '@supabase/supabase-js'
 import { Database } from '@shared/database.types.ts'
-import nowInRome from '@shared/nowInRome.ts'
 import sendNotifications from '@shared/sendNotifications.ts'
 
 console.info(`Job "certificate-reminder" started!`)
@@ -11,14 +10,15 @@ const supabaseAdmin = createClient<Database>(
   Deno.env.get('SECRET_JOBS_KEY')!
 )
 
-const NIR = new nowInRome()
+const today = Temporal.Now.plainDateISO('Europe/Rome')
+const oneMonthAgo = today.subtract({ months: 1 }).toString()
 
 const certificates = await supabaseAdmin.from('certificates')
   .select('user_id,expiration')
 if (certificates.error) throw certificates.error
 
 const certificatesGrouped = Object.groupBy(certificates.data, ({ expiration }) => (
-  Temporal.PlainDate.compare(NIR.plainDate, expiration) > 0 ? 'expired' : 'valid'
+  Temporal.PlainDate.compare(today, expiration) > 0 ? 'expired' : 'valid'
 ))
 
 console.info(certificatesGrouped.expired?.length + ' expired certificates')
@@ -28,8 +28,6 @@ const usersByCertificateStatus = Object.fromEntries(
     [status, certificates.map((c)=> c.user_id)]
   ))
 ) as Record<'expired' | 'valid', string[]>
-
-const oneMonthAgo = NIR.subtract({ months: 1 })
 
 const notifiableProfiles = await supabaseAdmin.from('profiles')
   .select('id')
@@ -72,7 +70,7 @@ const absentSuccessfullyNotified = await sendNotifications(
 )
 
 const { error: updateError } = await supabaseAdmin.from('profiles')
-  .update({ certificate_last_reminder: NIR.plainDate })
+  .update({ certificate_last_reminder: today.toString() })
   .in('id', [...expiredSuccessfullyNotified, ...absentSuccessfullyNotified])
 if(updateError) throw updateError
 
