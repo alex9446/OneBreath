@@ -1,6 +1,7 @@
 import { createClient } from '@supabase/supabase-js'
 import { Database } from '@shared/database.types.ts'
 import sendNotifications from '@shared/sendNotifications.ts'
+import { sendHeartbeat } from '@shared/heartbeat.ts'
 
 console.info(`Job "attendance-reminder" started!`)
 
@@ -40,6 +41,7 @@ const ASA_users_ids = attendances.data.map((attendance) => attendance.user_id)
 console.info(ASA_users_ids.length + ' users already set attendance')
 
 if (groups_ids.length < 1) {
+  await sendHeartbeat()
   console.info(`Job "attendance-reminder" finished! early exit`)
   Deno.exit()
 }
@@ -54,4 +56,5 @@ console.info(NSA_profiles_ids.length + ' users have not set attendance')
 await sendNotifications(supabaseAdmin, NSA_profiles_ids,
                         { title: 'Eri presente in piscina?', body: 'Segna la presenza!' })
 
+await sendHeartbeat()
 console.info(`Job "attendance-reminder" finished!`)

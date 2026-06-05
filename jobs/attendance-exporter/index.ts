@@ -5,6 +5,7 @@ import {
   craftAddSheet, craftAlert, craftBoolValidation, craftDeleteSheet, craftHeaderRow, craftRange,
   craftResizeFirstThreeColumns, craftUpdateCells, craftUserRows
 } from './craftBatchUpdate.ts'
+import { sendHeartbeat } from '@shared/heartbeat.ts'
 
 enum Sheet {
   ZeroIndex = 0,
@@ -134,7 +135,7 @@ for (const sheet of sheets) {
     )) throw err
   }
 
-  service.spreadsheets.batchUpdate({
+  await service.spreadsheets.batchUpdate({
     spreadsheetId,
     requestBody: {
       requests: [
@@ -164,4 +165,5 @@ for (const sheet of sheets) {
   })
 }
 
+await sendHeartbeat()
 console.info(`Job "attendance-exporter" finished!`)

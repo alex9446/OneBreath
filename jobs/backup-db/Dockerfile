@@ -2,7 +2,7 @@ ARG ALPINE_VERSION
 
 FROM alpine:${ALPINE_VERSION}
 
-RUN apk add --no-cache postgresql18-client rclone
+RUN apk add --no-cache postgresql18-client rclone curl
 
 RUN adduser -D lp-user
 

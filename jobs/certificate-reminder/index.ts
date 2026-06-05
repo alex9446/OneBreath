@@ -1,6 +1,7 @@
 import { createClient } from '@supabase/supabase-js'
 import { Database } from '@shared/database.types.ts'
 import sendNotifications from '@shared/sendNotifications.ts'
+import { sendHeartbeat } from '@shared/heartbeat.ts'
 
 console.info(`Job "certificate-reminder" started!`)
 
@@ -40,6 +41,7 @@ if (notifiableProfiles.error) throw notifiableProfiles.error
 console.info(notifiableProfiles.data.length + ' users need to be notified')
 
 if (notifiableProfiles.data.length < 1) {
+  await sendHeartbeat()
   console.info(`Job "certificate-reminder" finished! early exit`)
   Deno.exit()
 }
@@ -74,4 +76,5 @@ const { error: updateError } = await supabaseAdmin.from('profiles')
   .in('id', [...expiredSuccessfullyNotified, ...absentSuccessfullyNotified])
 if(updateError) throw updateError
 
+await sendHeartbeat()
 console.info(`Job "certificate-reminder" finished!`)
