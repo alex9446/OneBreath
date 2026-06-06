@@ -1,7 +1,7 @@
 import { createSignal, Show, onMount, type ParentComponent } from 'solid-js'
 import { useNavigate } from '@solidjs/router'
 import { useSupabase } from '../utils/context'
-import LoggedOnMount from './LoggedOnMount'
+import { LoggedOnMount } from './OnMountSupabase'
 
 const RequireLogin: ParentComponent = (props) => {
   const [loggedIn, setLoggedIn] = createSignal(false)

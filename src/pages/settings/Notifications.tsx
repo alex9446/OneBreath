@@ -12,9 +12,7 @@ const Notifications = () => {
   const [subscribeSupported, setSubscribeSupported] = createSignal(false)
   const [subscription, { refetch }] = createResource(getSubscription)
 
-  onMount(() => subscribeIsSupported().then((supported) => {
-    setSubscribeSupported(supported)
-  }, null))
+  onMount(() => subscribeIsSupported().then((supported) => setSubscribeSupported(supported)))
 
   const activate = action(async () => {
     await subscribeUser(supabaseClient)
