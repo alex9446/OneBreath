@@ -4,7 +4,7 @@ import sendNotifications from '@shared/sendNotifications.ts'
 import { sendHeartbeat } from '@shared/heartbeat.ts'
 
 console.info(`Job "attendance-reminder" started!`)
-
+await sendHeartbeat(true)
 
 const supabaseAdmin = createClient<Database>(
   Deno.env.get('SUPABASE_URL')!,

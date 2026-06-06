@@ -15,6 +15,7 @@ enum Sheet {
 }
 
 console.info(`Job "attendance-exporter" started!`)
+await sendHeartbeat(true)
 
 const today = Temporal.Now.plainDateISO('Europe/Rome')
 const yesterday = today.subtract({ days: 1 })
