@@ -1,4 +1,4 @@
-import { createMemo, createResource, createSignal, For, Show } from 'solid-js'
+import { createResource, createSignal, For, Show } from 'solid-js'
 import { useParams } from '@solidjs/router'
 import { useSupabase } from '../../utils/context'
 import { profilesWithStatus } from '../../utils/mixed.supabase'
@@ -23,12 +23,10 @@ const Athletes = () => {
     return new Set(admins?.map((admin) => admin.id) ?? [])
   })
 
-  const filteredProfiles = createMemo(() => (
-    profiles()?.filter((profile) => (
-      (selectedGroup() === 0 || selectedGroup() === profile.group_id) &&
-      (!expiredCertificates() || expiredCertificates() === !profile.status.certificate.valid) &&
-      (!expiredPayments() || expiredPayments() === !profile.status.payment.valid)
-    ))
+  const filteredProfiles = () => profiles()?.filter((profile) => (
+    (selectedGroup() === 0 || selectedGroup() === profile.group_id) &&
+    (!expiredCertificates() || expiredCertificates() === !profile.status.certificate.valid) &&
+    (!expiredPayments() || expiredPayments() === !profile.status.payment.valid)
   ))
 
   const profileById = (id: string) => profiles()?.find((p) => p.id === id)

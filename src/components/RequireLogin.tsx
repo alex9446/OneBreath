@@ -1,4 +1,4 @@
-import { createSignal, Show, onMount, type ParentComponent } from 'solid-js'
+import { createSignal, onMount, Show, type ParentComponent } from 'solid-js'
 import { useNavigate } from '@solidjs/router'
 import { useSupabase } from '../utils/context'
 import { LoggedOnMount } from './OnMountSupabase'

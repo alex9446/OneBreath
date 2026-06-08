@@ -1,17 +1,7 @@
 import { createResource, For } from 'solid-js'
 import { fetchGroups } from '../utils/fetchGroups'
+import FallbackGroups from './FallbackGroups'
 import './RadioGroup.sass'
-
-const FallbackGroups = () => {
-  const predictedLength = 8
-  const range = Array.from({ length: predictedLength }, (_, i) => i + 1)
-  return range.map((id) => (
-    <div>
-      <input type='radio' name='group' id={`group${id}`} required value={0} />
-      <label for={`group${id}`}>Caricamento {id}...</label>
-    </div>
-  ))
-}
 
 const RadioGroup = () => {
   const [groups] = createResource(fetchGroups)
