@@ -1,11 +1,11 @@
 import { createClient } from '@supabase/supabase-js'
 import { google } from 'googleapis'
+import { getDenoEnv, sendHeartbeat } from '@shared/mixed.ts'
 import { Database } from '@shared/database.types.ts'
 import {
   craftAddSheet, craftAlert, craftBoolValidation, craftDeleteSheet, craftHeaderRow, craftRange,
   craftResizeFirstThreeColumns, craftUpdateCells, craftUserRows
 } from './craftBatchUpdate.ts'
-import { sendHeartbeat } from '@shared/heartbeat.ts'
 
 enum Sheet {
   ZeroIndex = 0,
@@ -36,14 +36,14 @@ const defineOrThrow = <T>(value: T) => {
   return value
 }
 
-const athletesUrl = Deno.env.get('ATHLETES_URL')!
+const athletesUrl = getDenoEnv('ATHLETES_URL')
 
 const supabaseAdmin = createClient<Database>(
-  Deno.env.get('SUPABASE_URL')!,
-  Deno.env.get('SECRET_JOBS_KEY')!
+  getDenoEnv('SUPABASE_URL'),
+  getDenoEnv('SECRET_JOBS_KEY')
 )
 
-const serviceAccountInfo = JSON.parse(atob(Deno.env.get('SERVICE_ACCOUNT_INFO')!))
+const serviceAccountInfo = JSON.parse(atob(getDenoEnv('SERVICE_ACCOUNT_INFO')))
 
 const groupsProm = supabaseAdmin.from('groups').select('id,spreadsheet_id')
 const profilesProm = supabaseAdmin.from('profiles').select('id,first_name,last_name')

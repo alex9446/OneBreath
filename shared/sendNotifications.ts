@@ -1,14 +1,15 @@
 import { setVapidDetails, sendNotification, type PushSubscription } from 'web-push'
 import type { SupabaseClientDB } from './shortcut.types.ts'
 import { NotificationPayload } from './generic.types.ts'
+import { getDenoEnv } from './mixed.ts'
 
 const sendNotifications = async (supabaseAdmin: SupabaseClientDB, userIds: string[],
                                                                // 60*60*12 = 12 hours
                                  payload: NotificationPayload, ttl: number = 60*60*12) => {
   setVapidDetails(
     'https://github.com/alex9446/OneBreath',
-    Deno.env.get('VAPID_PUBLIC_KEY')!,
-    Deno.env.get('VAPID_PRIVATE_KEY')!
+    getDenoEnv('VAPID_PUBLIC_KEY'),
+    getDenoEnv('VAPID_PRIVATE_KEY')
   )
 
   // get who can be notified

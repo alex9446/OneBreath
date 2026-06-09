@@ -1,5 +1,6 @@
 import { createClient } from '@supabase/supabase-js'
 import type { Database } from '@shared/database.types.ts'
+import { getDenoEnv } from '@shared/mixed.ts'
 import { corsHeaders } from '../_shared/cors.ts'
 import { jsonResponseMessage } from '../_shared/jsonResponse.ts'
 import { validateUser } from '../_shared/validateUser.ts'
@@ -26,8 +27,8 @@ Deno.serve(async (req: Request) => {
     if (!Number.isInteger(group)) return jsonResponseMessage('group is not an integer!', 400)
 
     const supabaseAdmin = createClient<Database>(
-      Deno.env.get('SUPABASE_URL')!,
-      Deno.env.get('SECRET_FUNCTIONS_KEY')!
+      getDenoEnv('SUPABASE_URL'),
+      getDenoEnv('SECRET_FUNCTIONS_KEY')
     )
 
     // @uml - user valid?

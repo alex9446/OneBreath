@@ -1,14 +1,14 @@
 import { createClient } from '@supabase/supabase-js'
+import { getDenoEnv, sendHeartbeat } from '@shared/mixed.ts'
 import { Database } from '@shared/database.types.ts'
 import sendNotifications from '@shared/sendNotifications.ts'
-import { sendHeartbeat } from '@shared/heartbeat.ts'
 
 console.info(`Job "certificate-reminder" started!`)
 await sendHeartbeat(true)
 
 const supabaseAdmin = createClient<Database>(
-  Deno.env.get('SUPABASE_URL')!,
-  Deno.env.get('SECRET_JOBS_KEY')!
+  getDenoEnv('SUPABASE_URL'),
+  getDenoEnv('SECRET_JOBS_KEY')
 )
 
 const today = Temporal.Now.plainDateISO('Europe/Rome')
