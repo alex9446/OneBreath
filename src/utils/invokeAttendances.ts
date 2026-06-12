@@ -1,16 +1,11 @@
-import { FunctionsHttpError } from '@supabase/supabase-js'
 import type { SupabaseClientDB } from '@shared/shortcut.types'
 import type { AttendancesExtra, ResponseBody } from '@shared/functions.types'
+import invokeFunctions from './invokeFunctions'
 
 const invokeAttendances = async ( supabaseClient: SupabaseClientDB,
                                   action: 'remove' | 'verify' | 'set',
-                                  groupId: number ): Promise<ResponseBody<AttendancesExtra>> => {
-  const { data, error } = await supabaseClient.functions.invoke('attendances', {
-    body: { 'action': action, 'group': groupId }
-  })
-  if (error instanceof FunctionsHttpError) return await error.context.json()
-  if (error) throw error
-  return data
-}
+                                  groupId: number ): Promise<ResponseBody<AttendancesExtra>> => (
+  invokeFunctions(supabaseClient, 'attendances', { 'action': action, 'group': groupId })
+)
 
 export default invokeAttendances
