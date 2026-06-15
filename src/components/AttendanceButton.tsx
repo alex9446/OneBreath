@@ -1,7 +1,7 @@
 import type { Component } from 'solid-js'
 import { action, useAction, useSubmission } from '@solidjs/router'
 import { useSupabase } from '../utils/context'
-import invokeAttendances from '../utils/invokeAttendances'
+import { invokeAttendances } from '../utils/invokeFunctions'
 import ErrorBox from './ErrorBox'
 
 type AttendanceButtonProps = {

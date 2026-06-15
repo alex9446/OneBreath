@@ -1,5 +1,6 @@
 import { FunctionsHttpError, type FunctionInvokeOptions } from '@supabase/supabase-js'
 import type { SupabaseClientDB } from '@shared/shortcut.types'
+import type { AttendancesExtra, LeaderboardExtra, ResponseBody } from '@shared/functions.types'
 
 const invokeFunctions = async ( supabaseClient: SupabaseClientDB,
                                 functionName: string,
@@ -10,4 +11,21 @@ const invokeFunctions = async ( supabaseClient: SupabaseClientDB,
   return data
 }
 
-export default invokeFunctions
+const invokeAttendances = ( supabaseClient: SupabaseClientDB,
+                            action: 'remove' | 'verify' | 'set',
+                            groupId: number ): Promise<ResponseBody<AttendancesExtra>> => (
+  invokeFunctions(supabaseClient, 'attendances', { 'action': action, 'group': groupId })
+)
+
+const invokeBroadcast = ( supabaseClient: SupabaseClientDB,
+                          userIds: string[],
+                          message: string ): Promise<ResponseBody<null>> => (
+  invokeFunctions(supabaseClient, 'broadcast', { 'user_ids': userIds, 'message': message })
+)
+
+const invokeLeaderboard = ( supabaseClient: SupabaseClientDB,
+                            groupId: number ): Promise<ResponseBody<LeaderboardExtra>> => (
+  invokeFunctions(supabaseClient, 'leaderboard', { 'group': groupId })
+)
+
+export { invokeAttendances, invokeBroadcast, invokeLeaderboard }

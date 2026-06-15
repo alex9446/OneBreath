@@ -1,7 +1,7 @@
 import { createResource, Match, Show, Switch } from 'solid-js'
 import { useSupabase } from '../utils/context'
 import { getGroupFromLS } from '../utils/mixed'
-import invokeAttendances from '../utils/invokeAttendances'
+import { invokeAttendances } from '../utils/invokeFunctions'
 import ErrorBox from './ErrorBox'
 import { DayOfWeek, DaysOfWeek } from './DayOfWeek'
 import GroupName from './GroupName'
