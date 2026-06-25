@@ -1,10 +1,12 @@
 import { createResource, For } from 'solid-js'
+import { useSupabase } from '../utils/context'
 import { fetchGroups } from '../utils/fetchGroups'
 import FallbackGroups from './FallbackGroups'
 import './RadioGroup.sass'
 
 const RadioGroup = () => {
-  const [groups] = createResource(fetchGroups)
+  const supabaseClient = useSupabase()
+  const [groups] = createResource(() => fetchGroups(supabaseClient))
 
   return (
     <fieldset class='radio-input'>

@@ -1,4 +1,5 @@
 import { createResource, For, type Component } from 'solid-js'
+import { useSupabase } from '../utils/context'
 import { fetchGroups } from '../utils/fetchGroups'
 
 type SelectGroupProps = {
@@ -8,7 +9,8 @@ type SelectGroupProps = {
 }
 
 const SelectGroup: Component<SelectGroupProps> = (props) => {
-  const [groups] = createResource(fetchGroups)
+  const supabaseClient = useSupabase()
+  const [groups] = createResource(() => fetchGroups(supabaseClient))
 
   return (
     <select ref={props.ref} name='group' required onInput={props.onInput}

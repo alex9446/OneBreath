@@ -71,7 +71,7 @@ export const profilesWithStatus = async (supabaseClient: SupabaseClientDB) => {
   const paymentByUserId = new Map(payments.data.map((payment) => (
     [payment.user_id, payment.expiration]
   )))
-  const groups = await groupsById()
+  const groups = await groupsById(supabaseClient)
 
   return profiles.data.map((profile) => ({
     ...profile,

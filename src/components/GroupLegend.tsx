@@ -1,10 +1,12 @@
 import { createResource, For } from 'solid-js'
+import { useSupabase } from '../utils/context'
 import { fetchGroups } from '../utils/fetchGroups'
 import { getGroupAcronym } from '../utils/mixed'
 import './GroupLegend.sass'
 
 const GroupLegend = () => {
-  const [groups] = createResource(fetchGroups)
+  const supabaseClient = useSupabase()
+  const [groups] = createResource(() => fetchGroups(supabaseClient))
 
   return (
     <div class='group-legend'>

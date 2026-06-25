@@ -1,5 +1,5 @@
 import Cookies from 'js-cookie'
-import { useSupabase } from './context'
+import type { SupabaseClientDB } from '@shared/shortcut.types'
 
 type Group = {
   id: number
@@ -13,11 +13,10 @@ export const setGroups = (groups: Groups) => {
 
 export const getGroups = (): Groups => JSON.parse(Cookies.get('groups_cache') ?? '[]')
 
-export const fetchGroups = async () => {
+export const fetchGroups = async (supabaseClient: SupabaseClientDB) => {
   const cachedGroups = getGroups()
   if (cachedGroups.length > 0) return cachedGroups
 
-  const supabaseClient = useSupabase()
   const { data: groups, error } = await supabaseClient.from('groups')
     .select('id,name').order('id')
   if (error) throw error.message
@@ -25,8 +24,8 @@ export const fetchGroups = async () => {
   return groups
 }
 
-export const groupsById = async () => {
-  return (await fetchGroups()).reduce((acc, group) => {
+export const groupsById = async (supabaseClient: SupabaseClientDB) => {
+  return (await fetchGroups(supabaseClient)).reduce((acc, group) => {
     acc[group.id] = group
     return acc
   }, {} as Record<number, Group>)
