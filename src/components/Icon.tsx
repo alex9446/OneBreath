@@ -1,10 +1,10 @@
-import { Show, type Component } from 'solid-js'
+import { type JSX, Show, type Component } from 'solid-js'
 
 type IconProps = {
   height?: number
   width?: number
   viewBox?: `${number} ${number}`
-  classList?: { [k: string]: boolean | undefined }
+  classList?: JSX.ClassList | undefined
   onClick?: () => void
   title?: string
   path: string
