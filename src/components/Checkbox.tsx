@@ -3,7 +3,7 @@ import './Checkbox.sass'
 
 type CheckboxProps = {
   name?: string
-  checked?: boolean
+  checked: boolean | undefined
   set?: Setter<boolean>
 } & ParentProps
 

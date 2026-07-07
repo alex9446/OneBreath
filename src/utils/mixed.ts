@@ -18,7 +18,7 @@ const setKeyNumInLS = (keyName: string, numValue: string | number) => {
 
 const getKeyNumInLS = (keyName: string, defaultNaN: number) => {
   const keyValue = parseInt(localStorage.getItem(keyName) ?? '')
-  if (isNaN(keyValue)) return defaultNaN
+  if (Number.isNaN(keyValue)) return defaultNaN
   return keyValue
 }
 

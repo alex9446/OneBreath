@@ -33,12 +33,11 @@ export const contactsByZone = async (supabaseClient: SupabaseClientDB) => {
     .select('name,phone_number,notes,zone').order('id')
   if (error) throw error.message
 
-  return contacts.reduce((acc, contact) => {
-    const existingIndex = acc.findIndex((c) => c.zone === contact.zone)
-    if (existingIndex >= 0) acc[existingIndex].contacts.push(contact)
-    else acc.push({zone: contact.zone, contacts: [contact]})
+  return Object.values(contacts.reduce((acc, contact) => {
+    if (!acc[contact.zone]) acc[contact.zone] = {zone: contact.zone, contacts: [contact]}
+    else acc[contact.zone].contacts.push(contact)
     return acc
-  }, [] as ContactByZone[])
+  }, {} as Record<ContactByZone['zone'], ContactByZone>))
 }
 
 export const userStatus = async (supabaseClient: SupabaseClientDB,
@@ -95,7 +94,7 @@ export const downloadCertificate = async (supabaseClient: SupabaseClientDB,
 }
 
 export const silentTrackEvent = async (supabaseClient: SupabaseClientDB,
-                                       eventName: string, metadata?: Json) => {
+                                       eventName: string, metadata: Json = null) => {
   try {
     const userId = await getUserId(supabaseClient)
     await supabaseClient.from('tracking_events').insert([

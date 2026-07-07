@@ -15,9 +15,10 @@ const Attendances = () => {
   const params = useParams()
   const todayDate = getTodayDate()
   const options = createMemo(() => {
-    if (!params.groupDate) return { group: getGroupFromLS(), date: todayDate }
-    const groupDateSplitted = params.groupDate.split('g')
-    return { group: parseInt(groupDateSplitted[0]), date: groupDateSplitted[1] }
+    const [groupStr = '', date] = params['groupDate']?.split('g') ?? []
+    const group = parseInt(groupStr)
+    if (Number.isNaN(group) || !date) return { group: getGroupFromLS(), date: todayDate }
+    return { group, date }
   })
 
   const [attendances, {mutate}] = createResource(options, async ({ group, date }) => {
@@ -33,7 +34,7 @@ const Attendances = () => {
   const onInputEvent = () => {
     if (!inputDate.value) return
     mutate([])
-    navigate(`${params.groupDate ? '..' : '.'}/${selectGroup.value}g${inputDate.value}`)
+    navigate(`${params['groupDate'] ? '..' : '.'}/${selectGroup.value}g${inputDate.value}`)
   }
 
   const changeDate = (days: number) => {
@@ -47,7 +48,7 @@ const Attendances = () => {
     onInputEvent()
   }
 
-  const backPath = () => params.groupDate ? '../..' : '..'
+  const backPath = () => params['groupDate'] ? '../..' : '..'
 
   return (<>
     <Title>Area staff &gt; Storico presenze</Title>

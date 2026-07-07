@@ -35,12 +35,15 @@ self.addEventListener('push', (event) => {
 
   const payload = parsePushData(event.data)
   const options: NotificationOptions = {
-    body: payload.body,
-    icon: payload.icon ?? DEFAULT_ICON,
+    // default values from: https://developer.mozilla.org/en-US/docs/Web/API/ServiceWorkerRegistration/showNotification
     badge: payload.badge ?? DEFAULT_BADGE,
-    tag: payload.tag,
-    requireInteraction: payload.requireInteraction ?? false,
+    body: payload.body ?? '',
     data: { url: payload.url ?? DEFAULT_URL },
+    icon: payload.icon ?? DEFAULT_ICON,
+    lang: payload.lang ?? 'it-IT',
+    requireInteraction: payload.requireInteraction ?? false,
+    silent: payload.silent ?? null,
+    tag: payload.tag ?? ''
   }
 
   event.waitUntil(self.registration.showNotification(payload.title ?? 'Title error', options))

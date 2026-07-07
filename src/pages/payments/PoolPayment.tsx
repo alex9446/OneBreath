@@ -10,7 +10,7 @@ const PoolPayment = () => {
   const nextMonth = ((new Date().getMonth() + 1) % 12) + 1
   const isSummer = nextMonth > 5 && nextMonth < 10
   const nextMonthStr = String(isSummer ? 10 : nextMonth).padStart(2, '0')
-  const deadlines: Record<string, string> = {
+  const deadlines = {
     '1m': `2026-${nextMonthStr}-10`,
     '4m': '2026-10-10',
     '12m': '2026-10-10'
@@ -34,10 +34,10 @@ const PoolPayment = () => {
     <main id='poolpayment-page'>
       <Show when={submission.result?.ok} fallback={<>
         <p style='text-align: center'>Conferma pagamento piscina</p>
-        <select onInput={(e) => setNextDeadline(deadlines[e.currentTarget.value])}>
-          <option value='1m'>Mensile</option>
-          <option value='4m'>Quadrimestrale</option>
-          <option value='12m'>Annuale</option>
+        <select onInput={(e) => setNextDeadline(e.currentTarget.value)}>
+          <option value={deadlines['1m']}>Mensile</option>
+          <option value={deadlines['4m']}>Quadrimestrale</option>
+          <option value={deadlines['12m']}>Annuale</option>
         </select>
         <p>Prossima scadenza: {nextDeadline()}</p>
         <button onClick={useUpsertPayment} disabled={submission.pending}>Conferma</button>

@@ -11,7 +11,7 @@ import FakeButton from '../../../components/FakeButton'
 import Subscriptions from './athlete/Subscriptions'
 import './Athlete.sass'
 
-const ExpirationInfo: Component<{ name: string, expiration?: string }> = (props) => {
+const ExpirationInfo: Component<{ name: string, expiration: string | undefined }> = (props) => {
   const expiration = props.expiration ? getDateLocaleIT(props.expiration) : 'non caricato'
   return <p>Scadenza {props.name}: {expiration}</p>
 }
@@ -29,7 +29,7 @@ type AthleteProps = {
   }
   admin: boolean
   adminsRefetch: () => void
-  detail?: string
+  detail: string | undefined
 }
 
 const Athlete: Component<AthleteProps> = (props) => {

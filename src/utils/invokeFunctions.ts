@@ -4,7 +4,7 @@ import type { AttendancesExtra, LeaderboardExtra, ResponseBody } from '@shared/f
 
 const invokeFunctions = async ( supabaseClient: SupabaseClientDB,
                                 functionName: string,
-                                body: FunctionInvokeOptions['body'] ) => {
+                                body: NonNullable<FunctionInvokeOptions['body']> ) => {
   const { data, error } = await supabaseClient.functions.invoke(functionName, { body })
   if (error instanceof FunctionsHttpError) return await error.context.json()
   if (error) throw error

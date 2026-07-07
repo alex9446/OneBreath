@@ -1,9 +1,11 @@
 export type NotificationPayload = {
   title: string
+  badge?: string
   body?: string
   icon?: string
-  badge?: string
-  url?: string
-  tag?: string
+  lang?: string
   requireInteraction?: boolean
+  silent?: boolean | null
+  tag?: string
+  url?: string
 }

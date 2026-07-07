@@ -2,7 +2,7 @@ import type { Component, ParentProps } from 'solid-js'
 import './FakeButton.sass'
 
 type FakeButtonNativeProps = {
-  href?: string
+  href: string | undefined
   newPage?: boolean
   disabled?: boolean
 } & ParentProps

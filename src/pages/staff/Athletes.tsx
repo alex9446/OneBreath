@@ -34,7 +34,7 @@ const Athletes = () => {
 
   return (<>
     <Title>Area staff &gt; Atleti</Title>
-    <Show when={params.id} fallback={
+    <Show when={params['id']} fallback={
       <main id='athletes-page' style='gap: 10px'>
         <FilterProfiles profiles={profiles() ?? []} set={setSelectedGroup}
                         defaultOption={selectedGroup()} />
@@ -53,7 +53,10 @@ const Athletes = () => {
     }>
       {(userId) => (
         <Show when={profileById(userId())}>
-          {(profile) => <Athlete profile={profile()} admin={isAdmin(userId())} adminsRefetch={refetch} detail={params.detail} />}
+          {(profile) => (
+            <Athlete profile={profile()} detail={params['detail']}
+                     admin={isAdmin(userId())} adminsRefetch={refetch} />
+          )}
         </Show>
       )}
     </Show>
