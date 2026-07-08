@@ -26,6 +26,7 @@ Affinche la modifica sia visibile, ${name} dovrà effettuare nuovamente il login
 type AthleteProps = {
   profile: Pick<Tables<'profiles'>, 'id' | 'first_name' | 'last_name'> & {
     status: ReturnType<typeof userStatusRaw>
+    hasSubscription: boolean
   }
   admin: boolean
   adminsRefetch: () => void
@@ -63,7 +64,9 @@ const Athlete: Component<AthleteProps> = (props) => {
         </Show>
         <ExpirationInfo name='pagamento piscina' expiration={props.profile.status.paymentExpiration} />
         <UserAttendances id={props.profile.id} />
-        <FakeButton href='subscriptions'>Sottoscrizioni alle notifiche</FakeButton>
+        <Show when={props.profile.hasSubscription}>
+          <FakeButton href='subscriptions'>Sottoscrizioni alle notifiche</FakeButton>
+        </Show>
       </main>
     </>}>
       <Subscriptions userId={props.profile.id} />

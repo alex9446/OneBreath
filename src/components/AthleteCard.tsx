@@ -2,7 +2,7 @@ import type { Component } from 'solid-js'
 import { useNavigate } from '@solidjs/router'
 import type { Tables } from '@shared/database.types'
 import type { userStatusRaw } from '../utils/mixed'
-import { mdiCashSync, mdiClipboardPulseOutline, mdiShieldCrownOutline } from '../utils/iconPaths'
+import { mdiCashSync, mdiClipboardPulseOutline, mdiShieldCrownOutline, paperPlane } from '../utils/iconPaths'
 import Icon from './Icon'
 import './AthleteCard.sass'
 
@@ -10,6 +10,7 @@ type AthleteCardProps = {
   profile: Pick<Tables<'profiles'>, 'id' | 'first_name' | 'last_name'> & {
     groupName: string
     status: ReturnType<typeof userStatusRaw>
+    hasSubscription: boolean
   }
   isAdmin: boolean
 }
@@ -25,6 +26,7 @@ const AthleteCard: Component<AthleteCardProps> = (props) => {
         <Icon path={mdiShieldCrownOutline} classList={{ admin: true, hide: !props.isAdmin }} />
         <Icon path={mdiClipboardPulseOutline} classList={props.profile.status.certificate} />
         <Icon path={mdiCashSync} classList={props.profile.status.payment} />
+        <Icon path={paperPlane} classList={{ subscription: true, hide: !props.profile.hasSubscription }} />
       </div>
     </article>
   )

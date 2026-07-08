@@ -57,12 +57,15 @@ export const profilesWithStatus = async (supabaseClient: SupabaseClientDB) => {
     .select('id,first_name,last_name,group_id').order('first_name')
   const certificatesProm = supabaseClient.from('certificates').select('user_id,expiration')
   const paymentsProm = supabaseClient.from('payments').select('user_id,expiration')
-  const [profiles, certificates, payments] = await Promise.all(
-    [profilesProm, certificatesProm, paymentsProm]
+  const subscriptionsProm = supabaseClient.from('subscriptions').select('user_id')
+
+  const [profiles, certificates, payments, subscriptions] = await Promise.all(
+    [profilesProm, certificatesProm, paymentsProm, subscriptionsProm]
   )
   if (profiles.error) throw profiles.error.message
   if (certificates.error) throw certificates.error.message
   if (payments.error) throw payments.error.message
+  if (subscriptions.error) throw subscriptions.error.message
 
   const certificateByUserId = new Map(certificates.data.map((certificate) => (
     [certificate.user_id, certificate.expiration]
@@ -70,12 +73,14 @@ export const profilesWithStatus = async (supabaseClient: SupabaseClientDB) => {
   const paymentByUserId = new Map(payments.data.map((payment) => (
     [payment.user_id, payment.expiration]
   )))
+  const subscriptionsUserIds = new Set(subscriptions.data.map((sub) => sub.user_id))
   const groups = await groupsById(supabaseClient)
 
   return profiles.data.map((profile) => ({
     ...profile,
     groupName: groups[profile.group_id]?.name ?? 'Gruppo senza nome',
-    status: userStatusRaw(certificateByUserId.get(profile.id), paymentByUserId.get(profile.id))
+    status: userStatusRaw(certificateByUserId.get(profile.id), paymentByUserId.get(profile.id)),
+    hasSubscription: subscriptionsUserIds.has(profile.id)
   }))
 }
 
