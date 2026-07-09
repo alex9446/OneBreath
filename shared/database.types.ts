@@ -85,18 +85,21 @@ export type Database = {
       groups: {
         Row: {
           days_of_week: number[]
+          disabled_reminders: Database["public"]["Enums"]["reminders"][]
           id: number
           name: string
           spreadsheet_id: string | null
         }
         Insert: {
           days_of_week?: number[]
+          disabled_reminders?: Database["public"]["Enums"]["reminders"][]
           id?: number
           name: string
           spreadsheet_id?: string | null
         }
         Update: {
           days_of_week?: number[]
+          disabled_reminders?: Database["public"]["Enums"]["reminders"][]
           id?: number
           name?: string
           spreadsheet_id?: string | null
@@ -292,6 +295,7 @@ export type Database = {
       [_ in never]: never
     }
     Enums: {
+      reminders: "attendance" | "certificate"
       zones: "Livorno" | "Cecina" | "Follonica"
     }
     CompositeTypes: {
@@ -420,6 +424,7 @@ export type CompositeTypes<
 export const Constants = {
   public: {
     Enums: {
+      reminders: ["attendance", "certificate"],
       zones: ["Livorno", "Cecina", "Follonica"],
     },
   },

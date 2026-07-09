@@ -14,9 +14,18 @@ const supabaseAdmin = createClient<Database>(
 const today = Temporal.Now.plainDateISO('Europe/Rome')
 const oneMonthAgo = today.subtract({ months: 1 }).toString()
 
-const certificates = await supabaseAdmin.from('certificates')
+// get excluded groups
+const groupsProm = supabaseAdmin.from('groups')
+  .select('id').contains('disabled_reminders', ['certificate'])
+// get certificates with expiration date
+const certificatesProm = supabaseAdmin.from('certificates')
   .select('user_id,expiration')
+
+const [groups, certificates] = await Promise.all([groupsProm, certificatesProm])
+if (groups.error) throw groups.error
 if (certificates.error) throw certificates.error
+
+const excludedGroups = groups.data.map((group) => group.id)
 
 const certificatesGrouped = Object.groupBy(certificates.data, ({ expiration }) => (
   Temporal.PlainDate.compare(today, expiration) > 0 ? 'expired' : 'valid'
@@ -36,6 +45,8 @@ const notifiableProfiles = await supabaseAdmin.from('profiles')
   .or(`certificate_last_reminder.is.null,certificate_last_reminder.lt.${oneMonthAgo}`)
   // exclude those who hold a valid certificate
   .not('id', 'in', `(${usersByCertificateStatus.valid.join(',')})`)
+  // exclude those who belong to an excluded group
+  .not('group_id', 'in', `(${excludedGroups.join(',')})`)
 if (notifiableProfiles.error) throw notifiableProfiles.error
 
 console.info(notifiableProfiles.data.length + ' users need to be notified')

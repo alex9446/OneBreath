@@ -14,9 +14,11 @@ const supabaseAdmin = createClient<Database>(
 const today = Temporal.Now.plainDateISO('Europe/Rome')
 const todayString = today.toString()
 
-// get active groups in current day of week
+// get active groups in current day of week, except excluded
 const groupsProm = supabaseAdmin.from('groups')
-  .select('id').contains('days_of_week', [today.dayOfWeek])
+  .select('id')
+  .contains('days_of_week', [today.dayOfWeek])
+  .not('disabled_reminders', 'cs', '{"attendance"}')
 // check if today is a midweek holiday
 const midweekHolidayProm = supabaseAdmin
   .from('midweek_holidays').select('date').eq('date', todayString).maybeSingle()
