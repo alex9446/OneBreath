@@ -53,7 +53,7 @@ const Attendances = () => {
   return (<>
     <Title>Area staff &gt; Storico presenze</Title>
     <main id='attendances-page'>
-      <SelectGroup ref={selectGroup} defaultOption={options().group} onInput={onInputEvent} />
+      <SelectGroup ref={selectGroup} defaultOption={options().group} set={onInputEvent} />
       <div class='date-selector'>
         <Icon path={W12H24MenuLeft} width={18} viewBox='12 24'
               title='giorno precedente' onClick={() => changeDate(-1)} />

@@ -1,23 +1,25 @@
-import { createResource, For, Suspense } from 'solid-js'
+import { createResource, createSignal, For, Suspense } from 'solid-js'
 import { A } from '@solidjs/router'
 import { useSupabase } from '../utils/context'
 import { getGroupFromLS } from '../utils/mixed'
 import { invokeLeaderboard } from '../utils/invokeFunctions'
 import Title from '../components/Title'
-import GroupName from '../components/GroupName'
+import SelectGroup from '../components/SelectGroup'
 import GoBack from '../components/GoBack'
 import './Leaderboard.sass'
 
 const Leaderboard = () => {
   const supabaseClient = useSupabase()
   const groupId = getGroupFromLS()
+  const [selectedGroup, setSelectedGroup] = createSignal(groupId)
 
-  const [leaderboard] = createResource(groupId, (gid) => invokeLeaderboard(supabaseClient, gid))
+  const [leaderboard] = createResource(selectedGroup, (gid) => invokeLeaderboard(supabaseClient, gid))
 
   return (<>
     <Title>Classifica presenze</Title>
     <main id='leaderboard-page'>
-      <p>Classifica presenze <GroupName id={groupId} /></p>
+      <p>Classifica presenze</p>
+      <SelectGroup defaultOption={groupId} set={setSelectedGroup} />
       <Suspense fallback='Caricamento...'>
         <div class='grid'>
           <p>Nome</p><p>Numero presenze</p>

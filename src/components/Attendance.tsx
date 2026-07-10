@@ -2,9 +2,9 @@ import { createResource, Match, Show, Switch } from 'solid-js'
 import { useSupabase } from '../utils/context'
 import { getGroupFromLS } from '../utils/mixed'
 import { invokeAttendances } from '../utils/invokeFunctions'
+import { groupsById } from '../utils/fetchGroups'
 import ErrorBox from './ErrorBox'
 import { DayOfWeek, DaysOfWeek } from './DayOfWeek'
-import GroupName from './GroupName'
 import AttendanceButton from './AttendanceButton'
 import './Attendance.sass'
 
@@ -16,6 +16,9 @@ const Attendance = () => {
     invokeAttendances(supabaseClient, 'verify', groupId)
   ))
 
+  const [groups] = createResource(() => groupsById(supabaseClient))
+  const groupName = (id: number) => groups()?.[id]?.name ?? 'Gruppo senza nome'
+
   return (
     <Show keyed when={verify()?.code === 200 && verify()?.extra} fallback={
       <Show when={verify.loading} fallback={<ErrorBox>{verify()?.message}</ErrorBox>}>
@@ -26,14 +29,14 @@ const Attendance = () => {
         <Switch fallback={<ErrorBox>Stato non previsto! Avvisare staff</ErrorBox>}>
           <Match when={extraUnion.state === 'already-set' && extraUnion}>
             {(extra) => (<>
-              <p>Presenza di <DayOfWeek day={extra().daySetted} /> a <GroupName id={extra().groupSetted} /> confermata!</p>
+              <p>Presenza di <DayOfWeek day={extra().daySetted} /> a {groupName(extra().groupSetted)} confermata!</p>
               <AttendanceButton action='remove' groupId={groupId} refetch={refetch}
                                 pendingLabel='Annullo...' label='Annulla' />
             </>)}
           </Match>
           <Match when={extraUnion.state === 'day-not-allowed' && extraUnion}>
             {(extra) => (<>
-              <p>Segnatura presenza a <GroupName id={groupId} /> non attiva.</p>
+              <p>Segnatura presenza a {groupName(groupId)} non attiva.</p>
               <p class='more-info'>
                 <Show when={extra().isMidweekHoliday} fallback={<>
                   Ritorna qui nei seguenti giorni: <DaysOfWeek days={extra().allowedDays} />.<br />
@@ -46,7 +49,7 @@ const Attendance = () => {
           </Match>
           <Match when={extraUnion.state === 'settable' && extraUnion}>
             {(extra) => (<>
-              <p>Eri presente <DayOfWeek day={extra().dayOfWeek} /> a <GroupName id={groupId} />?</p>
+              <p>Eri presente <DayOfWeek day={extra().dayOfWeek} /> a {groupName(groupId)}?</p>
               <AttendanceButton action='set' groupId={groupId} refetch={refetch}
                                 pendingLabel='Invio...' label='Si' />
             </>)}
