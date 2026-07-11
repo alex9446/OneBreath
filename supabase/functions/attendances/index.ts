@@ -1,15 +1,20 @@
 import { createClient } from '@supabase/supabase-js'
+import { AttendancesExtra } from '@shared/functions.types.ts'
 import type { Database } from '@shared/database.types.ts'
-import { getDenoEnv } from '@shared/mixed.ts'
+import { getDenoEnv, isInteger } from '@shared/mixed.ts'
+import { createJsonResponseMessage } from '../_shared/jsonResponse.ts'
 import { corsHeaders } from '../_shared/cors.ts'
-import { jsonResponseMessage } from '../_shared/jsonResponse.ts'
 import { validateUser } from '../_shared/validateUser.ts'
 import { allowedAttendance } from './allowedAttendance.ts'
 import { removeAttendance } from './removeAttendance.ts'
 import { setAttendance } from './setAttendance.ts'
 import { manageRawError } from '../_shared/manageRawError.ts'
 
-const validActions = ['remove', 'verify', 'set', 'make_coffee']
+const validActionsList = ['remove', 'verify', 'set', 'make_coffee'] as const
+type ValidActions = typeof validActionsList[number]
+const isValidAction = (action: unknown): action is ValidActions => validActionsList.includes(action as ValidActions)
+
+const jsonResponseMessage = createJsonResponseMessage<AttendancesExtra>()
 
 console.info(`Edge function "attendances" up and running!`)
 
@@ -23,8 +28,8 @@ Deno.serve(async (req: Request) => {
   try {
     // @uml - payload valid?
     const { action, group } = await req.json()
-    if (!validActions.includes(action)) return jsonResponseMessage('action not valid!', 400)
-    if (!Number.isInteger(group)) return jsonResponseMessage('group is not an integer!', 400)
+    if (!isValidAction(action)) return jsonResponseMessage('action not valid!', 400)
+    if (!isInteger(group)) return jsonResponseMessage('group is not an integer!', 400)
 
     const supabaseAdmin = createClient<Database>(
       getDenoEnv('SUPABASE_URL'),

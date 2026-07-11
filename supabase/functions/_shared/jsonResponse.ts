@@ -2,7 +2,7 @@ import { ResponseBody } from '@shared/functions.types.ts'
 import { corsHeaders } from './cors.ts'
 
 
-export function jsonResponse<ExtraType>(body: ResponseBody<ExtraType>) {
+const jsonResponse = <T>(body: ResponseBody<T>) => {
   if (body.code !== 200) console.warn(body)
 
   return new Response(JSON.stringify(body), {
@@ -11,6 +11,10 @@ export function jsonResponse<ExtraType>(body: ResponseBody<ExtraType>) {
   })
 }
 
-export function jsonResponseMessage<ExtraType>(message: string, code: number, extra?: ExtraType) {
-  return jsonResponse<ExtraType>({ message, code, extra: extra ?? null })
-}
+const createJsonResponseMessage = <T>() => (
+  (message: string, code: number, extra: T | null = null) => (
+    jsonResponse({ message, code, extra })
+  )
+)
+
+export { jsonResponse, createJsonResponseMessage }

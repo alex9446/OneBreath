@@ -2,11 +2,16 @@ import { validate as validateUUID } from 'uuid'
 import { createClient } from '@supabase/supabase-js'
 import type { Database } from '@shared/database.types.ts'
 import { getDenoEnv } from '@shared/mixed.ts'
-import { corsHeaders } from '../_shared/cors.ts'
-import { jsonResponseMessage } from '../_shared/jsonResponse.ts'
-import { userIsAdmin, validateUser } from '../_shared/validateUser.ts'
 import sendNotifications from '@shared/sendNotifications.ts'
+import { createJsonResponseMessage } from '../_shared/jsonResponse.ts'
+import { corsHeaders } from '../_shared/cors.ts'
+import { userIsAdmin, validateUser } from '../_shared/validateUser.ts'
 import { manageRawError } from '../_shared/manageRawError.ts'
+
+const isValidUUIDList = (list: unknown): list is string[] => (
+  Array.isArray(list) && list.every(validateUUID)
+)
+const jsonResponseMessage = createJsonResponseMessage<null>()
 
 console.info(`Edge function "broadcast" up and running!`)
 
@@ -17,9 +22,7 @@ Deno.serve(async (req: Request) => {
 
   try {
     const { user_ids, message } = await req.json()
-    if (!(Array.isArray(user_ids) && user_ids.every(validateUUID))) {
-      return jsonResponseMessage('user_ids is not a valid list of UUID!', 400)
-    }
+    if (!isValidUUIDList(user_ids)) return jsonResponseMessage('user_ids is not a valid list of UUID!', 400)
     if (typeof message !== 'string') return jsonResponseMessage('message is not a string!', 400)
 
     const supabaseAdmin = createClient<Database>(

@@ -1,4 +1,6 @@
-import { jsonResponse, jsonResponseMessage } from './jsonResponse.ts'
+import { createJsonResponseMessage, jsonResponse } from './jsonResponse.ts'
+
+const jsonResponseMessage = createJsonResponseMessage<null>()
 
 export function manageRawError(rawError: unknown) {
   if (rawError instanceof Object) {

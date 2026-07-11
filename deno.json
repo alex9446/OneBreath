@@ -2,5 +2,21 @@
   "nodeModulesDir": "manual",
   "imports": {
     "@shared/": "./shared/"
+  },
+  // imported from @tsconfig/strictest/tsconfig.json
+  // "extends" is not supported in this config file
+  "compilerOptions": {
+    "strict": true,
+    "allowUnusedLabels": false,
+    "allowUnreachableCode": false,
+    "exactOptionalPropertyTypes": true,
+    "noFallthroughCasesInSwitch": true,
+    "noImplicitOverride": true,
+    "noImplicitReturns": true,
+    "noPropertyAccessFromIndexSignature": true,
+    "noUncheckedIndexedAccess": true,
+    "noUnusedLocals": true,
+    "noUnusedParameters": true,
+    "skipLibCheck": true
   }
 }

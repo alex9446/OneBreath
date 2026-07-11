@@ -1,10 +1,13 @@
 import { createClient } from '@supabase/supabase-js'
+import { LeaderboardExtra } from '@shared/functions.types.ts'
 import type { Database } from '@shared/database.types.ts'
-import { getDenoEnv } from '@shared/mixed.ts'
+import { getDenoEnv, isInteger } from '@shared/mixed.ts'
+import { createJsonResponseMessage } from '../_shared/jsonResponse.ts'
 import { corsHeaders } from '../_shared/cors.ts'
-import { jsonResponseMessage } from '../_shared/jsonResponse.ts'
 import { validateUser } from '../_shared/validateUser.ts'
 import { manageRawError } from '../_shared/manageRawError.ts'
+
+const jsonResponseMessage = createJsonResponseMessage<LeaderboardExtra>()
 
 console.info(`Edge function "leaderboard" up and running!`)
 
@@ -15,7 +18,7 @@ Deno.serve(async (req: Request) => {
 
   try {
     const { group } = await req.json()
-    if (!Number.isInteger(group)) return jsonResponseMessage('group is not an integer!', 400)
+    if (!isInteger(group)) return jsonResponseMessage('group is not an integer!', 400)
 
     const supabaseAdmin = createClient<Database>(
       getDenoEnv('SUPABASE_URL'),

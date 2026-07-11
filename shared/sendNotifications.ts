@@ -56,10 +56,11 @@ const sendNotifications = async (supabaseAdmin: SupabaseClientDB, userIds: strin
       }
     }
     if (statusCode === 201) return subscription.user_id
+    return null
   })
 
   const usersSuccessfullyNotified = await Promise.all(notificationProm)
-  return new Set(usersSuccessfullyNotified.filter((userId) => userId !== undefined))
+  return new Set(usersSuccessfullyNotified.filter((userId) => userId !== null))
 }
 
 export default sendNotifications

@@ -1,8 +1,10 @@
 import { getDenoEnv } from '@shared/mixed.ts'
+import { createJsonResponseMessage } from '../_shared/jsonResponse.ts'
 import { corsHeaders } from '../_shared/cors.ts'
-import { jsonResponseMessage } from '../_shared/jsonResponse.ts'
+import { startJob } from './startJob.ts'
 import { manageRawError } from '../_shared/manageRawError.ts'
-import { startJob } from "./startJob.ts";
+
+const jsonResponseMessage = createJsonResponseMessage<null>()
 
 console.info(`Edge function "restart-job" up and running!`)
 

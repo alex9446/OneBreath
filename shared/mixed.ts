@@ -13,3 +13,5 @@ export const getDenoEnv = (key: string) => {
   if (env === undefined) throw new Error(`${key} is undefined`)
   return env
 }
+
+export const isInteger = (value: unknown): value is number => Number.isInteger(value)
