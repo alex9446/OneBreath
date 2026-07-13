@@ -24,9 +24,9 @@ const Leaderboard = () => {
         <div class='grid'>
           <p>Nome</p><p>Numero presenze</p>
           <For each={leaderboard()?.extra}>
-            {(attendance) => (<>
-              <p>{attendance.first_name} {attendance.last_name}</p>
-              <p>{attendance.apg}</p>
+            {(athlete) => (<>
+              <p>{athlete.fullname}</p>
+              <p>{athlete.attendances}</p>
             </>)}
           </For>
         </div>

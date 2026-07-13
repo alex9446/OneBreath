@@ -292,7 +292,13 @@ export type Database = {
       }
     }
     Functions: {
-      [_ in never]: never
+      get_leaderboard: {
+        Args: { group_id_param: number; max_date: string; min_date: string }
+        Returns: {
+          attendances: number
+          fullname: string
+        }[]
+      }
     }
     Enums: {
       reminders: "attendance" | "certificate"
