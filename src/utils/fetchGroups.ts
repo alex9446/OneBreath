@@ -18,7 +18,7 @@ export const fetchGroups = async (supabaseClient: SupabaseClientDB) => {
   if (cachedGroups.length > 0) return cachedGroups
 
   const { data: groups, error } = await supabaseClient.from('groups')
-    .select('id,name').order('id')
+    .select('id,name,acronym').order('id')
   if (error) throw error.message
   setGroups(groups)
   return groups

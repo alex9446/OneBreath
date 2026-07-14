@@ -4,6 +4,7 @@ create table public.groups (
   days_of_week smallint[] not null default '{}'::smallint[],
   spreadsheet_id text null,
   disabled_reminders reminders[] not null default '{}'::reminders[],
+  acronym text not null,
   constraint groups_pkey primary key (id),
   constraint groups_name_key unique (name),
   constraint groups_spreadsheet_id_key unique (spreadsheet_id),

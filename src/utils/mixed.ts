@@ -41,7 +41,8 @@ export const base64ToUint8Array = (base64String: string) => {
   return outputArray
 }
 
-export const getGroupAcronym = (sentence: string | null) => {
+/** @deprecated use acronomy property */
+export const getGroupAcronym = (sentence: string | undefined) => {
   if (!sentence) return ''
   return sentence.trim().split(/[\s\(\)]+/).map((word) => word[0]).join('')
 }
@@ -59,8 +60,12 @@ export const getTodayDate = () => (
   new Date().toLocaleDateString('en-CA')
 )
 
-export const getDateLocaleIT = (date: string) => (
-  new Date(date).toLocaleDateString('it-IT')
+export const getDateLocaleIT = (date: string, shortYear: boolean = false) => (
+  new Date(date).toLocaleDateString('it-IT', {
+    day: '2-digit',
+    month: '2-digit',
+    year: shortYear ? '2-digit' : 'numeric'
+  })
 )
 
 export const getDateTimeLocaleIT = (date: string) => (

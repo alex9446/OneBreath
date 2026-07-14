@@ -5,10 +5,10 @@ select
   a.marked_day,
   a.group_id,
   a.user_id,
-  concat(p.first_name, ' ', p.last_name) as name
+  concat(p.first_name, ' ', p.last_name) as fullname
 from
   public.attendances as a
   join public.profiles as p on a.user_id = p.id
 order by
   a.marked_day desc,
-  name;
+  fullname;

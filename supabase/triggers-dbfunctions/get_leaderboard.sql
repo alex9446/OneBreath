@@ -7,18 +7,18 @@ as $$
     concat(p.first_name, ' ', p.last_name) as fullname,
     count(*) as attendances
   from
-    public.attendances a
-    join public.profiles p on a.user_id = p.id
+    public.attendances as a
+    join public.profiles as p on a.user_id = p.id
   where
     a.group_id = group_id_param
     and a.marked_day >= min_date
     and a.marked_day <= max_date
+    and p.leaderboard is true
   group by
-    a.user_id,
-    p.first_name,
-    p.last_name
+    p.id
   order by
-    attendances desc;
+    attendances desc,
+    fullname;
 $$;
 
 revoke execute on function public.get_leaderboard from public;

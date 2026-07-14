@@ -84,6 +84,7 @@ export type Database = {
       }
       groups: {
         Row: {
+          acronym: string
           days_of_week: number[]
           disabled_reminders: Database["public"]["Enums"]["reminders"][]
           id: number
@@ -91,6 +92,7 @@ export type Database = {
           spreadsheet_id: string | null
         }
         Insert: {
+          acronym: string
           days_of_week?: number[]
           disabled_reminders?: Database["public"]["Enums"]["reminders"][]
           id?: number
@@ -98,6 +100,7 @@ export type Database = {
           spreadsheet_id?: string | null
         }
         Update: {
+          acronym?: string
           days_of_week?: number[]
           disabled_reminders?: Database["public"]["Enums"]["reminders"][]
           id?: number
@@ -250,9 +253,9 @@ export type Database = {
     Views: {
       attendances_with_name: {
         Row: {
+          fullname: string | null
           group_id: number | null
           marked_day: string | null
-          name: string | null
           user_id: string | null
         }
         Relationships: [
@@ -264,31 +267,6 @@ export type Database = {
             referencedColumns: ["id"]
           },
         ]
-      }
-      leaderboard: {
-        Row: {
-          apg: number | null
-          first_name: string | null
-          group_id: number | null
-          last_name: string | null
-        }
-        Relationships: [
-          {
-            foreignKeyName: "attendances_group_id_fkey"
-            columns: ["group_id"]
-            isOneToOne: false
-            referencedRelation: "groups"
-            referencedColumns: ["id"]
-          },
-        ]
-      }
-      pretty_attendances: {
-        Row: {
-          group_name: string | null
-          marked_day: string | null
-          user_id: string | null
-        }
-        Relationships: []
       }
     }
     Functions: {

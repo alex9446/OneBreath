@@ -23,7 +23,7 @@ const Attendances = () => {
 
   const [attendances, {mutate}] = createResource(options, async ({ group, date }) => {
     const { data: attendances, error } = await supabaseClient.from('attendances_with_name')
-      .select('user_id,name').eq('group_id', group).eq('marked_day', date)
+      .select('user_id,fullname').eq('group_id', group).eq('marked_day', date)
     if (error) throw error.message
     return attendances
   })
@@ -67,7 +67,7 @@ const Attendances = () => {
         <For each={attendances()}>
           {(attendance) => (
             <li>
-              <A href={`${backPath()}/athletes/${attendance.user_id}`}>{attendance.name}</A>
+              <A href={`${backPath()}/athletes/${attendance.user_id}`}>{attendance.fullname}</A>
             </li>
           )}
         </For>
