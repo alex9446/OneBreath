@@ -1,6 +1,6 @@
-import { base64ToUint8Array, sha256 } from './mixed'
 import type { SupabaseClientDB } from '@shared/shortcut.types'
 import type { Json } from '@shared/database.types'
+import { base64ToUint8Array, sha256 } from './mixed'
 import { getUserId, silentTrackEvent } from './mixed.supabase'
 
 const subscriptionJson = (subscription: PushSubscription) => {

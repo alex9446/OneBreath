@@ -1,17 +1,17 @@
 import { createClient } from '@supabase/supabase-js'
 import { LeaderboardExtra } from '@shared/functions.types.ts'
 import type { Database } from '@shared/database.types.ts'
-import { getDenoEnv, isInteger } from '@shared/mixed.ts'
+import { FIRST_SEASON, isInteger } from '@shared/mixed.ts'
+import { getDenoEnv } from '@shared/mixed.deno.ts'
 import { createJsonResponseMessage } from '../_shared/jsonResponse.ts'
 import { corsHeaders } from '../_shared/cors.ts'
 import { validateUser } from '../_shared/validateUser.ts'
 import { manageRawError } from '../_shared/manageRawError.ts'
 
-const FIRST_SEASON = 2025
 const currentYear = () => Temporal.Now.plainDateISO('Europe/Rome').year
 
 const isValidSeason = (season: unknown): season is number => (
-  isInteger(season) && (season >= FIRST_SEASON || season <= currentYear())
+  isInteger(season) && season >= FIRST_SEASON && season <= currentYear()
 )
 const jsonResponseMessage = createJsonResponseMessage<LeaderboardExtra>()
 

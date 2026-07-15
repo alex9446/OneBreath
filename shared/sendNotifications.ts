@@ -1,7 +1,7 @@
 import { setVapidDetails, sendNotification, type PushSubscription } from 'web-push'
 import type { SupabaseClientDB } from './shortcut.types.ts'
 import { NotificationPayload } from './generic.types.ts'
-import { getDenoEnv } from './mixed.ts'
+import { getDenoEnv } from './mixed.deno.ts'
 
 const sendNotifications = async (supabaseAdmin: SupabaseClientDB, userIds: string[],
                                                                // 60*60*12 = 12 hours

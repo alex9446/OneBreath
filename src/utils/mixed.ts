@@ -130,3 +130,14 @@ export const downloadBlob = (data: Blob | MediaSource, downloadName: string) => 
   link.remove()
   return true
 }
+
+export const range = (start: number, stop: number, step: number = 1) => (
+  Array.from({ length: Math.ceil((stop - start) / step) }, (_, i) => start + i * step)
+)
+
+export const currentMonth = () => new Date().getMonth() + 1
+
+const currentYear = () => new Date().getFullYear()
+
+const NEW_SEASON_MONTH = 9
+export const currentSeason = () => currentYear() - (currentMonth() < NEW_SEASON_MONTH ? 1 : 0)

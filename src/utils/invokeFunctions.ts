@@ -24,8 +24,9 @@ const invokeBroadcast = ( supabaseClient: SupabaseClientDB,
 )
 
 const invokeLeaderboard = ( supabaseClient: SupabaseClientDB,
-                            groupId: number ): Promise<ResponseBody<LeaderboardExtra>> => (
-  invokeFunctions(supabaseClient, 'leaderboard', { 'group': groupId })
+                            groupId: number,
+                            season: number | undefined ): Promise<ResponseBody<LeaderboardExtra>> => (
+  invokeFunctions(supabaseClient, 'leaderboard', { 'group': groupId, 'season': season })
 )
 
 export { invokeAttendances, invokeBroadcast, invokeLeaderboard }

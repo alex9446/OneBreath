@@ -2,11 +2,11 @@
 @use '../components/placeholderSass/TwoColumnGrid'
 
 #leaderboard-page
-  align-items: center
   > p
     text-align: center
   > div.grid
     @extend %two-column-grid
     row-gap: 10px
+    align-self: center
   .hide-hint
     font-size: variables.$font-size-small

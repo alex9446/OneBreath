@@ -1,5 +1,6 @@
 import { createSignal, Show } from 'solid-js'
 import { action, useAction, useSubmission } from '@solidjs/router'
+import { currentMonth } from '../../utils/mixed'
 import { useSupabase } from '../../utils/context'
 import { getUserId } from '../../utils/mixed.supabase'
 import Title from '../../components/Title'
@@ -7,7 +8,7 @@ import ErrorBox from '../../components/ErrorBox'
 import GoBack from '../../components/GoBack'
 
 const PoolPayment = () => {
-  const nextMonth = ((new Date().getMonth() + 1) % 12) + 1
+  const nextMonth = (currentMonth() % 12) + 1
   const isSummer = nextMonth > 5 && nextMonth < 10
   const nextMonthStr = String(isSummer ? 10 : nextMonth).padStart(2, '0')
   const deadlines = {

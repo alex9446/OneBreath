@@ -1,6 +1,6 @@
 import type { SupabaseClientDB } from '@shared/shortcut.types'
-import { downloadBlob, setAdminInLS, setGroupInLS, userStatusRaw } from './mixed'
 import type { Enums, Json, Tables } from '@shared/database.types'
+import { downloadBlob, setAdminInLS, setGroupInLS, userStatusRaw } from './mixed'
 import { groupsById } from './fetchGroups'
 
 export const getUserId = async (supabaseClient: SupabaseClientDB) => {
@@ -54,7 +54,7 @@ export const userStatus = async (supabaseClient: SupabaseClientDB,
 
 export const profilesWithStatus = async (supabaseClient: SupabaseClientDB) => {
   const profilesProm = supabaseClient.from('profiles')
-    .select('id,first_name,last_name,group_id').order('first_name')
+    .select('id,first_name,last_name,group_id').order('first_name').order('last_name')
   const certificatesProm = supabaseClient.from('certificates').select('user_id,expiration')
   const paymentsProm = supabaseClient.from('payments').select('user_id,expiration')
   const subscriptionsProm = supabaseClient.from('subscriptions').select('user_id')

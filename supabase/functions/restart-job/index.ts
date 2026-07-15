@@ -1,4 +1,4 @@
-import { getDenoEnv } from '@shared/mixed.ts'
+import { getDenoEnv } from '@shared/mixed.deno.ts'
 import { createJsonResponseMessage } from '../_shared/jsonResponse.ts'
 import { corsHeaders } from '../_shared/cors.ts'
 import { startJob } from './startJob.ts'
@@ -25,7 +25,7 @@ Deno.serve(async (req: Request) => {
     if (typeof started !== 'boolean') return jsonResponseMessage('started is not a boolean!', 400)
     if (started) return jsonResponseMessage('started is not false, see job logs', 200)
 
-    const start = await startJob(slug)
+    const start = await startJob(slug, getDenoEnv('SCW_REGION'), getDenoEnv('SCW_SECRET_KEY'))
     if (start.error) return jsonResponseMessage(start.error.message, start.error.code)
 
     return jsonResponseMessage(`start request sended -> ${start.data.statusCode}`, 200)

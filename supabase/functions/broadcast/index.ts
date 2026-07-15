@@ -1,7 +1,7 @@
 import { validate as validateUUID } from 'uuid'
 import { createClient } from '@supabase/supabase-js'
 import type { Database } from '@shared/database.types.ts'
-import { getDenoEnv } from '@shared/mixed.ts'
+import { getDenoEnv } from '@shared/mixed.deno.ts'
 import sendNotifications from '@shared/sendNotifications.ts'
 import { createJsonResponseMessage } from '../_shared/jsonResponse.ts'
 import { corsHeaders } from '../_shared/cors.ts'

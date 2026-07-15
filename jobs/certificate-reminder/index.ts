@@ -1,5 +1,5 @@
 import { createClient } from '@supabase/supabase-js'
-import { getDenoEnv, sendHeartbeat } from '@shared/mixed.ts'
+import { getDenoEnv, sendHeartbeat } from '@shared/mixed.deno.ts'
 import { Database } from '@shared/database.types.ts'
 import sendNotifications from '@shared/sendNotifications.ts'
 
