@@ -41,12 +41,6 @@ export const base64ToUint8Array = (base64String: string) => {
   return outputArray
 }
 
-/** @deprecated use acronomy property */
-export const getGroupAcronym = (sentence: string | undefined) => {
-  if (!sentence) return ''
-  return sentence.trim().split(/[\s\(\)]+/).map((word) => word[0]).join('')
-}
-
 const capitalize = (word: string) => (
   word.charAt(0).toUpperCase() + word.slice(1).toLowerCase()
 )

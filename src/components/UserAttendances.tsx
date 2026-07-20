@@ -2,7 +2,7 @@ import { createResource, For, Suspense, type Component } from 'solid-js'
 import { useSupabase } from '../utils/context'
 import { getUserId } from '../utils/mixed.supabase'
 import { groupsById } from '../utils/fetchGroups'
-import { getDateLocaleIT, getGroupAcronym } from '../utils/mixed'
+import { getDateLocaleIT } from '../utils/mixed'
 import GroupLegend from '../components/GroupLegend'
 import './UserAttendances.sass'
 
@@ -19,7 +19,7 @@ const UserAttendances: Component<{ id?: string }> = (props) => {
     if (error) throw error.message
     return attendances.map((attendance) => ({
       markedDay: getDateLocaleIT(attendance.marked_day, true),
-      groupAcronym: getGroupAcronym(groups[attendance.group_id]?.name)
+      groupAcronym: groups[attendance.group_id]?.acronym
     }))
   })
 

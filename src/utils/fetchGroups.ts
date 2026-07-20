@@ -4,6 +4,7 @@ import type { SupabaseClientDB } from '@shared/shortcut.types'
 type Group = {
   id: number
   name: string
+  acronym: string
 }
 type Groups = Group[]
 
