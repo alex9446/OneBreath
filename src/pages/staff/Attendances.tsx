@@ -1,6 +1,6 @@
 import { createMemo, createResource, For } from 'solid-js'
 import { A, useNavigate, useParams } from '@solidjs/router'
-import { getGroupFromLS, getTodayDate } from '../../utils/mixed'
+import { getDateString, getGroupFromLS, getTodayDate } from '../../utils/mixed'
 import { useSupabase } from '../../utils/context'
 import { W12H24MenuLeft, W12H24MenuRight } from '../../utils/iconPaths'
 import Title from '../../components/Title'
@@ -13,11 +13,13 @@ const Attendances = () => {
   const navigate = useNavigate()
   const supabaseClient = useSupabase()
   const params = useParams()
-  const todayDate = getTodayDate()
+  const minDate = '2025-10-23'
+  const maxDate = getTodayDate()
+
   const options = createMemo(() => {
     const [groupStr = '', date] = params['groupDate']?.split('g') ?? []
     const group = parseInt(groupStr)
-    if (Number.isNaN(group) || !date) return { group: getGroupFromLS(), date: todayDate }
+    if (Number.isNaN(group) || !date) return { group: getGroupFromLS(), date: maxDate }
     return { group, date }
   })
 
@@ -28,24 +30,30 @@ const Attendances = () => {
     return attendances
   })
 
-  let selectGroup!: HTMLSelectElement
-  let inputDate!: HTMLInputElement
-
-  const onInputEvent = () => {
-    if (!inputDate.value) return
+  const navigateToRoute = (group: number, date: string) => {
     mutate([])
-    navigate(`${params['groupDate'] ? '..' : '.'}/${selectGroup.value}g${inputDate.value}`)
+    navigate(`${params['groupDate'] ? '..' : '.'}/${group}g${date}`)
   }
 
+  const onGroupChange = (group: number) => navigateToRoute(group, options().date)
+
+  const onDateChange = (date: string) => navigateToRoute(options().group, date)
+
+  const canChangeDate = (days: number, date: Date) => {
+    if (days < 0 && date <= new Date(minDate)) return false
+    if (days > 0 && date >= new Date(maxDate)) return false
+    return true
+  }
+
+  const canChangeDateCL = (days: number) => ({
+    disabled: !canChangeDate(days, new Date(options().date))
+  })
+
   const changeDate = (days: number) => {
-    let date = inputDate.valueAsDate
-    if (!date) return
-    const { value } = inputDate
-    if (days < 0 && value === inputDate.min) return
-    if (days > 0 && value === inputDate.max) return
+    const date = new Date(options().date)
+    if (!canChangeDate(days, date)) return
     date.setDate(date.getDate() + days)
-    inputDate.valueAsDate = date
-    onInputEvent()
+    onDateChange(getDateString(date))
   }
 
   const backPath = () => params['groupDate'] ? '../..' : '..'
@@ -53,14 +61,14 @@ const Attendances = () => {
   return (<>
     <Title>Area staff &gt; Storico presenze</Title>
     <main id='attendances-page'>
-      <SelectGroup ref={selectGroup} defaultOption={options().group} set={onInputEvent} />
+      <SelectGroup defaultOption={options().group} set={onGroupChange} />
       <div class='date-selector'>
-        <Icon path={W12H24MenuLeft} width={18} viewBox='12 24'
-              title='giorno precedente' onClick={() => changeDate(-1)} />
-        <input type='date' ref={inputDate} required onInput={onInputEvent}
-               value={options().date} min='2025-10-23' max={todayDate} />
-        <Icon path={W12H24MenuRight} width={18} viewBox='12 24'
-              title='giorno successivo' onClick={() => changeDate(1)} />
+        <Icon path={W12H24MenuLeft} width={18} viewBox='12 24' title='giorno precedente'
+              onClick={() => changeDate(-1)} classList={canChangeDateCL(-1)} />
+        <input type='date' required onInput={(e) => onDateChange(e.currentTarget.value)}
+               value={options().date} min={minDate} max={maxDate} />
+        <Icon path={W12H24MenuRight} width={18} viewBox='12 24' title='giorno successivo'
+              onClick={() => changeDate(1)} classList={canChangeDateCL(1)} />
       </div>
       <p>{attendances.loading ? 'Caricamento...' : `Totale: ${attendances()?.length}`}</p>
       <ul>

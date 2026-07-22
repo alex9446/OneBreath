@@ -49,10 +49,10 @@ export const capwords = (str: string, separator: string = ' ') => (
   str.split(separator).map(capitalize).join(separator)
 )
 
-export const getTodayDate = () => (
-  // en-CA because by default it formats dates as yyyy-mm-dd
-  new Date().toLocaleDateString('en-CA')
-)
+// en-CA because by default it formats dates as yyyy-mm-dd
+export const getDateString = (date: Date) => date.toLocaleDateString('en-CA')
+
+export const getTodayDate = () => getDateString(new Date())
 
 export const getDateLocaleIT = (date: string, shortYear: boolean = false) => (
   new Date(date).toLocaleDateString('it-IT', {
