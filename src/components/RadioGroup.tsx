@@ -1,5 +1,5 @@
 import { createResource, For } from 'solid-js'
-import { useSupabase } from '../utils/context'
+import { useSupabase } from '../utils/supabaseContext'
 import { fetchGroups } from '../utils/fetchGroups'
 import FallbackGroups from './FallbackGroups'
 import './RadioGroup.sass'

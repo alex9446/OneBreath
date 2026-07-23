@@ -1,5 +1,5 @@
 import { action, redirect, useAction, useSubmission } from '@solidjs/router'
-import { useSupabase } from '../utils/context'
+import { useSupabase } from '../utils/supabaseContext'
 import ErrorBox from './ErrorBox'
 
 const LogoutButton = () => {

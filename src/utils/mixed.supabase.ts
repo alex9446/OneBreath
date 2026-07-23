@@ -3,13 +3,6 @@ import type { Enums, Json, Tables } from '@shared/database.types'
 import { downloadBlob, setAdminInLS, setGroupInLS, userStatusRaw } from './mixed'
 import { groupsById } from './fetchGroups'
 
-export const getUserId = async (supabaseClient: SupabaseClientDB) => {
-  const { data: { session }, error } = await supabaseClient.auth.getSession()
-  if (error) throw error.message
-  if (!session) throw 'session is null'
-  return session.user.id
-}
-
 export const fillLocalStorage = async (supabaseClient: SupabaseClientDB, userId: string) => {
   const profileProm = supabaseClient.from('profiles')
     .select('group_id').eq('id', userId).single()
@@ -40,9 +33,7 @@ export const contactsByZone = async (supabaseClient: SupabaseClientDB) => {
   }, {} as Record<ContactByZone['zone'], ContactByZone>))
 }
 
-export const userStatus = async (supabaseClient: SupabaseClientDB,
-                                 idPromise?: Promise<string>) => {
-  const userId = await idPromise ?? await getUserId(supabaseClient)
+export const userStatus = async (supabaseClient: SupabaseClientDB, userId: string) => {
   const certificateProm = supabaseClient.from('certificates')
     .select('expiration').eq('user_id', userId).maybeSingle()
   const paymentProm = supabaseClient.from('payments')
@@ -98,10 +89,9 @@ export const downloadCertificate = async (supabaseClient: SupabaseClientDB,
   return downloadBlob(data, downloadName ?? path.split('/').pop() ?? path)
 }
 
-export const silentTrackEvent = async (supabaseClient: SupabaseClientDB,
+export const silentTrackEvent = async (supabaseClient: SupabaseClientDB, userId: string,
                                        eventName: string, metadata: Json = null) => {
   try {
-    const userId = await getUserId(supabaseClient)
     await supabaseClient.from('tracking_events').insert([
       { user_id: userId, event_name: eventName, metadata }
     ])

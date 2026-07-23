@@ -1,7 +1,7 @@
 import { createResource, For, Show, type Component } from 'solid-js'
 import { action, useAction, useSubmission } from '@solidjs/router'
 import { getDateTimeLocaleIT } from '../../../../utils/mixed'
-import { useSupabase } from '../../../../utils/context'
+import { useSupabase } from '../../../../utils/supabaseContext'
 import { invokeBroadcast } from '../../../../utils/invokeFunctions'
 import Title from '../../../../components/Title'
 import ErrorBox from '../../../../components/ErrorBox'

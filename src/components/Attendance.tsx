@@ -1,5 +1,5 @@
 import { createResource, Match, Show, Switch } from 'solid-js'
-import { useSupabase } from '../utils/context'
+import { useSupabase } from '../utils/supabaseContext'
 import { getGroupFromLS } from '../utils/mixed'
 import { invokeAttendances } from '../utils/invokeFunctions'
 import { groupsById } from '../utils/fetchGroups'

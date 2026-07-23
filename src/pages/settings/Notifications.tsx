@@ -1,6 +1,7 @@
 import { createResource, createSignal, onMount, Show } from 'solid-js'
 import { action, useAction, useSubmission } from '@solidjs/router'
-import { useSupabase } from '../../utils/context'
+import { useSupabase } from '../../utils/supabaseContext'
+import { useUserId } from '../../utils/userIdContext'
 import { getSubscription, subscribeIsSupported, subscribeUser, unsubscribeUser } from '../../utils/subscribeUser'
 import Title from '../../components/Title'
 import ErrorBox from '../../components/ErrorBox'
@@ -9,13 +10,14 @@ import './Notification.sass'
 
 const Notifications = () => {
   const supabaseClient = useSupabase()
+  const userId = useUserId()
   const [subscribeSupported, setSubscribeSupported] = createSignal(false)
   const [subscription, { refetch }] = createResource(getSubscription)
 
   onMount(() => subscribeIsSupported().then((supported) => setSubscribeSupported(supported)))
 
   const activate = action(async () => {
-    await subscribeUser(supabaseClient)
+    await subscribeUser(supabaseClient, userId)
     await refetch()
     return { ok: true }
   })

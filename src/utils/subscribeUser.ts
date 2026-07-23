@@ -1,7 +1,7 @@
 import type { SupabaseClientDB } from '@shared/shortcut.types'
 import type { Json } from '@shared/database.types'
 import { base64ToUint8Array, sha256 } from './mixed'
-import { getUserId, silentTrackEvent } from './mixed.supabase'
+import { silentTrackEvent } from './mixed.supabase'
 
 const subscriptionJson = (subscription: PushSubscription) => {
   return JSON.stringify(subscription.toJSON())
@@ -25,18 +25,17 @@ const createSubscription = async () => {
   })
 }
 
-const sendToServer = async (supabaseClient: SupabaseClientDB,
+const sendToServer = async (supabaseClient: SupabaseClientDB, userId: string,
                             subscription: PushSubscription) => {
-  const userId = await getUserId(supabaseClient)
   const { error } = await supabaseClient.from('subscriptions').insert([
     { user_id: userId, subscription_json: subscription.toJSON() as Json }
   ])
   if (error) throw error.message
 }
 
-export const subscribeUser = async (supabaseClient: SupabaseClientDB) => {
+export const subscribeUser = async (supabaseClient: SupabaseClientDB, userId: string) => {
   const subscription = await createSubscription()
-  await sendToServer(supabaseClient, subscription)
+  await sendToServer(supabaseClient, userId, subscription)
   localStorage.setItem('subscriptionHash', await subscriptionSha(subscription))
 }
 
@@ -52,7 +51,8 @@ export const subscribeIsSupported = async () => {
   return false
 }
 
-export const silentSubscriptionUpdate = async (supabaseClient: SupabaseClientDB) => {
+export const silentSubscriptionUpdate = async (supabaseClient: SupabaseClientDB,
+                                               userId: string) => {
   try {
     if (!await subscribeIsSupported()) return
     const subscription = await getSubscription()
@@ -60,14 +60,14 @@ export const silentSubscriptionUpdate = async (supabaseClient: SupabaseClientDB)
       const subscriptionHash = await subscriptionSha(subscription)
       if (localStorage.getItem('subscriptionHash') === subscriptionHash) return
       try {
-        await sendToServer(supabaseClient, subscription)
+        await sendToServer(supabaseClient, userId, subscription)
       } catch (error) {
         if (typeof error !== 'string' || !error.includes('duplicate key')) throw error
       }
       localStorage.setItem('subscriptionHash', subscriptionHash)
     } else if (Notification.permission === 'granted') {
       const metadata = { user_agent: navigator.userAgent }
-      await silentTrackEvent(supabaseClient, 'notification-granted', metadata)
+      await silentTrackEvent(supabaseClient, userId, 'notification-granted', metadata)
     }
   } catch {}
 }

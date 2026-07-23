@@ -1,5 +1,5 @@
 import { createResource, For } from 'solid-js'
-import { useSupabase } from '../utils/context'
+import { useSupabase } from '../utils/supabaseContext'
 import { contactsByZone } from '../utils/mixed.supabase'
 import Title from '../components/Title'
 import FakeButtonNative from '../components/FakeButtonNative'

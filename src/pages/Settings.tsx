@@ -1,8 +1,8 @@
 import { createResource } from 'solid-js'
 import { action, redirect, useSubmission } from '@solidjs/router'
 import { FormManager, getGroupFromLS, setGroupInLS } from '../utils/mixed'
-import { useSupabase } from '../utils/context'
-import { getUserId } from '../utils/mixed.supabase'
+import { useSupabase } from '../utils/supabaseContext'
+import { useUserId } from '../utils/userIdContext'
 import Title from '../components/Title'
 import SelectGroup from '../components/SelectGroup'
 import Checkbox from '../components/Checkbox'
@@ -13,11 +13,11 @@ import GoBack from '../components/GoBack'
 const Settings = () => {
   const groupId = getGroupFromLS()
   const supabaseClient = useSupabase()
-  const userIdPromise = getUserId(supabaseClient)
+  const userId = useUserId()
 
   const [leaderboard] = createResource(async () => {
     const { data: profile, error } = await supabaseClient.from('profiles')
-      .select('leaderboard').eq('id', await userIdPromise).single()
+      .select('leaderboard').eq('id', userId).single()
     if (error) throw error.message
     return profile.leaderboard
   })
@@ -27,7 +27,7 @@ const Settings = () => {
     const group_id = parseInt(formManager.getString('group'))
     const leaderboard = formManager.getBoolean('leaderboard')
     const { error } = await supabaseClient.from('profiles')
-      .update({ group_id, leaderboard }).eq('id', await userIdPromise)
+      .update({ group_id, leaderboard }).eq('id', userId)
     if (error) throw error.message
     setGroupInLS(group_id)
     throw redirect('/')

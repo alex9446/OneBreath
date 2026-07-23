@@ -1,20 +1,18 @@
 import { createResource, For, Suspense, type Component } from 'solid-js'
-import { useSupabase } from '../utils/context'
-import { getUserId } from '../utils/mixed.supabase'
+import { useSupabase } from '../utils/supabaseContext'
 import { groupsById } from '../utils/fetchGroups'
 import { getDateLocaleIT } from '../utils/mixed'
 import GroupLegend from '../components/GroupLegend'
 import './UserAttendances.sass'
 
-const UserAttendances: Component<{ id?: string }> = (props) => {
+const UserAttendances: Component<{ id: string }> = (props) => {
   const supabaseClient = useSupabase()
 
   const [attendances] = createResource(async () => {
-    const userId = props.id ?? await getUserId(supabaseClient)
     const groups = await groupsById(supabaseClient)
     const { data: attendances, error } = await supabaseClient.from('attendances')
       .select('marked_day,group_id')
-      .eq('user_id', userId)
+      .eq('user_id', props.id)
       .order('marked_day', { ascending: false })
     if (error) throw error.message
     return attendances.map((attendance) => ({

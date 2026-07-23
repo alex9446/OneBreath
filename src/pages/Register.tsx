@@ -1,6 +1,6 @@
 import { createSignal } from 'solid-js'
 import { action, redirect, useSubmission } from '@solidjs/router'
-import { useSupabase } from '../utils/context'
+import { useSupabase } from '../utils/supabaseContext'
 import { capwords, FormManager, setGroupInLS } from '../utils/mixed'
 import Title from '../components/Title'
 import RadioGroup from '../components/RadioGroup'

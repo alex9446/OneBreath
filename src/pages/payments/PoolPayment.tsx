@@ -1,8 +1,8 @@
 import { createSignal, Show } from 'solid-js'
 import { action, useAction, useSubmission } from '@solidjs/router'
 import { currentMonth } from '../../utils/mixed'
-import { useSupabase } from '../../utils/context'
-import { getUserId } from '../../utils/mixed.supabase'
+import { useSupabase } from '../../utils/supabaseContext'
+import { useUserId } from '../../utils/userIdContext'
 import Title from '../../components/Title'
 import ErrorBox from '../../components/ErrorBox'
 import GoBack from '../../components/GoBack'
@@ -18,10 +18,10 @@ const PoolPayment = () => {
   }
 
   const supabaseClient = useSupabase()
+  const userId = useUserId()
   const [nextDeadline, setNextDeadline] = createSignal(deadlines['1m'])
 
   const upsertPayment = action(async () => {
-    const userId = await getUserId(supabaseClient)
     const { error } = await supabaseClient.from('payments')
       .upsert({ user_id: userId, expiration: nextDeadline() })
     if (error) throw error.message

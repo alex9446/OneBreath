@@ -1,5 +1,5 @@
 import { onCleanup, onMount, type ParentComponent } from 'solid-js'
-import { Provider } from '../utils/context'
+import { SupabaseProvider } from '../utils/supabaseContext'
 import DomainChangeAlert from './DomainChangeAlert'
 import CreditsInFooter from './CreditsInFooter'
 import { GenericOnMount } from './OnMountSupabase'
@@ -41,12 +41,12 @@ const RootComponent: ParentComponent = (props) => {
   })
 
   return (
-    <Provider>
+    <SupabaseProvider>
       <DomainChangeAlert />
       {props.children}
       <CreditsInFooter />
       <GenericOnMount />
-    </Provider>
+    </SupabaseProvider>
   )
 }
 

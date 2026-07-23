@@ -1,5 +1,5 @@
 import { createResource, For, Suspense } from 'solid-js'
-import { useSupabase } from '../../utils/context'
+import { useSupabase } from '../../utils/supabaseContext'
 import { getDateLocaleIT } from '../../utils/mixed'
 import Title from '../../components/Title'
 import GoBack from '../../components/GoBack'

@@ -1,8 +1,8 @@
 import { createResource, Show } from 'solid-js'
 import { action, useSubmission } from '@solidjs/router'
-import { useSupabase } from '../../utils/context'
+import { useSupabase } from '../../utils/supabaseContext'
+import { useUserId } from '../../utils/userIdContext'
 import { FormManager, getTodayDate } from '../../utils/mixed'
-import { getUserId } from '../../utils/mixed.supabase'
 import Title from '../../components/Title'
 import ErrorBox from '../../components/ErrorBox'
 import GoBack from '../../components/GoBack'
@@ -12,6 +12,7 @@ const ByteMultiple = 1000
 
 const UploadCertificate = () => {
   const supabaseClient = useSupabase()
+  const userId = useUserId()
 
   const [bucketMetadata] = createResource(async () => {
     const { data, error } = await supabaseClient.storage.getBucket('certificates')
@@ -24,7 +25,6 @@ const UploadCertificate = () => {
 
   const uploadAction = action(async (formData: FormData) => {
     const formManager = new FormManager(formData)
-    const userId = await getUserId(supabaseClient)
     const file = formManager.get('file')
     const date = formManager.getString('date')
 

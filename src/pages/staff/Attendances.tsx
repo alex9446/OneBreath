@@ -1,7 +1,7 @@
 import { createMemo, createResource, For } from 'solid-js'
 import { A, useNavigate, useParams } from '@solidjs/router'
 import { getDateString, getGroupFromLS, getTodayDate } from '../../utils/mixed'
-import { useSupabase } from '../../utils/context'
+import { useSupabase } from '../../utils/supabaseContext'
 import { W12H24MenuLeft, W12H24MenuRight } from '../../utils/iconPaths'
 import Title from '../../components/Title'
 import SelectGroup from '../../components/SelectGroup'

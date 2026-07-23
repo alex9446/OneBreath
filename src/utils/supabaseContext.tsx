@@ -4,7 +4,7 @@ import type { SupabaseClientDB } from '@shared/shortcut.types'
 
 const supabaseContext = createContext<SupabaseClientDB>()
 
-export const Provider: ParentComponent = (props) => {
+export const SupabaseProvider: ParentComponent = (props) => {
   const supabase = createClient(
     import.meta.env.VITE_SUPABASE_URL,
     import.meta.env.VITE_SUPABASE_PUBLISHABLE_KEY

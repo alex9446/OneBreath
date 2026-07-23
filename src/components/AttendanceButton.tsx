@@ -1,6 +1,6 @@
 import type { Component } from 'solid-js'
 import { action, useAction, useSubmission } from '@solidjs/router'
-import { useSupabase } from '../utils/context'
+import { useSupabase } from '../utils/supabaseContext'
 import { invokeAttendances } from '../utils/invokeFunctions'
 import ErrorBox from './ErrorBox'
 

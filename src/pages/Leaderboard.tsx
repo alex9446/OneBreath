@@ -1,6 +1,6 @@
 import { createResource, createSignal, For, Suspense } from 'solid-js'
 import { A } from '@solidjs/router'
-import { useSupabase } from '../utils/context'
+import { useSupabase } from '../utils/supabaseContext'
 import { currentSeason, getGroupFromLS } from '../utils/mixed'
 import { invokeLeaderboard } from '../utils/invokeFunctions'
 import Title from '../components/Title'

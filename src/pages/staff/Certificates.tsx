@@ -1,7 +1,7 @@
 import { createResource, createSignal, For, Suspense } from 'solid-js'
 import { action, useAction, useSubmission } from '@solidjs/router'
 import type { Tables } from '@shared/database.types'
-import { useSupabase } from '../../utils/context'
+import { useSupabase } from '../../utils/supabaseContext'
 import { downloadCertificate } from '../../utils/mixed.supabase'
 import { expirationStatus, getDateLocaleIT } from '../../utils/mixed'
 import { mdiTrayArrowDown } from '../../utils/iconPaths'

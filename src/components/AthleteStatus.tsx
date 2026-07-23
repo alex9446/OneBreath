@@ -1,6 +1,7 @@
 import { createResource } from 'solid-js'
 import { A } from '@solidjs/router'
-import { useSupabase } from '../utils/context'
+import { useSupabase } from '../utils/supabaseContext'
+import { useUserId } from '../utils/userIdContext'
 import { userStatus } from '../utils/mixed.supabase'
 import { mdiCashSync, mdiClipboardPulseOutline } from '../utils/iconPaths'
 import Icon from './Icon'
@@ -8,7 +9,9 @@ import './AthleteStatus.sass'
 
 const AthleteStatus = () => {
   const supabaseClient = useSupabase()
-  const [status] = createResource(() => userStatus(supabaseClient))
+  const userId = useUserId()
+
+  const [status] = createResource(() => userStatus(supabaseClient, userId))
 
   return (
     <A href='/status'

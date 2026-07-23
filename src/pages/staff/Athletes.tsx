@@ -1,6 +1,6 @@
 import { createResource, createSignal, For, Show } from 'solid-js'
 import { useParams } from '@solidjs/router'
-import { useSupabase } from '../../utils/context'
+import { useSupabase } from '../../utils/supabaseContext'
 import { profilesWithStatus } from '../../utils/mixed.supabase'
 import Title from '../../components/Title'
 import FilterProfiles from '../../components/FilterProfiles'

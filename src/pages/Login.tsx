@@ -1,5 +1,5 @@
 import { A, action, redirect, useSubmission } from '@solidjs/router'
-import { useSupabase } from '../utils/context'
+import { useSupabase } from '../utils/supabaseContext'
 import { FormManager } from '../utils/mixed'
 import { fillLocalStorage } from '../utils/mixed.supabase'
 import Title from '../components/Title'

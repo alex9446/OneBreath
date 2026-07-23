@@ -1,7 +1,8 @@
 import { createResource, Match, Show, Suspense, Switch, type Component } from 'solid-js'
 import { getDateLocaleIT } from '../utils/mixed'
-import { useSupabase } from '../utils/context'
-import { getUserId, userStatus } from '../utils/mixed.supabase'
+import { useSupabase } from '../utils/supabaseContext'
+import { useUserId } from '../utils/userIdContext'
+import { userStatus } from '../utils/mixed.supabase'
 import Title from '../components/Title'
 import DownloadCertButton from '../components/DownloadCertButton'
 import FakeButton from '../components/FakeButton'
@@ -40,9 +41,9 @@ const ExpirationInfo: Component<ExpirationProps> = (props) => {
 
 const Status = () => {
   const supabaseClient = useSupabase()
-  const userIdPromise = getUserId(supabaseClient)
+  const userId = useUserId()
 
-  const [status] = createResource(() => userStatus(supabaseClient, userIdPromise))
+  const [status] = createResource(() => userStatus(supabaseClient, userId))
 
   return (<>
     <Title>Stato profilo</Title>
@@ -54,7 +55,7 @@ const Status = () => {
                           date={status()?.certificateExpiration} />
         </Suspense>
         <Show when={status()?.certificate.notfound === false}>
-          <DownloadCertButton userId={userIdPromise} />
+          <DownloadCertButton userId={userId} />
         </Show>
         <FakeButton href='/sportexam/uploadcertificate'>Carica certificato</FakeButton>
       </article>

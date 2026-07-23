@@ -1,7 +1,8 @@
 import { createSignal, onMount, Show } from 'solid-js'
 import { action, useAction, useSubmission } from '@solidjs/router'
 import Cookies from 'js-cookie'
-import { useSupabase } from '../utils/context'
+import { useSupabase } from '../utils/supabaseContext'
+import { useUserId } from '../utils/userIdContext'
 import { getSubscription, subscribeIsSupported, subscribeUser } from '../utils/subscribeUser'
 import { silentTrackEvent } from '../utils/mixed.supabase'
 import ErrorBox from './ErrorBox'
@@ -9,6 +10,7 @@ import './NotificationBanner.sass'
 
 const NotificationBanner = () => {
   const supabaseClient = useSupabase()
+  const userId = useUserId()
   const [showBanner, setShowBanner] = createSignal(false)
 
   onMount(() => {
@@ -21,7 +23,7 @@ const NotificationBanner = () => {
   })
 
   const activate = action(async () => {
-    await subscribeUser(supabaseClient)
+    await subscribeUser(supabaseClient, userId)
     setShowBanner(false)
     return { ok: true }
   })
@@ -34,7 +36,7 @@ const NotificationBanner = () => {
   }
 
   const handleNever = () => {
-    silentTrackEvent(supabaseClient, 'never-notification-banner')
+    silentTrackEvent(supabaseClient, userId, 'never-notification-banner')
     Cookies.set('hideNotificationBanner', 'yes', { expires: 365 })
     setShowBanner(false)
   }

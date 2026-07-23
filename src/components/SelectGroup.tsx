@@ -1,5 +1,5 @@
 import { createResource, For, type Component } from 'solid-js'
-import { useSupabase } from '../utils/context'
+import { useSupabase } from '../utils/supabaseContext'
 import { fetchGroups } from '../utils/fetchGroups'
 
 type SelectGroupProps = {

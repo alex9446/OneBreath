@@ -1,6 +1,6 @@
 import { createSignal, Show } from 'solid-js'
 import { action, useSubmission } from '@solidjs/router'
-import { useSupabase } from '../../utils/context'
+import { useSupabase } from '../../utils/supabaseContext'
 import { FormManager } from '../../utils/mixed'
 import Title from '../../components/Title'
 import ErrorBox from '../../components/ErrorBox'

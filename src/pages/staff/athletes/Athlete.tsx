@@ -2,8 +2,8 @@ import { Show, type Component } from 'solid-js'
 import { action, useAction, useSubmission } from '@solidjs/router'
 import type { Tables } from '@shared/database.types'
 import { getDateLocaleIT, type userStatusRaw } from '../../../utils/mixed'
-import { useSupabase } from '../../../utils/context'
-import { getUserId } from '../../../utils/mixed.supabase'
+import { useSupabase } from '../../../utils/supabaseContext'
+import { useUserId } from '../../../utils/userIdContext'
 import ErrorBox from '../../../components/ErrorBox'
 import DownloadCertButton from '../../../components/DownloadCertButton'
 import UserAttendances from '../../../components/UserAttendances'
@@ -35,10 +35,10 @@ type AthleteProps = {
 
 const Athlete: Component<AthleteProps> = (props) => {
   const supabaseClient = useSupabase()
+  const currentAdminId = useUserId()
 
   const insertAdmin = action(async () => {
     if (!window.confirm(confirmMessage(props.profile.first_name))) return { ok: false }
-    const currentAdminId = await getUserId(supabaseClient)
     const { error } = await supabaseClient.from('admins').insert([
       { id: props.profile.id, added_by: currentAdminId }
     ])
