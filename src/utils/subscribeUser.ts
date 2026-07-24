@@ -1,15 +1,15 @@
 import type { SupabaseClientDB } from '@shared/shortcut.types'
 import type { Json } from '@shared/database.types'
-import { base64ToUint8Array, sha256 } from './mixed'
+import { sha256, urlB64ToUint8Array } from './mixed'
 import { silentTrackEvent } from './mixed.supabase'
 
-const subscriptionJson = (subscription: PushSubscription) => {
-  return JSON.stringify(subscription.toJSON())
-}
+const subscriptionJson = (subscription: PushSubscription) => (
+  JSON.stringify(subscription.toJSON())
+)
 
-const subscriptionSha = async (subscription: PushSubscription) => {
-  return await sha256(subscriptionJson(subscription))
-}
+const subscriptionSha = (subscription: PushSubscription) => (
+  sha256(subscriptionJson(subscription))
+)
 
 export const getSubscription = async () => {
   const registration = await navigator.serviceWorker.ready
@@ -18,7 +18,7 @@ export const getSubscription = async () => {
 
 const createSubscription = async () => {
   const registration = await navigator.serviceWorker.ready
-  const convertedVapidKey = base64ToUint8Array(import.meta.env.VITE_VAPID_PUBLIC_KEY)
+  const convertedVapidKey = urlB64ToUint8Array(import.meta.env.VITE_VAPID_PUBLIC_KEY)
   return await registration.pushManager.subscribe({
     userVisibleOnly: true,
     applicationServerKey: convertedVapidKey
