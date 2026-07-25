@@ -1,0 +1,13 @@
+#!/bin/sh
+
+set -e
+
+echo "PRE-commit check..."
+
+# mute stdout ad stderr
+[ "$1" != "-v" ] && exec > /dev/null 2>&1
+
+deno check
+deno lint
+npx tsc -b
+npx eslint

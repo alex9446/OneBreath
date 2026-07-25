@@ -14,10 +14,7 @@ const ChangePassword = () => {
   const userId = useUserId()
   const [success, setSuccess] = createSignal(false)
 
-  onMount(() => {
-    if (!location.search.includes('reset')) return
-    fillLocalStorage(supabaseClient, userId)
-  })
+  onMount(() => location.search.includes('reset') && fillLocalStorage(supabaseClient, userId))
 
   const setNewPassword = action(async (formData: FormData) => {
     const formManager = new FormManager(formData)

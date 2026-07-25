@@ -95,5 +95,7 @@ export const silentTrackEvent = async (supabaseClient: SupabaseClientDB, userId:
     await supabaseClient.from('tracking_events').insert([
       { user_id: userId, event_name: eventName, metadata }
     ])
-  } catch {}
+  } catch {
+    // deliberately empty
+  }
 }

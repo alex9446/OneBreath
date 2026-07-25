@@ -33,9 +33,10 @@ const MidweekHolidays = lazy(() => import('./pages/staff/MidweekHolidays'))
 const NotFound = lazy(() => import('./pages/NotFound'))
 
 const root = document.getElementById('root')
+if (!root) throw new Error('element with ID \'root\' not found')
 
 const groupDateFilters: MatchFilters = {
-  groupDate: /^\d+g\d{4}\-\d\d\-\d\d$/
+  groupDate: /^\d+g\d{4}-\d\d-\d\d$/
 }
 const AthleteFilters: MatchFilters = {
   id: (uuid: string) => validate(uuid),
@@ -85,4 +86,4 @@ render(() => {
       <Route path='*' component={NotFound} />
     </Router>
   )
-}, root!)
+}, root)

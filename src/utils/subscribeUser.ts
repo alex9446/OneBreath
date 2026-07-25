@@ -69,5 +69,7 @@ export const silentSubscriptionUpdate = async (supabaseClient: SupabaseClientDB,
       const metadata = { user_agent: navigator.userAgent }
       await silentTrackEvent(supabaseClient, userId, 'notification-granted', metadata)
     }
-  } catch {}
+  } catch {
+    // deliberately empty
+  }
 }

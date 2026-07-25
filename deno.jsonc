@@ -1,4 +1,5 @@
 {
+  "exclude": ["src/", "vite.config.ts"],
   "nodeModulesDir": "manual",
   "imports": {
     "@shared/": "./shared/"
