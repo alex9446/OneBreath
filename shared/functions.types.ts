@@ -37,5 +37,5 @@ export type ResponseBody<T> = {
   message: string
   code: number
   extra: T | null
-  catched_error?: unknown
+  catched_error?: object
 }
