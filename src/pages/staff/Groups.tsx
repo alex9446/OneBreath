@@ -20,7 +20,7 @@ const Groups = () => {
     <Title>Lista gruppi</Title>
     <main id='groups-page'>
       <p>Lista gruppi</p>
-      <Suspense fallback='Caricamento...'>
+      <Suspense fallback={<p>Caricamento...</p>}>
         <div class='grid'>
           <p>Nome gruppo</p><p>Giorni della settimana</p>
           <For each={groups()}>

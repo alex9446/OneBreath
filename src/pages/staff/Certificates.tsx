@@ -53,7 +53,7 @@ const Certificates = () => {
     <main id='certificates-page'>
       <ErrorBox>{submission.error}</ErrorBox>
       <div class='grid'>
-        <Suspense fallback='Caricamento...'>
+        <Suspense fallback={<p>Caricamento...</p>}>
             <For each={uploadedCertificates()}>
               {(certificate, index) => (
                 <article onClick={() => useHandler(certificate, index())}>

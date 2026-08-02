@@ -18,7 +18,7 @@ const MidweekHolidays = () => {
     <Title>Giorni festivi infrasettimanali</Title>
     <main id='midweek-holidays-page'>
       <p>Giorni festivi infrasettimanali</p>
-      <Suspense fallback='Caricamento...'>
+      <Suspense fallback={<p>Caricamento...</p>}>
         <div>
           <For each={midweek_holidays()}>
             {(holiday) => <p>{getDateLocaleIT(holiday)}</p>}

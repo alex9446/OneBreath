@@ -26,7 +26,7 @@ const Leaderboard = () => {
       <p>Classifica presenze</p>
       <SelectGroup defaultOption={groupId} set={setSelectedGroup} />
       <SelectSeason value={selectedSeason()} set={setSelectedSeason} />
-      <Suspense fallback='Caricamento...'>
+      <Suspense fallback={<p>Caricamento...</p>}>
         <div class='grid'>
           <p>Nome</p><p>Numero presenze</p>
           <For each={leaderboard()?.extra}>

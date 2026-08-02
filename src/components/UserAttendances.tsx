@@ -23,7 +23,7 @@ const UserAttendances: Component<{ id: string }> = (props) => {
 
   return (<>
     <GroupLegend />
-    <Suspense fallback='Caricamento...'>
+    <Suspense fallback={<p>Caricamento...</p>}>
       <div class='user-attendances-grid'>
         <p>Data</p><p>Gruppo</p>
         <For each={attendances()}>
