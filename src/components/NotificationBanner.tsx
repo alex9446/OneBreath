@@ -5,13 +5,20 @@ import { useSupabase } from '../utils/supabaseContext'
 import { useUserId } from '../utils/userIdContext'
 import { getSubscription, subscribeIsSupported, subscribeUser } from '../utils/subscribeUser'
 import { silentTrackEvent } from '../utils/mixed.supabase'
+import FakeButton from './FakeButton'
 import ErrorBox from './ErrorBox'
 import './NotificationBanner.sass'
+
+const isApple = () => {
+  const exp = /iPod|iPhone|iPad|Macintosh/
+  return exp.test(navigator.platform) || exp.test(navigator.userAgent)
+}
 
 const NotificationBanner = () => {
   const supabaseClient = useSupabase()
   const userId = useUserId()
   const [showBanner, setShowBanner] = createSignal(false)
+  const [showAppleTutorial, setShowAppleTutorial] = createSignal(false)
 
   onMount(() => {
     subscribeIsSupported()
@@ -19,7 +26,9 @@ const NotificationBanner = () => {
       .then((subscription) => {
         if(!subscription && !Cookies.get('hideNotificationBanner')) setShowBanner(true)
       })
-      .catch(() => {})
+      .catch(() => {
+        if(isApple() && !Cookies.get('hideNotificationBanner')) setShowAppleTutorial(true)
+      })
   })
 
   const activate = action(async () => {
@@ -42,13 +51,17 @@ const NotificationBanner = () => {
   }
 
   return (
-    <Show when={showBanner()}>
+    <Show when={showBanner() || showAppleTutorial()}>
       <div class='notification-banner'>
         <p>🔔 <span>Non perdere nessun avviso!</span> Attiva le notifiche</p>
         <div class='actions'>
-          <button onClick={useActivate} disabled={activateSubmission.pending}>
-            {activateSubmission.pending ? 'Attivazione...' : 'Attiva ora'}
-          </button>
+          <Show when={!showAppleTutorial()} fallback={
+            <FakeButton href='/tutorial#safari-ios'>Video tutorial</FakeButton>
+          }>
+            <button onClick={useActivate} disabled={activateSubmission.pending}>
+              {activateSubmission.pending ? 'Attivazione...' : 'Attiva ora'}
+            </button>
+          </Show>
           <div>
             <button onClick={handleLater}>Più tardi</button>
             <button onClick={handleNever}>Mai più 😭</button>

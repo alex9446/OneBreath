@@ -2,7 +2,7 @@ import { Show, type ParentComponent } from 'solid-js'
 import FakeButton from './FakeButton'
 import { getAdminInLS } from '../utils/mixed'
 
-const notAdmin = () => (<>
+const NotAdmin = () => (<>
   <main>
     <p>Pagina riservata agli utenti staff</p>
   </main>
@@ -12,7 +12,7 @@ const notAdmin = () => (<>
 </>)
 
 const RequireAdmin: ParentComponent = (props) => (
-  <Show when={getAdminInLS() >= 1} fallback={notAdmin()}>
+  <Show when={getAdminInLS() >= 1} fallback={<NotAdmin />}>
     {props.children}
   </Show>
 )

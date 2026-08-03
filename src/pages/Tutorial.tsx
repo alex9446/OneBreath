@@ -6,16 +6,19 @@ import './Tutorial.sass'
 
 const videoList = [
   {
+    htmlId: 'firefox-android',
     title: 'su Firefox (Android)',
     webm: 'Android_Firefox.webm',
     mp4: 'Android_Firefox.mp4'
   },
   {
+    htmlId: 'chrome-android',
     title: 'su Chrome (Android)',
     webm: 'Android_Chrome.webm',
     mp4: 'Android_Chrome.mp4'
   },
   {
+    htmlId: 'safari-ios',
     title: 'su Safari (iOS 26)',
     webm: 'iOS_Safari.webm',
     mp4: 'iOS_Safari.mp4'
@@ -35,6 +38,7 @@ const Tutorial = () => {
   const [videos] = createResource(() => (
     Promise.all(videoList.map(async (video) => (
       {
+        htmlId: video.htmlId,
         title: video.title,
         webmUrl: (await getSignedUrl(video.webm)),
         mp4Url: (await getSignedUrl(video.mp4))
@@ -48,7 +52,7 @@ const Tutorial = () => {
       <p>Installazione Web App e attivazione notifiche 🔔</p>
       <For each={videos()}>
         {(video) => (
-          <article>
+          <article id={video.htmlId}>
             <h5>{video.title}</h5>
             <video controls preload='metadata'>
               <source type='video/webm' src={video.webmUrl} />

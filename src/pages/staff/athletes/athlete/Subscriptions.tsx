@@ -38,9 +38,7 @@ const Subscriptions: Component<{ userId: string }> = (props) => {
   return (<>
     <Title>Sottoscrizioni alle notifiche</Title>
     <main id='subscriptions-page'>
-      <Show when={subscriptions()?.length} fallback={
-        <p>Nessuna sottoscrizione</p>
-      }>
+      <Show when={subscriptions()?.length} fallback={<p>Nessuna sottoscrizione</p>}>
         <div class='grid'>
           <p>Ultimo invio</p><p>Stato</p>
           <For each={subscriptions()}>
