@@ -15,7 +15,7 @@ const sendNotifications = async (supabaseAdmin: SupabaseClientDB, userIds: strin
   // get who can be notified
   const subscriptions = await supabaseAdmin.from('subscriptions')
     .select('id,subscription_json,user_id,last_status_code').in('user_id', userIds)
-    .overrideTypes<Array<{ subscription_json: PushSubscription }>>()
+    .overrideTypes<{ subscription_json: PushSubscription }[]>()
   if (subscriptions.error) throw subscriptions.error
   const uniqueUIDs = Array.from(new Set(subscriptions.data.map((s) => s.user_id)))
   console.info(uniqueUIDs.length + ' users can be notified')

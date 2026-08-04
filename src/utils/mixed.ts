@@ -40,7 +40,7 @@ const capitalize = (word: string) => (
   word.charAt(0).toUpperCase() + word.slice(1).toLowerCase()
 )
 
-export const capwords = (str: string, separator: string = ' ') => (
+export const capwords = (str: string, separator = ' ') => (
   str.split(separator).map(capitalize).join(separator)
 )
 
@@ -49,7 +49,7 @@ export const getDateString = (date: Date) => date.toLocaleDateString('en-CA')
 
 export const getTodayDate = () => getDateString(new Date())
 
-export const getDateLocaleIT = (date: string, shortYear: boolean = false) => (
+export const getDateLocaleIT = (date: string, shortYear = false) => (
   new Date(date).toLocaleDateString('it-IT', {
     day: '2-digit',
     month: '2-digit',
@@ -120,7 +120,7 @@ export const downloadBlob = (data: Blob | MediaSource, downloadName: string) => 
   return true
 }
 
-export const range = (start: number, stop: number, step: number = 1) => (
+export const range = (start: number, stop: number, step = 1) => (
   Array.from({ length: Math.ceil((stop - start) / step) }, (_, i) => start + i * step)
 )
 
