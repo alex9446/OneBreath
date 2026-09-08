@@ -1,6 +1,6 @@
 ARG DENO_ALPINE_VERSION
 
-FROM denoland/deno:alpine-${DENO_ALPINE_VERSION}
+FROM denoland/deno:alpine-${DENO_ALPINE_VERSION:?}
 
 RUN apk add --no-cache jq
 
