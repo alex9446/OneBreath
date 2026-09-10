@@ -1,24 +1,16 @@
 import { createSignal, Show } from 'solid-js'
 import { action, useAction, useSubmission } from '@solidjs/router'
-import { currentMonth } from '../../utils/mixed'
 import { useSupabase } from '../../utils/supabaseContext'
 import { useUserId } from '../../utils/userIdContext'
+import { poolPaymentDeadlines } from '../../utils/mixed'
 import Title from '../../components/Title'
 import ErrorBox from '../../components/ErrorBox'
 import GoBack from '../../components/GoBack'
 
 const PoolPayment = () => {
-  const nextMonth = (currentMonth() % 12) + 1
-  const isSummer = nextMonth > 5 && nextMonth < 10
-  const nextMonthStr = String(isSummer ? 10 : nextMonth).padStart(2, '0')
-  const deadlines = {
-    '1m': `2026-${nextMonthStr}-10`,
-    '4m': '2026-10-10',
-    '12m': '2026-10-10'
-  }
-
   const supabaseClient = useSupabase()
   const userId = useUserId()
+  const deadlines = poolPaymentDeadlines()
   const [nextDeadline, setNextDeadline] = createSignal(deadlines['1m'])
 
   const upsertPayment = action(async () => {

@@ -124,9 +124,36 @@ export const range = (start: number, stop: number, step = 1) => (
   Array.from({ length: Math.ceil((stop - start) / step) }, (_, i) => start + i * step)
 )
 
-export const currentMonth = () => new Date().getMonth() + 1
+const Month = { Jan: 1, Feb: 2, Mar: 3, Apr: 4, May: 5, Jun: 6, Jul: 7, Aug: 8, Sep: 9, Oct: 10, Nov: 11, Dec: 12 } as const
+
+const currentMonth = () => new Date().getMonth() + 1
 
 const currentYear = () => new Date().getFullYear()
 
-const NEW_SEASON_MONTH = 9
-export const currentSeason = () => currentYear() - (currentMonth() < NEW_SEASON_MONTH ? 1 : 0)
+export const currentSeason = () => currentYear() - (currentMonth() < Month.Sep ? 1 : 0)
+
+const specialMonths: Record<number, number> = {
+  [Month.May]: Month.Oct,
+  [Month.Jun]: Month.Oct,
+  [Month.Jul]: Month.Oct,
+  [Month.Aug]: Month.Oct,
+  [Month.Sep]: Month.Nov,
+}
+
+export const poolPaymentDeadlines = () => {
+  const currYear = currentYear()
+  const currMonth = currentMonth()
+  const monthlyNextYear = currYear + (currMonth >= Month.Dec ? 1 : 0)
+  const monthlyNextMonthRaw = specialMonths[currMonth] ?? ((currMonth % 12) + 1)
+  const monthlyNextMonth = String(monthlyNextMonthRaw).padStart(2, '0')
+  const termlyNextYear = currYear + (currMonth >= Month.Sep ? 1 : 0)
+  const isFirstTermly = currMonth >= Month.Sep || currMonth <= Month.Jan
+  const termlyNextMonth = String(isFirstTermly ? Month.Feb : Month.Oct).padStart(2, '0')
+  const annualNextYear = termlyNextYear
+
+  return {
+    '1m': `${monthlyNextYear}-${monthlyNextMonth}-10`,
+    '4m': `${termlyNextYear}-${termlyNextMonth}-10`,
+    '12m': `${annualNextYear}-10-10`
+  }
+}

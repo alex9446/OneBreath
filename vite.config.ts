@@ -6,7 +6,7 @@ export default defineConfig({
   plugins: [solid()],
   resolve: {
     alias: {
-      '@shared': path.resolve(__dirname, './shared')
+      '@shared': path.resolve('./shared')
     }
   },
   build: {
@@ -16,9 +16,9 @@ export default defineConfig({
         'service-worker': './src/service-worker.js'
       },
       output: {
-        entryFileNames: assetInfo => {
-          return assetInfo.name === 'service-worker' ? '[name].js' : 'assets/[name]-[hash].js'
-        }
+        entryFileNames: assetInfo => (
+          assetInfo.name === 'service-worker' ? '[name].js' : 'assets/[name]-[hash].js'
+        )
       }
     }
   }
