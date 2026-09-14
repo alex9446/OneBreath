@@ -140,20 +140,20 @@ const specialMonths: Record<number, number> = {
   [Month.Sep]: Month.Nov,
 }
 
+const padMonth = (month: number) => String(month).padStart(2, '0')
+
 export const poolPaymentDeadlines = () => {
   const currYear = currentYear()
   const currMonth = currentMonth()
-  const monthlyNextYear = currYear + (currMonth >= Month.Dec ? 1 : 0)
-  const monthlyNextMonthRaw = specialMonths[currMonth] ?? ((currMonth % 12) + 1)
-  const monthlyNextMonth = String(monthlyNextMonthRaw).padStart(2, '0')
-  const termlyNextYear = currYear + (currMonth >= Month.Sep ? 1 : 0)
   const isFirstTermly = currMonth >= Month.Sep || currMonth <= Month.Jan
-  const termlyNextMonth = String(isFirstTermly ? Month.Feb : Month.Oct).padStart(2, '0')
-  const annualNextYear = termlyNextYear
+  const monthlyNextYear = currYear + (currMonth >= Month.Dec ? 1 : 0)
+  const monthlyNextMonth = padMonth(specialMonths[currMonth] ?? ((currMonth % 12) + 1))
+  const termlyNextYear = currYear + (currMonth >= Month.Sep ? 1 : 0)
+  const termlyNextMonth = padMonth(isFirstTermly ? Month.Feb : Month.Oct)
 
   return {
     '1m': `${monthlyNextYear}-${monthlyNextMonth}-10`,
     '4m': `${termlyNextYear}-${termlyNextMonth}-10`,
-    '12m': `${annualNextYear}-10-10`
+    '12m': `${termlyNextYear}-10-10`
   }
 }
