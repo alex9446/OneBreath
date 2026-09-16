@@ -10,7 +10,7 @@ const Home = () => (<>
   <Title>Homepage</Title>
   <main id='home-page'>
     <AthleteStatus />
-    <p>Allenamenti in piscina terminati, ci si vede in mare! 🌊</p>
+    <p>🤿 La vasca ci aspetta. Pronti a ripartire? 🏊🏼</p>
     {/* <Attendance /> */}
     <NotificationBanner />
   </main>
