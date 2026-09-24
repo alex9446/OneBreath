@@ -1,6 +1,6 @@
 {
   "imports": {
-    "@supabase/supabase-js": "npm:@supabase/supabase-js@2.116.0",
+    "@supabase/supabase-js": "npm:@supabase/supabase-js@2.117.1",
     "@shared/": "./shared/"
   }
 }
