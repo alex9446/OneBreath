@@ -9,12 +9,13 @@ class KEEP(IntEnum):
     MONTHS = 12
 
 
-BACKUP_FILE = "paths.txt"
+BACKUP_LIST = 'ls_backup.txt'
+DELETE_LIST = 'to_delete.txt'
 
 
 DATETIME_RE = re.compile(r'\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}\+\d{2}:\d{2}')
 
-with open(BACKUP_FILE) as file:
+with open(BACKUP_LIST) as file:
     backups = [
         (datetime.fromisoformat(match.group(0)), path)
         for path in [line.strip() for line in file]
@@ -49,7 +50,5 @@ for dt, path in backups:
         seen()
         keep.add(path)
 
-
-for dt, path in backups:
-    if path not in keep:
-        print(path)
+with open(DELETE_LIST, 'w') as file:
+    file.writelines([f'{path}\n' for dt, path in backups if path not in keep])
