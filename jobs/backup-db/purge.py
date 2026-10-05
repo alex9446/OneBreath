@@ -1,26 +1,28 @@
 from datetime import datetime, timedelta, timezone
 from enum import IntEnum
-import re
+from os import environ
+from re import compile as re_compile
+from subprocess import run as proc_run
 
 
 class KEEP(IntEnum):
-    ALL_FROM_DAYS = 7
-    WEEKS = 8
+    ALL_FROM_DAYS = 14
+    WEEKS = 16
     MONTHS = 12
 
 
-BACKUP_LIST = 'ls_backup.txt'
-DELETE_LIST = 'to_delete.txt'
+DATETIME_RE = re_compile(r'\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}\+\d{2}:\d{2}')
 
+REMOTE_BUCKET = environ['REMOTE_BUCKET']
 
-DATETIME_RE = re.compile(r'\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}\+\d{2}:\d{2}')
+paths = proc_run(
+    ['rclone', 'lsf', REMOTE_BUCKET], capture_output=True, text=True
+).stdout.split('\n')
 
-with open(BACKUP_LIST) as file:
-    backups = [
-        (datetime.fromisoformat(match.group(0)), path)
-        for path in [line.strip() for line in file]
-        if (match := DATETIME_RE.search(path))
-    ]
+backups = [
+    (datetime.fromisoformat(match.group(0)), path.strip())
+    for path in paths if (match := DATETIME_RE.search(path))
+]
 
 backups.sort(key=lambda x: x[0], reverse=True)
 
@@ -50,5 +52,7 @@ for dt, path in backups:
         seen()
         keep.add(path)
 
-with open(DELETE_LIST, 'w') as file:
-    file.writelines([f'{path}\n' for dt, path in backups if path not in keep])
+for dt, path in backups:
+    if path not in keep:
+        print(f'deleting: {path}')
+        proc_run(['rclone', 'deletefile', REMOTE_BUCKET + path])
