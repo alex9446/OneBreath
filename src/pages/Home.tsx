@@ -11,15 +11,6 @@ const Home = () => (<>
   <main id='home-page'>
     <AthleteStatus />
     <Attendance />
-    <div style='font-size: 16px'>
-      <p>Inizio allenamenti:</p>
-      <ul>
-        <li>01/10 Livorno</li>
-        <li>05/10 Cecina</li>
-        <li>06/10 Follonica</li>
-        <li>12/10 Scaramellozzi</li>
-      </ul>
-    </div>
     <NotificationBanner />
   </main>
   <nav>
