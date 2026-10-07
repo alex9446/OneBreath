@@ -15,6 +15,7 @@ const Athletes = () => {
   const [selectedGroup, setSelectedGroup] = createSignal(0)
   const [expiredCertificates, setExpiredCertificates] = createSignal(false)
   const [expiredPayments, setExpiredPayments] = createSignal(false)
+  const [emptySubscriptions, setEmptySubscriptions] = createSignal(false)
 
   const [profiles] = createResource(() => profilesWithStatus(supabaseClient))
 
@@ -26,7 +27,8 @@ const Athletes = () => {
   const filteredProfiles = () => profiles()?.filter((profile) => (
     (selectedGroup() === 0 || selectedGroup() === profile.group_id) &&
     (!expiredCertificates() || expiredCertificates() === !profile.status.certificate.valid) &&
-    (!expiredPayments() || expiredPayments() === !profile.status.payment.valid)
+    (!expiredPayments() || expiredPayments() === !profile.status.payment.valid) &&
+    (!emptySubscriptions() || emptySubscriptions() === !profile.hasSubscription)
   ))
 
   const profileById = (id: string) => profiles()?.find((p) => p.id === id)
@@ -43,6 +45,8 @@ const Athletes = () => {
                     checked={expiredCertificates()}>certificato scaduto</Checkbox>
           <Checkbox set={setExpiredPayments}
                     checked={expiredPayments()}>pagamento scaduto</Checkbox>
+          <Checkbox set={setEmptySubscriptions}
+                    checked={emptySubscriptions()}>notifiche disattivate</Checkbox>
         </section>
         <For each={filteredProfiles()} fallback={
           <p>{profiles.loading ? 'Caricamento atleti...' : 'Nessun atleta trovato'}</p>
