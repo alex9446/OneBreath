@@ -1,8 +1,9 @@
-import { createResource, For, Suspense, type Component } from 'solid-js'
+import { createResource, ErrorBoundary, For, Suspense, type Component } from 'solid-js'
 import { useSupabase } from '../utils/supabaseContext'
 import { groupsById } from '../utils/fetchGroups'
 import { getDateLocaleIT } from '../utils/mixed'
 import GroupLegend from '../components/GroupLegend'
+import ErrorBox from './ErrorBox'
 import './UserAttendances.sass'
 
 const UserAttendances: Component<{ id: string }> = (props) => {
@@ -23,16 +24,18 @@ const UserAttendances: Component<{ id: string }> = (props) => {
 
   return (<>
     <GroupLegend />
-    <Suspense fallback={<p>Caricamento...</p>}>
-      <div class='user-attendances-grid'>
-        <p>Data</p><p>Gruppo</p>
-        <For each={attendances()}>
-          {(attendance) => (<>
-            <p>{attendance.markedDay}</p><p>{attendance.groupAcronym}</p>
-          </>)}
-        </For>
-      </div>
-    </Suspense>
+    <ErrorBoundary fallback={(err) => <ErrorBox>{err}</ErrorBox>}>
+      <Suspense fallback={<p>Caricamento...</p>}>
+        <div class='user-attendances-grid'>
+          <p>Data</p><p>Gruppo</p>
+          <For each={attendances()}>
+            {(attendance) => (<>
+              <p>{attendance.markedDay}</p><p>{attendance.groupAcronym}</p>
+            </>)}
+          </For>
+        </div>
+      </Suspense>
+    </ErrorBoundary>
   </>)
 }
 
