@@ -1,9 +1,10 @@
-import { createResource, Match, Show, Suspense, Switch, type Component } from 'solid-js'
+import { createResource, Match, Show, Switch, type Component } from 'solid-js'
 import { getDateLocaleIT } from '../utils/mixed'
 import { useSupabase } from '../utils/supabaseContext'
 import { useUserId } from '../utils/userIdContext'
 import { userStatus } from '../utils/mixed.supabase'
 import Title from '../components/Title'
+import SuspenseWithError from '../components/SuspenseWithError'
 import DownloadCertButton from '../components/DownloadCertButton'
 import FakeButton from '../components/FakeButton'
 import GoBack from '../components/GoBack'
@@ -48,26 +49,24 @@ const Status = () => {
   return (<>
     <Title>Stato profilo</Title>
     <main id='status-page'>
-      <article classList={status()?.certificate}>
-        <h3>Stato certificato</h3>
-        <Suspense fallback={<p>Caricamento scadenza...</p>}>
+      <SuspenseWithError>
+        <article classList={status()?.certificate}>
+          <h3>Stato certificato</h3>
           <ExpirationInfo status={status()?.certificate}
                           date={status()?.certificateExpiration} />
-        </Suspense>
-        <Show when={status()?.certificate.notfound === false}>
-          <DownloadCertButton userId={userId} />
-        </Show>
-        <FakeButton href='/sportexam/uploadcertificate'>Carica certificato</FakeButton>
-      </article>
-      <hr />
-      <article classList={status()?.payment}>
-        <h3>Stato pagamento piscina</h3>
-        <Suspense fallback={<p>Caricamento scadenza...</p>}>
+          <Show when={status()?.certificate.notfound === false}>
+            <DownloadCertButton userId={userId} />
+          </Show>
+          <FakeButton href='/sportexam/uploadcertificate'>Carica certificato</FakeButton>
+        </article>
+        <hr />
+        <article classList={status()?.payment}>
+          <h3>Stato pagamento piscina</h3>
           <ExpirationInfo status={status()?.payment}
                           date={status()?.paymentExpiration} />
-        </Suspense>
-        <FakeButton href='/payments/poolpayment'>Conferma pagamento piscina</FakeButton>
-      </article>
+          <FakeButton href='/payments/poolpayment'>Conferma pagamento piscina</FakeButton>
+        </article>
+      </SuspenseWithError>
     </main>
     <nav>
       <GoBack />

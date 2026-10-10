@@ -1,4 +1,4 @@
-import { createResource, createSignal, For, Suspense } from 'solid-js'
+import { createResource, createSignal, For } from 'solid-js'
 import { A } from '@solidjs/router'
 import { useSupabase } from '../utils/supabaseContext'
 import { currentSeason, getGroupFromLS } from '../utils/mixed'
@@ -6,6 +6,7 @@ import { invokeLeaderboard } from '../utils/invokeFunctions'
 import Title from '../components/Title'
 import SelectGroup from '../components/SelectGroup'
 import SelectSeason from '../components/SelectSeason'
+import SuspenseWithError from '../components/SuspenseWithError'
 import GoBack from '../components/GoBack'
 import './Leaderboard.sass'
 
@@ -26,7 +27,7 @@ const Leaderboard = () => {
       <p>Classifica presenze</p>
       <SelectGroup defaultOption={groupId} set={setSelectedGroup} />
       <SelectSeason value={selectedSeason()} set={setSelectedSeason} />
-      <Suspense fallback={<p>Caricamento...</p>}>
+      <SuspenseWithError>
         <div class='grid'>
           <p>Nome</p><p>Numero presenze</p>
           <For each={leaderboard()?.extra}>
@@ -36,7 +37,7 @@ const Leaderboard = () => {
             </>)}
           </For>
         </div>
-      </Suspense>
+      </SuspenseWithError>
       <p class='hide-hint'>ℹ️ <A href='/settings'>Puoi nasconderti da questa lista</A></p>
     </main>
     <nav>

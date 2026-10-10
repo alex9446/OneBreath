@@ -1,6 +1,7 @@
-import { createResource, For, Suspense } from 'solid-js'
+import { createResource, For } from 'solid-js'
 import { useSupabase } from '../../utils/supabaseContext'
 import Title from '../../components/Title'
+import SuspenseWithError from '../../components/SuspenseWithError'
 import GoBack from '../../components/GoBack'
 import './Groups.sass'
 
@@ -20,7 +21,7 @@ const Groups = () => {
     <Title>Lista gruppi</Title>
     <main id='groups-page'>
       <p>Lista gruppi</p>
-      <Suspense fallback={<p>Caricamento...</p>}>
+      <SuspenseWithError>
         <div class='grid'>
           <p>Nome gruppo</p><p>Giorni della settimana</p>
           <For each={groups()}>
@@ -30,7 +31,7 @@ const Groups = () => {
             </>)}
           </For>
         </div>
-      </Suspense>
+      </SuspenseWithError>
     </main>
     <nav>
       <GoBack />

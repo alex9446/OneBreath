@@ -1,7 +1,8 @@
-import { createResource, For, Suspense } from 'solid-js'
+import { createResource, For } from 'solid-js'
 import { useSupabase } from '../../utils/supabaseContext'
 import { getDateLocaleIT } from '../../utils/mixed'
 import Title from '../../components/Title'
+import SuspenseWithError from '../../components/SuspenseWithError'
 import GoBack from '../../components/GoBack'
 import './MidweekHolidays.sass'
 
@@ -18,13 +19,13 @@ const MidweekHolidays = () => {
     <Title>Giorni festivi infrasettimanali</Title>
     <main id='midweek-holidays-page'>
       <p>Giorni festivi infrasettimanali</p>
-      <Suspense fallback={<p>Caricamento...</p>}>
+      <SuspenseWithError>
         <div>
           <For each={midweek_holidays()}>
             {(holiday) => <p>{getDateLocaleIT(holiday)}</p>}
           </For>
         </div>
-      </Suspense>
+      </SuspenseWithError>
     </main>
     <nav>
       <GoBack />

@@ -1,4 +1,4 @@
-import { createResource, createSignal, For, Suspense } from 'solid-js'
+import { createResource, createSignal, For } from 'solid-js'
 import { action, useAction, useSubmission } from '@solidjs/router'
 import type { Tables } from '@shared/database.types'
 import { useSupabase } from '../../utils/supabaseContext'
@@ -7,6 +7,7 @@ import { expirationStatus, getDateLocaleIT } from '../../utils/mixed'
 import { mdiTrayArrowDown } from '../../utils/iconPaths'
 import Title from '../../components/Title'
 import ErrorBox from '../../components/ErrorBox'
+import SuspenseWithError from '../../components/SuspenseWithError'
 import Icon from '../../components/Icon'
 import GoBack from '../../components/GoBack'
 import './Certificates.sass'
@@ -53,7 +54,7 @@ const Certificates = () => {
     <main id='certificates-page'>
       <ErrorBox>{submission.error}</ErrorBox>
       <div class='grid'>
-        <Suspense fallback={<p>Caricamento...</p>}>
+        <SuspenseWithError>
             <For each={uploadedCertificates()}>
               {(certificate, index) => (
                 <article onClick={() => useHandler(certificate, index())}>
@@ -70,7 +71,7 @@ const Certificates = () => {
                 </article>
               )}
             </For>
-        </Suspense>
+        </SuspenseWithError>
       </div>
     </main>
     <nav>
