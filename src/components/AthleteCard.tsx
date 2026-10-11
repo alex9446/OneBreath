@@ -23,10 +23,10 @@ const AthleteCard: Component<AthleteCardProps> = (props) => {
       <h5>{props.profile.first_name} {props.profile.last_name}</h5>
       <p>{props.profile.groupName}</p>
       <div class='icons'>
-        <Icon path={mdiShieldCrownOutline} classList={{ admin: true, hide: !props.isAdmin }} />
         <Icon path={mdiClipboardPulseOutline} classList={props.profile.status.certificate} />
         <Icon path={mdiCashSync} classList={props.profile.status.payment} />
         <Icon path={paperPlane} classList={{ subscription: true, hide: !props.profile.hasSubscription }} />
+        <Icon path={mdiShieldCrownOutline} classList={{ admin: true, hide: !props.isAdmin }} />
       </div>
     </article>
   )
