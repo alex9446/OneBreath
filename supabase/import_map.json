@@ -1,7 +1,7 @@
 {
   "imports": {
     "@supabase/supabase-js": "npm:@supabase/supabase-js@2.117.2",
-    "uuid": "npm:uuid@14.0.2",
+    "uuid": "npm:uuid@14.0.3",
     "web-push": "npm:web-push@3.6.7",
     "@shared/": "../shared/"
   }
