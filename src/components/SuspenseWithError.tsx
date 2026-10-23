@@ -1,12 +1,12 @@
-import { ErrorBoundary, Suspense, type ParentComponent } from 'solid-js'
-import ErrorBox from './ErrorBox'
+import { Suspense, type ParentComponent } from 'solid-js'
+import ErrorBoundaryBox from './ErrorBoundaryBox'
 
 const SuspenseWithError: ParentComponent = (props) => (
-  <ErrorBoundary fallback={(err) => <ErrorBox>{err}</ErrorBox>}>
+  <ErrorBoundaryBox>
     <Suspense fallback={<p>Caricamento...</p>}>
       {props.children}
     </Suspense>
-  </ErrorBoundary>
+  </ErrorBoundaryBox>
 )
 
 export default SuspenseWithError
