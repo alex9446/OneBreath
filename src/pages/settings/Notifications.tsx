@@ -4,6 +4,7 @@ import { useSupabase } from '../../utils/supabaseContext'
 import { useUserId } from '../../utils/userIdContext'
 import { getSubscription, subscribeIsSupported, subscribeUser, unsubscribeUser } from '../../utils/subscribeUser'
 import Title from '../../components/Title'
+import ErrorBoundaryBox from '../../components/ErrorBoundaryBox'
 import ErrorBox from '../../components/ErrorBox'
 import GoBack from '../../components/GoBack'
 import './Notification.sass'
@@ -35,16 +36,18 @@ const Notifications = () => {
   return (<>
     <Title>Impostazioni &gt; Notifiche</Title>
     <main id='notifications-page'>
-      <Show when={subscription()} fallback={
-        <button onClick={useActivate}
-                disabled={!subscribeSupported() || activateSubmission.pending}>
-          {subscribeSupported() ? 'Attiva notifiche' : 'Non supportate'}
-        </button>
-      }>
-        <button onClick={useDeactivate} disabled={deactivateSubmission.pending}>
-          Disattiva notifiche
-        </button>
-      </Show>
+      <ErrorBoundaryBox>
+        <Show when={subscription()} fallback={
+          <button onClick={useActivate}
+                  disabled={!subscribeSupported() || activateSubmission.pending}>
+            {subscribeSupported() ? 'Attiva notifiche' : 'Non supportate'}
+          </button>
+        }>
+          <button onClick={useDeactivate} disabled={deactivateSubmission.pending}>
+            Disattiva notifiche
+          </button>
+        </Show>
+      </ErrorBoundaryBox>
       <ErrorBox>{activateSubmission.error}</ErrorBox>
       <ErrorBox>{deactivateSubmission.error}</ErrorBox>
       <p class='notice'>

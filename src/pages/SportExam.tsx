@@ -4,6 +4,7 @@ import { contactsByZone } from '../utils/mixed.supabase'
 import Title from '../components/Title'
 import FakeButtonNative from '../components/FakeButtonNative'
 import FakeButton from '../components/FakeButton'
+import ErrorBoundaryBox from '../components/ErrorBoundaryBox'
 import GoBack from '../components/GoBack'
 import './SportExam.sass'
 
@@ -21,21 +22,23 @@ const SportExam = () => {
     <main id='sportexam-page'>
       <FakeButtonNative href={sportexamRequestUrl} newPage>Scarica modulo</FakeButtonNative>
       <FakeButton href='uploadcertificate'>Carica certificato</FakeButton>
-      <For each={contacts()}>
-        {(contactsWithZone) => (<>
-          <hr />
-          <p>Numeri utili in zona {contactsWithZone.zone}</p>
-          <For each={contactsWithZone.contacts}>
-            {(contact) => (
-              <div class='contact'>
-                <p>{contact.name}</p>
-                <p><a href={`tel:${contact.phone_number}`}>{contact.phone_number}</a></p>
-                <p>{contact.notes}</p>
-              </div>
-            )}
-          </For>
-        </>)}
-      </For>
+      <ErrorBoundaryBox>
+        <For each={contacts()}>
+          {(contactsWithZone) => (<>
+            <hr />
+            <p>Numeri utili in zona {contactsWithZone.zone}</p>
+            <For each={contactsWithZone.contacts}>
+              {(contact) => (
+                <div class='contact'>
+                  <p>{contact.name}</p>
+                  <p><a href={`tel:${contact.phone_number}`}>{contact.phone_number}</a></p>
+                  <p>{contact.notes}</p>
+                </div>
+              )}
+            </For>
+          </>)}
+        </For>
+      </ErrorBoundaryBox>
     </main>
     <nav>
       <GoBack />

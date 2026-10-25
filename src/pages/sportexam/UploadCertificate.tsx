@@ -4,6 +4,7 @@ import { useSupabase } from '../../utils/supabaseContext'
 import { useUserId } from '../../utils/userIdContext'
 import { FormManager, getTodayDate } from '../../utils/mixed'
 import Title from '../../components/Title'
+import ErrorBoundaryBox from '../../components/ErrorBoundaryBox'
 import ErrorBox from '../../components/ErrorBox'
 import GoBack from '../../components/GoBack'
 import './UploadCertificate.sass'
@@ -45,19 +46,21 @@ const UploadCertificate = () => {
     <main id='uploadcertificate-page'>
       <Show when={submission.result?.ok} fallback={<>
         <p style='text-align: center'>Carica certificato</p>
-        <form method='post' action={uploadAction} enctype='multipart/form-data'>
-          <input type='file' name='file' accept={bucketMetadata()?.allowedMimeTypes}
-                disabled={bucketMetadata.loading} required />
-          <p class='size-limit'>
-            Dimensione massima {(bucketMetadata()?.fileSizeLimitInMB ?? 0)}MB
-          </p>
-          <label>
-            Data di scadenza:
-            <input type='date' name='date' min={getTodayDate()} required />
-          </label>
-          <input type='submit' value={submission.pending ? 'Invio...' : 'Invia'}
-                 disabled={bucketMetadata.loading || submission.pending} />
-        </form>
+        <ErrorBoundaryBox>
+          <form method='post' action={uploadAction} enctype='multipart/form-data'>
+            <input type='file' name='file' accept={bucketMetadata()?.allowedMimeTypes}
+                   disabled={bucketMetadata.loading} required />
+            <p class='size-limit'>
+              Dimensione massima {(bucketMetadata()?.fileSizeLimitInMB ?? 0)}MB
+            </p>
+            <label>
+              Data di scadenza:
+              <input type='date' name='date' min={getTodayDate()} required />
+            </label>
+            <input type='submit' value={submission.pending ? 'Invio...' : 'Invia'}
+                   disabled={bucketMetadata.loading || submission.pending} />
+          </form>
+        </ErrorBoundaryBox>
       </>}>
         <p style='color:green'>Certificato inviato con successo!</p>
       </Show>

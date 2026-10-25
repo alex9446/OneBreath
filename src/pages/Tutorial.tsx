@@ -1,6 +1,7 @@
 import { createResource, For } from 'solid-js'
 import { useSupabase } from '../utils/supabaseContext'
 import Title from '../components/Title'
+import ErrorBoundaryBox from '../components/ErrorBoundaryBox'
 import GoBack from '../components/GoBack'
 import './Tutorial.sass'
 
@@ -50,17 +51,19 @@ const Tutorial = () => {
     <Title>Video tutorial</Title>
     <main id='tutorial-page'>
       <p>Installazione Web App e attivazione notifiche 🔔</p>
-      <For each={videos()}>
-        {(video) => (
-          <article id={video.htmlId}>
-            <h5>{video.title}</h5>
-            <video controls preload='metadata'>
-              <source type='video/webm' src={video.webmUrl} />
-              <source type='video/mp4' src={video.mp4Url} />
-            </video>
-          </article>
-        )}
-      </For>
+      <ErrorBoundaryBox>
+        <For each={videos()}>
+          {(video) => (
+            <article id={video.htmlId}>
+              <h5>{video.title}</h5>
+              <video controls preload='metadata'>
+                <source type='video/webm' src={video.webmUrl} />
+                <source type='video/mp4' src={video.mp4Url} />
+              </video>
+            </article>
+          )}
+        </For>
+      </ErrorBoundaryBox>
     </main>
     <nav>
       <GoBack />
