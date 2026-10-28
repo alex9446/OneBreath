@@ -16,10 +16,9 @@ const Settings = () => {
   const userId = useUserId()
 
   const [leaderboard] = createResource(async () => {
-    const { data: profile, error } = await supabaseClient.from('profiles')
+    const { data: profile } = await supabaseClient.from('profiles')
       .select('leaderboard').eq('id', userId).single()
-    if (error) throw error.message
-    return profile.leaderboard
+    return profile?.leaderboard ?? true
   })
 
   const saveSettings = action(async (formData: FormData) => {
