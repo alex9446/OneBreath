@@ -14,7 +14,7 @@ enum Sheet {
   ColumnSize = 180
 }
 
-console.info(`Job "attendance-exporter" started!`)
+console.info(`Job "attendance-certificate-exporter" started!`)
 await sendHeartbeat(true)
 
 const today = Temporal.Now.plainDateISO('Europe/Rome')
@@ -167,4 +167,4 @@ for (const sheet of sheets) {
 }
 
 await sendHeartbeat()
-console.info(`Job "attendance-exporter" finished!`)
+console.info(`Job "attendance-certificate-exporter" finished!`)
