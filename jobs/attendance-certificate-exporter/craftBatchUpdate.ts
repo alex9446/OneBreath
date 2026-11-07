@@ -92,6 +92,18 @@ const craftLink = (uri: string) => (
   ]}
 )
 
+const craftDateValue = (date: Temporal.PlainDate) => {
+  const sheetsEpoch = Temporal.PlainDate.from({ year: 1899, month: 12, day: 30 })
+  const serialNumber = date.since(sheetsEpoch, { largestUnit: 'days' }).days
+  return {
+    userEnteredValue: { numberValue: serialNumber },
+    userEnteredFormat: {
+      numberFormat: { type: 'DATE', pattern: 'dd/mm/yyyy' },
+      horizontalAlignment: 'LEFT'
+    }
+  }
+}
+
 const craftValues = (values: sheets_v4.Schema$CellData[]) => ({ values })
 
 export const craftHeaderRow = (firstStaticCells: string[], days: string[]) => (
@@ -100,19 +112,32 @@ export const craftHeaderRow = (firstStaticCells: string[], days: string[]) => (
   )))
 )
 
-type Rows = {
+type UserRows = {
   name: string
   link: string
   certificate: string
   payment: string
   attendant: boolean[]
 }[]
-export const craftUserRows = (rows: Rows) => (
+export const craftUserRows = (rows: UserRows) => (
   rows.map((row) => craftValues([
     { ...craftStringValue(row.name), ...craftLink(row.link) },
     craftStringValue(row.certificate),
     craftStringValue(row.payment),
     ...row.attendant.map((b) => craftBoolValue(b))
+  ]))
+)
+
+type CertificateRows = {
+  name: string
+  state: string
+  expiration: Temporal.PlainDate
+}[]
+export const craftCertificateRows = (rows: CertificateRows) => (
+  rows.map((row) => craftValues([
+    craftStringValue(row.name),
+    craftStringValue(row.state),
+    craftDateValue(row.expiration)
   ]))
 )
 

@@ -3,8 +3,8 @@ import { google } from 'googleapis'
 import { getDenoEnv, sendHeartbeat } from '@shared/mixed.deno.ts'
 import { Database } from '@shared/database.types.ts'
 import {
-  craftAddSheet, craftAlert, craftBoolValidation, craftDeleteSheet, craftHeaderRow, craftRange,
-  craftResizeFirstThreeColumns, craftUpdateCells, craftUserRows
+  craftAddSheet, craftAlert, craftBoolValidation, craftCertificateRows, craftDeleteSheet,
+  craftHeaderRow, craftRange, craftResizeFirstThreeColumns, craftUpdateCells, craftUserRows
 } from './craftBatchUpdate.ts'
 
 enum Sheet {
@@ -24,11 +24,16 @@ const monthFirstDate = yesterday.with({ day: 1 }).toString()
 
 const expirationState = (date: string) => {
   const expiration = Temporal.PlainDate.from(date)
-  const expirationLocaleIT = expiration.toLocaleString('it-IT')
-  if (Temporal.PlainDate.compare(expiration, today) >= 0) {
-    return `valido, fino al ${expirationLocaleIT}`
+  return {
+    isValid: Temporal.PlainDate.compare(expiration, today) >= 0,
+    expirationPlainDate: expiration,
+    expirationLocaleIT: expiration.toLocaleString('it-IT')
   }
-  return `scaduto, il ${expirationLocaleIT}`
+}
+
+const expirationStateStr = (date: string) => {
+  const state = expirationState(date)
+  return `${state.isValid ? 'valido, fino al' : 'scaduto, il'} ${state.expirationLocaleIT}`
 }
 
 const defineOrThrow = <T>(value: T) => {
@@ -71,10 +76,10 @@ const namesById = new Map(profiles.data.map((profile) => (
   [profile.id, `${profile.first_name} ${profile.last_name}`]
 )))
 const certificateByUserId = new Map(certificates.data.map((certificate) => (
-  [certificate.user_id, expirationState(certificate.expiration)]
+  [certificate.user_id, expirationStateStr(certificate.expiration)]
 )))
 const paymentByUserId = new Map(payments.data.map((payment) => (
-  [payment.user_id, expirationState(payment.expiration)]
+  [payment.user_id, expirationStateStr(payment.expiration)]
 )))
 
 const unique = <T>(array: T[]) => Array.from(new Set(array))
@@ -117,6 +122,8 @@ const auth = new google.auth.JWT({
 
 const service = google.sheets({ version: 'v4', auth })
 
+const alertMessage = 'ATTENZIONE: non modificare, verrà sovrascritto!'
+
 for (const sheet of sheets) {
   if (!sheet) continue
   const spreadsheetId = sheet.spreadsheetId
@@ -158,13 +165,46 @@ for (const sheet of sheets) {
           ]
         ),
         craftResizeFirstThreeColumns(sheet.sheetId, Sheet.ColumnSize),
-        craftAlert(
-          sheet.sheetId, sheet.necessaryRows, 'ATTENZIONE: non modificare, verrà sovrascritto!'
-        )
+        craftAlert(sheet.sheetId, sheet.necessaryRows, alertMessage)
       ]
     }
   })
 }
+
+const certificateRows = certificates.data.map((certificate) => {
+  const state = expirationState(certificate.expiration)
+  return {
+    name: defineOrThrow(namesById.get(certificate.user_id)),
+    state: state.isValid ? 'valido' : 'scaduto',
+    expiration: state.expirationPlainDate
+  }
+}).toSorted((a, b) => a.name.localeCompare(b.name))
+
+const certificateSpreadsheetId = Deno.env.get('CERTIFICATE_SPREADSHEET_ID')
+if (certificateSpreadsheetId) {
+  const endRowIndex = Sheet.HeaderRow + certificateRows.length
+
+  await service.spreadsheets.batchUpdate({
+    spreadsheetId: certificateSpreadsheetId,
+    requestBody: {
+      requests: [
+        craftUpdateCells({ sheetId: 0 }, []),
+        craftUpdateCells(
+          craftRange(
+            0,
+            Sheet.ZeroIndex, endRowIndex,
+            Sheet.ZeroIndex, 3),
+          [
+            craftHeaderRow(['Soci', 'Stato', 'Scadenza'], []),
+            ...craftCertificateRows(certificateRows)
+          ]
+        ),
+        craftResizeFirstThreeColumns(0, Sheet.ColumnSize),
+        craftAlert(0, endRowIndex, alertMessage)
+      ]
+    }
+  })
+} else console.warn('CERTIFICATE_SPREADSHEET_ID is undefined!', certificateSpreadsheetId)
 
 await sendHeartbeat()
 console.info(`Job "attendance-certificate-exporter" finished!`)
