@@ -1,18 +1,7 @@
 import { createClient } from '@supabase/supabase-js'
-import { google } from 'googleapis'
 import { getDenoEnv, sendHeartbeat } from '@shared/mixed.deno.ts'
 import { Database } from '@shared/database.types.ts'
-import {
-  craftAddSheet, craftAlert, craftBoolValidation, craftCertificateRows, craftDeleteSheet,
-  craftHeaderRow, craftRange, craftResizeFirstThreeColumns, craftUpdateCells, craftUserRows
-} from './craftBatchUpdate.ts'
-
-enum Sheet {
-  ZeroIndex = 0,
-  HeaderRow = 1,
-  StaticCells = 3,
-  ColumnSize = 180
-}
+import { runBatchUpdate, Sheet } from './runBatchUpdate.ts'
 
 console.info(`Job "attendance-certificate-exporter" started!`)
 await sendHeartbeat(true)
@@ -47,8 +36,6 @@ const supabaseAdmin = createClient<Database>(
   getDenoEnv('SUPABASE_URL'),
   getDenoEnv('SECRET_JOBS_KEY')
 )
-
-const serviceAccountInfo = JSON.parse(atob(getDenoEnv('SERVICE_ACCOUNT_INFO')))
 
 const groupsProm = supabaseAdmin.from('groups').select('id,spreadsheet_id')
 const profilesProm = supabaseAdmin.from('profiles').select('id,first_name,last_name')
@@ -85,7 +72,7 @@ const paymentByUserId = new Map(payments.data.map((payment) => (
 const unique = <T>(array: T[]) => Array.from(new Set(array))
 const markedGroups = unique(attendances.data.map((a) => a.group_id)).sort()
 
-const sheets = markedGroups.map((group) => {
+const attendanceSheets = markedGroups.map((group) => {
   const groupAttendances = attendances.data.filter((a) => a.group_id === group)
   const days = unique(groupAttendances.map((a) => a.marked_day)).sort()
   const userIds = unique(groupAttendances.map((a) => a.user_id))
@@ -113,63 +100,7 @@ const sheets = markedGroups.map((group) => {
     })).toSorted((a, b) => a.name.localeCompare(b.name))
   }
 })
-
-const auth = new google.auth.JWT({
-  email: serviceAccountInfo.client_email,
-  key: serviceAccountInfo.private_key,
-  scopes: ['https://www.googleapis.com/auth/spreadsheets'],
-})
-
-const service = google.sheets({ version: 'v4', auth })
-
-const alertMessage = 'ATTENZIONE: non modificare, verrà sovrascritto!'
-
-for (const sheet of sheets) {
-  if (!sheet) continue
-  const spreadsheetId = sheet.spreadsheetId
-
-  try {
-    await service.spreadsheets.batchUpdate({
-      spreadsheetId,
-      requestBody: {
-        requests: [ craftDeleteSheet(sheet.sheetId) ]
-      }
-    })
-  } catch (err: unknown) {
-    if (!(
-      typeof err === 'object' && err !== null &&
-      'message' in err && typeof err.message === 'string' &&
-      err.message.includes(`No sheet with id: ${sheet.sheetId}`)
-    )) throw err
-  }
-
-  await service.spreadsheets.batchUpdate({
-    spreadsheetId,
-    requestBody: {
-      requests: [
-        craftAddSheet(sheet.sheetTitle, sheet.sheetId),
-        craftBoolValidation(craftRange(
-          sheet.sheetId,
-          Sheet.HeaderRow, sheet.necessaryRows,
-          Sheet.StaticCells, sheet.necessaryColumns
-        )),
-        craftUpdateCells(
-          craftRange(
-            sheet.sheetId,
-            Sheet.ZeroIndex, sheet.necessaryRows,
-            Sheet.ZeroIndex, sheet.necessaryColumns
-          ),
-          [
-            craftHeaderRow(['Soci', 'Certificato', 'Pagamento'], sheet.days),
-            ...craftUserRows(sheet.userRows)
-          ]
-        ),
-        craftResizeFirstThreeColumns(sheet.sheetId, Sheet.ColumnSize),
-        craftAlert(sheet.sheetId, sheet.necessaryRows, alertMessage)
-      ]
-    }
-  })
-}
+export type AttendanceSheets = typeof attendanceSheets
 
 const certificateRows = certificates.data.map((certificate) => {
   const state = expirationState(certificate.expiration)
@@ -179,32 +110,9 @@ const certificateRows = certificates.data.map((certificate) => {
     expiration: state.expirationPlainDate
   }
 }).toSorted((a, b) => a.name.localeCompare(b.name))
+export type CertificateRows = typeof certificateRows
 
-const certificateSpreadsheetId = Deno.env.get('CERTIFICATE_SPREADSHEET_ID')
-if (certificateSpreadsheetId) {
-  const endRowIndex = Sheet.HeaderRow + certificateRows.length
-
-  await service.spreadsheets.batchUpdate({
-    spreadsheetId: certificateSpreadsheetId,
-    requestBody: {
-      requests: [
-        craftUpdateCells({ sheetId: 0 }, []),
-        craftUpdateCells(
-          craftRange(
-            0,
-            Sheet.ZeroIndex, endRowIndex,
-            Sheet.ZeroIndex, 3),
-          [
-            craftHeaderRow(['Soci', 'Stato', 'Scadenza'], []),
-            ...craftCertificateRows(certificateRows)
-          ]
-        ),
-        craftResizeFirstThreeColumns(0, Sheet.ColumnSize),
-        craftAlert(0, endRowIndex, alertMessage)
-      ]
-    }
-  })
-} else console.warn('CERTIFICATE_SPREADSHEET_ID is undefined!', certificateSpreadsheetId)
+await runBatchUpdate(attendanceSheets, certificateRows)
 
 await sendHeartbeat()
 console.info(`Job "attendance-certificate-exporter" finished!`)
